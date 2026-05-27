@@ -1,0 +1,66 @@
+<h2>Project Timeline</h2>
+<p>
+  This page presents the 13-week project schedule. Major activity blocks are grouped
+  by phase: <em>Planning</em>, <em>Design / Implementation</em>, <em>Testing</em>,
+  <em>Write-up</em>, and <em>Deliverables</em>. Specific calendar dates are bound to
+  the Week 0 anchor in the <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
+</p>
+
+<h3>Phase Overview</h3>
+<table class="content-table">
+  <thead>
+    <tr><th>Phase</th><th>Weeks</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Intro</td><td>0</td><td>Course orientation, repo bootstrap, mentor sync</td></tr>
+    <tr><td>Planning</td><td>1</td><td>Scope lock, proposal v1, milestone schedule</td></tr>
+    <tr><td>Design / Implementation</td><td>2–8</td><td>Build the FORGE application across the calibration, demonstration, and sweep tiers</td></tr>
+    <tr><td>Testing</td><td>9–10</td><td>Unit, integration, calibration checks; user-facing UX pass</td></tr>
+    <tr><td>Write-up</td><td>11</td><td>Final paper, iShowcase materials, demo prep</td></tr>
+    <tr><td>Deliverables</td><td>12</td><td>Final submission, iShowcase, repository freeze</td></tr>
+  </tbody>
+</table>
+
+<h3>Weekly Schedule</h3>
+<ul>
+  <li><strong>Week 0 — Intro.</strong> Course orientation. Bootstrap the three project
+      repositories. Initial mentor sync to confirm scope.</li>
+  <li><strong>Week 1 — Planning.</strong> Lock project scope. Submit proposal v1 with the
+      milestone schedule and Gantt. Identify integration risks early.</li>
+  <li><strong>Weeks 2–8 — Design / Implementation.</strong> Seven-week build phase with one
+      substantive deliverable per week:
+    <ul>
+      <li>W2: Architecture sketch; calibration-tier scaffold</li>
+      <li>W3: Backend skeleton, data loader, posterior interface</li>
+      <li>W4: Hernández-Lobato proof-of-concept reproducing baseline metrics</li>
+      <li>W5: Frontend MVP wired to backend; demo gallery shell</li>
+      <li>W6: FAIR Universe HiggsML evaluation pipeline running end-to-end</li>
+      <li>W7: Worker process and hyperparameter sweep harness</li>
+      <li>W8: Full integration pass; end-to-end smoke test passing</li>
+    </ul>
+  </li>
+  <li><strong>Weeks 9–10 — Testing.</strong> W9 covers unit and integration tests plus
+      calibration sanity checks. W10 is user-facing testing, bug triage, and UX polish —
+      this is the slack week if any earlier deliverable slips.</li>
+  <li><strong>Week 11 — Write-up.</strong> Final paper drafted and revised. iShowcase poster
+      and demo materials prepared. Practice run of the live demo.</li>
+  <li><strong>Week 12 — Deliverables.</strong> Final submission. iShowcase presentation.
+      Repository freeze and tag <code>v1.0</code> cut across all three repos.</li>
+</ul>
+
+<h3>Risk Management</h3>
+<p>
+  The schedule reserves Week 10 explicitly as a recovery buffer. If a Design /
+  Implementation milestone slips by one week, the integration smoke test (W8) shifts
+  into W9 and the testing window compresses to W10 only. A two-week slip triggers a
+  scope-cut conversation with the advisor — the FAIR Universe HiggsML evaluation tier
+  (W6) is the documented descope candidate, since the calibration tier (W2–W4) is the
+  load-bearing piece of the writeup.
+</p>
+
+<h3>Tracking</h3>
+<p>
+  This schedule is mirrored in the <a href="#gantt" data-go-panel="gantt">Gantt chart</a>,
+  whose source of truth is <code>data/gantt.json</code> in this repository. The Gantt is
+  updated weekly; git commits provide the frozen paper trail.
+</p>

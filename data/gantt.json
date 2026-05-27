@@ -1,0 +1,22 @@
+{
+  "project": "FORGE",
+  "course": "INFO 698",
+  "owner": "Nathan Herling",
+  "week0_start": "",
+  "last_updated": "",
+  "weeks": [
+    { "week": 0,  "phase": "Intro",         "activity": "Course intro, repo bootstrap, mentor sync",            "status": "planned" },
+    { "week": 1,  "phase": "Planning",      "activity": "Scope lock, proposal v1, milestone schedule",          "status": "planned" },
+    { "week": 2,  "phase": "Design / Impl", "activity": "Architecture sketch, calibration tier scaffold",       "status": "planned" },
+    { "week": 3,  "phase": "Design / Impl", "activity": "Backend skeleton, data loader, posterior interface",   "status": "planned" },
+    { "week": 4,  "phase": "Design / Impl", "activity": "Hernandez-Lobato PoC integrated",                       "status": "planned" },
+    { "week": 5,  "phase": "Design / Impl", "activity": "Frontend MVP, demo gallery wired",                     "status": "planned" },
+    { "week": 6,  "phase": "Design / Impl", "activity": "FAIR Universe HiggsML evaluation pipeline",            "status": "planned" },
+    { "week": 7,  "phase": "Design / Impl", "activity": "Worker / hyperparameter sweep harness",                "status": "planned" },
+    { "week": 8,  "phase": "Design / Impl", "activity": "Integration pass, end-to-end smoke test",              "status": "planned" },
+    { "week": 9,  "phase": "Testing",       "activity": "Unit + integration tests, calibration checks",         "status": "planned" },
+    { "week": 10, "phase": "Testing",       "activity": "User-facing testing, bug triage, UX polish",           "status": "planned" },
+    { "week": 11, "phase": "Write-up",      "activity": "Final paper, iShowcase materials, demo prep",          "status": "planned" },
+    { "week": 12, "phase": "Deliverables",  "activity": "Final submission, iShowcase, repo freeze",             "status": "planned" }
+  ]
+}

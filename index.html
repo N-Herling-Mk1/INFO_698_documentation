@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FORGE — INFO 698 Capstone</title>
+
+  <!-- Favicons (flame _2 set) -->
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon_2.ico">
+  <link rel="icon" type="image/png" sizes="16x16"  href="assets/img/favicons/favicon-16_2.png">
+  <link rel="icon" type="image/png" sizes="32x32"  href="assets/img/favicons/favicon-32_2.png">
+  <link rel="icon" type="image/png" sizes="48x48"  href="assets/img/favicons/favicon-48_2.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon_2.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/favicons/android-chrome-192_2.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/img/favicons/android-chrome-512_2.png">
+
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+  <!-- Top banner: 3-column grid (logo · title · byline+U-of-A) -->
+  <header class="banner">
+
+    <div class="banner-left">
+      <img src="assets/img/official_Forge_logo.png" alt="FORGE project logo" class="banner-logo">
+      <p class="banner-tagline">
+        Functional-posterior observatory<br>
+        for scientific machine learning.
+      </p>
+    </div>
+
+    <div class="banner-title">
+      <h1><span class="forge-letter">F</span><span class="forge-dot">&middot;</span><span class="forge-letter">O</span><span class="forge-dot">&middot;</span><span class="forge-letter">R</span><span class="forge-dot">&middot;</span><span class="forge-letter">G</span><span class="forge-dot">&middot;</span><span class="forge-letter">E</span></h1>
+      <p class="banner-acronym">
+        <span class="acro-letter">F</span>unctional-posterior
+        <span class="acro-letter">O</span>bservatory for
+        <span class="acro-letter">R</span>efinement and
+        <span class="acro-letter">G</span>eometric
+        <span class="acro-letter">E</span>xploration
+      </p>
+      <p class="banner-subtitle">INFO 698 Capstone Project</p>
+    </div>
+
+    <div class="banner-right">
+      <div class="banner-byline">
+        <span class="banner-byline-name">Nathan Herling</span>
+        <span class="banner-byline-role">Team Lead &amp; Head Designer</span>
+      </div>
+      <div class="banner-uofa-wrap">
+        <img src="assets/img/U_of_A.png" alt="University of Arizona" class="banner-uofa">
+      </div>
+    </div>
+
+  </header>
+
+  <div class="app-grid">
+
+    <!-- Side navigation -->
+    <nav class="sidenav" aria-label="Primary">
+      <ul>
+        <li><a href="#home"     data-panel="home"     class="nav-link active">Home</a></li>
+        <li><a href="#overview" data-panel="overview" class="nav-link">Project Overview</a></li>
+        <li><a href="#timeline" data-panel="timeline" class="nav-link">Project Timeline</a></li>
+        <li><a href="#gantt"    data-panel="gantt"    class="nav-link">Gantt Chart</a></li>
+        <li><a href="#proposal" data-panel="proposal" class="nav-link">Project Proposal</a></li>
+        <li><a href="#video"    data-panel="video"    class="nav-link">Project Video</a></li>
+        <li><a href="#branding" data-panel="branding" class="nav-link">Logo &amp; Branding</a></li>
+        <li class="nav-divider"></li>
+        <li><a href="#poster"   data-panel="poster"   class="nav-link">Poster <span class="badge-future">future</span></a></li>
+        <li><a href="#writeup"  data-panel="writeup"  class="nav-link">Final Write-up <span class="badge-future">future</span></a></li>
+        <li class="nav-divider"></li>
+        <li class="nav-section-label">Related Repositories</li>
+        <li><a href="https://github.com/N-Herling-Mk1/INFO_698_experiments" target="_blank" rel="noopener" class="nav-link external">Experiments &#x2197;</a></li>
+        <li><a href="https://github.com/N-Herling-Mk1/INFO_698_software"   target="_blank" rel="noopener" class="nav-link external">Software &#x2197;</a></li>
+      </ul>
+    </nav>
+
+    <main class="main-panel" id="main-panel">
+      <div class="loading">Loading&hellip;</div>
+    </main>
+
+  </div>
+
+  <footer class="footer">
+    <p>FORGE INFO 698 &middot; <a href="https://github.com/N-Herling-Mk1/INFO_698_documentation" target="_blank" rel="noopener">View source on GitHub</a></p>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/gantt.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

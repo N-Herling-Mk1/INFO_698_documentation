@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 64" width="240" height="64" aria-label="FORGE logo">
+  <rect width="240" height="64" fill="none"/>
+  <text x="0" y="44" font-family="Georgia, 'Times New Roman', serif" font-size="36" fill="#FFFFFF" letter-spacing="6">FORGE</text>
+  <line x1="0" y1="54" x2="172" y2="54" stroke="#C67D3E" stroke-width="1.5"/>
+  <text x="0" y="62" font-family="system-ui, -apple-system, sans-serif" font-size="7" fill="rgba(255,255,255,0.6)" letter-spacing="2.5">PLACEHOLDER — REPLACE WITH REAL LOGO</text>
+</svg>

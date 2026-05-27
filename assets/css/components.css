@@ -1,0 +1,538 @@
+/* ===========================================================
+   FORGE INFO 698 — components.css
+   Gantt table, buttons, embeds, status badges, hero, branding
+   =========================================================== */
+
+/* ---- Hero block (Home splash) ---- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 24px 0 28px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero-logo-link {
+  display: block;
+  flex-shrink: 0;
+  border-bottom: none;
+}
+.hero-logo-link:hover {
+  border-bottom: none;
+}
+
+.hero-logo {
+  display: block;
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  background: #000;
+  padding: 8px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.hero-logo-link:hover .hero-logo {
+  transform: scale(1.015);
+  box-shadow: var(--shadow-md);
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 2.4rem;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px 0;
+  color: var(--color-navy);
+}
+
+.hero-tagline {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  margin: 0 0 12px 0;
+  line-height: 1.45;
+}
+
+.hero-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-faint);
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 18px;
+    padding-top: 12px;
+  }
+  .hero-logo {
+    width: 180px;
+    height: 180px;
+  }
+  .hero-title { font-size: 1.9rem; }
+}
+
+/* ---- Branding panel ---- */
+.branding-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 36px;
+  margin-top: 20px;
+  align-items: start;
+}
+
+.branding-logo-figure {
+  margin: 0;
+  position: sticky;
+  top: 88px; /* below the sticky banner */
+}
+
+.branding-logo {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  background: #000;
+  padding: 12px;
+}
+
+.branding-logo-figure figcaption {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+  font-style: italic;
+  text-align: center;
+}
+
+.branding-commentary h3 {
+  font-size: 1rem;
+  color: var(--color-navy);
+  margin-top: 1.4em;
+  margin-bottom: 0.4em;
+  font-family: var(--font-serif);
+  font-weight: normal;
+  border-bottom: 1px solid var(--color-border-soft);
+  padding-bottom: 4px;
+}
+.branding-commentary h3:first-child {
+  margin-top: 0;
+}
+
+.branding-commentary p {
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.branding-commentary em {
+  color: var(--color-text-faint);
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .branding-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .branding-logo-figure {
+    position: static;
+    text-align: center;
+  }
+  .branding-logo {
+    margin: 0 auto;
+  }
+}
+
+/* ---- Derivative marks (favicon, simplified) ---- */
+.branding-derivative-row {
+  display: flex;
+  gap: 24px;
+  margin: 16px 0 28px 0;
+  flex-wrap: wrap;
+}
+
+.branding-derivative {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 14px 18px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border-soft);
+}
+
+.branding-derivative-icon {
+  flex-shrink: 0;
+  background: #000;
+  padding: 6px;
+  border-radius: var(--radius);
+}
+
+.branding-derivative-icon img {
+  display: block;
+}
+
+.branding-derivative figcaption {
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+.branding-derivative-note {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+/* ---- Palette table chips ---- */
+.branding-palette-table .color-chip {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.1);
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* ===========================================================
+   Below this line: existing components from earlier build
+   =========================================================== */
+
+/* ---- Splash / Home cards ---- */
+.splash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.splash-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  background: #FFFFFF;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+.splash-card:hover {
+  border-color: var(--color-navy-soft);
+  box-shadow: var(--shadow-md);
+}
+
+.splash-card h3 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  color: var(--color-navy);
+}
+
+.splash-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- Gantt — Excel-style table ---- */
+.gantt-wrapper {
+  overflow-x: auto;
+  margin-top: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #FFFFFF;
+}
+
+.gantt-table {
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  width: 100%;
+  min-width: 920px;
+}
+
+.gantt-table th, .gantt-table td {
+  border: 1px solid var(--color-border);
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: middle;
+  background: #FFFFFF;
+}
+
+.gantt-table thead th {
+  background: var(--color-navy);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: center;
+  border-color: var(--color-navy);
+}
+
+.gantt-table tbody tr:nth-child(even) td:not(.gantt-bar-cell) {
+  background: #FAFBFD;
+}
+
+.gantt-table td.col-week {
+  font-weight: 600;
+  color: var(--color-navy);
+  white-space: nowrap;
+  width: 70px;
+}
+
+.gantt-table td.col-phase {
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  width: 130px;
+}
+
+.gantt-table td.col-activity {
+  min-width: 240px;
+}
+
+.gantt-table td.col-status {
+  text-align: center;
+  width: 100px;
+}
+
+.gantt-bar-cell {
+  width: 32px;
+  text-align: center;
+  padding: 0;
+}
+
+.gantt-bar {
+  display: block;
+  height: 22px;
+  margin: 0 2px;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+
+.gantt-bar.phase-intro        { background: var(--phase-intro); }
+.gantt-bar.phase-planning     { background: var(--phase-planning); }
+.gantt-bar.phase-design       { background: var(--phase-design); }
+.gantt-bar.phase-testing      { background: var(--phase-testing); }
+.gantt-bar.phase-writeup      { background: var(--phase-writeup); }
+.gantt-bar.phase-deliverables { background: var(--phase-deliv); }
+
+.status-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.status-planned    { background: var(--color-bg-alt);  color: var(--color-text-muted); }
+.status-in_progress{ background: #F5E5D0;              color: #8B5A1E; }
+.status-done       { background: #DAE8DD;              color: #2F5C44; }
+.status-slipped    { background: #F0D6D2;              color: #7A2E26; }
+
+.gantt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--color-bg-alt);
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.gantt-meta {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--color-bg-muted);
+  border-left: 3px solid var(--color-navy-soft);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- PDF / Video embeds ---- */
+.embed-wrapper {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-bg-alt);
+}
+
+.embed-pdf {
+  width: 100%;
+  height: 80vh;
+  display: block;
+  border: none;
+}
+
+.embed-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #000;
+}
+
+.download-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 18px;
+  background: var(--color-navy);
+  color: #FFFFFF;
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-navy);
+  transition: background 0.12s ease;
+}
+.btn:hover {
+  background: var(--color-navy-mid);
+  border-color: var(--color-navy-mid);
+  border-bottom-color: var(--color-navy-mid);
+}
+
+.btn-secondary {
+  background: #FFFFFF;
+  color: var(--color-navy);
+}
+.btn-secondary:hover {
+  background: var(--color-bg-alt);
+  color: var(--color-navy);
+}
+
+/* ---- Empty / placeholder panels ---- */
+.placeholder-panel {
+  padding: 40px;
+  text-align: center;
+  background: var(--color-bg-alt);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+}
+.placeholder-panel h2 { color: var(--color-text-muted); }
+
+/* ---- Tables used in timeline / general content ---- */
+.content-table {
+  border-collapse: collapse;
+  margin: 12px 0 20px 0;
+  font-size: 0.9rem;
+  width: 100%;
+  max-width: 720px;
+}
+.content-table th, .content-table td {
+  border: 1px solid var(--color-border);
+  padding: 7px 12px;
+  text-align: left;
+}
+.content-table thead th {
+  background: var(--color-bg-alt);
+  color: var(--color-navy);
+  font-weight: 600;
+}
+
+/* ---- Error / inline notice ---- */
+.notice-error {
+  background: #FBEAE7;
+  border-left: 3px solid var(--color-danger);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  color: var(--color-danger);
+  border-radius: var(--radius);
+  margin: 12px 0;
+}
+
+/* ===========================================================
+   Project Overview panel + subtle brand-color accents
+   =========================================================== */
+
+/* Lead paragraph at top of overview panel */
+.lead {
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  border-left: 3px solid var(--color-accent);
+  padding: 6px 16px;
+  margin: 0 0 28px 0;
+  background: #FBF6F0;  /* very pale amber tint */
+}
+
+.lead em {
+  color: var(--color-navy-mid);
+  font-style: italic;
+}
+
+/* Overview section blocks */
+.overview-section {
+  margin-bottom: 28px;
+}
+
+.overview-section h3 {
+  color: var(--color-navy);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: 1.15rem;
+  margin: 0 0 10px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--color-border-soft);
+  letter-spacing: 0.01em;
+}
+
+.overview-section ol {
+  margin: 6px 0 8px 0;
+  padding-left: 1.6em;
+}
+
+.overview-section ol li {
+  margin-bottom: 8px;
+}
+
+.overview-section strong {
+  color: var(--color-navy);
+}
+
+/* ---- Subtle brand-color theming applied across content panels ---- */
+
+/* Tables: navy header text, amber bottom rule under thead */
+.content-table thead th {
+  color: var(--color-navy);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+/* Inline links in content panels: a touch warmer on hover */
+.main-panel a:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* Code chips: a hint of cool tone */
+.main-panel code {
+  color: var(--color-navy-mid);
+}
+
+/* h3 hue for section heads inside any panel */
+.main-panel h3 {
+  color: var(--color-navy);
+}

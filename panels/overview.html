@@ -1,0 +1,160 @@
+<h2>Project Overview</h2>
+
+<p class="lead">
+  FORGE is a web-hosted Bayesian posterior exploration tool. The dataset is locked;
+  the methodology is open. What varies between users is <em>how each chose to look
+  at the data and reason about it</em> &mdash; FORGE is the instrument that makes
+  those choices visible, comparable, and replayable.
+</p>
+
+<section class="overview-section">
+  <h3>The acronym</h3>
+  <p>
+    <strong>FORGE</strong> &mdash; <strong>F</strong>unctional-posterior
+    <strong>O</strong>bservatory for <strong>R</strong>efinement and
+    <strong>G</strong>eometric <strong>E</strong>xploration. Reads as a noun
+    phrase: <em>"FORGE is a functional-posterior observatory&hellip;"</em>
+  </p>
+</section>
+
+<section class="overview-section">
+  <h3>What the tool does</h3>
+  <p>
+    FORGE takes a locked benchmark dataset, exposes the modeling pipeline as
+    user-controllable knobs (priors, architecture, hyperparameters, calibration
+    targets), and lets a user fit a model, generate a posterior, and view it
+    geometrically. The same dataset, fit by different users with different
+    methodological choices, produces different posteriors &mdash; and FORGE
+    surfaces those differences directly.
+  </p>
+  <p>
+    The thesis claim is: <strong>Bayesian methodology made explorable</strong>.
+    Posterior shape is not just a number; it is an object that can be looked at,
+    compared, and questioned.
+  </p>
+</section>
+
+<section class="overview-section">
+  <h3>User flow</h3>
+  <ol>
+    <li>
+      <strong>EDA layer.</strong> Explore the locked dataset before any model is
+      fit. Feature distributions, missingness, pairwise correlations, subgroup
+      structure. EDA outputs feed downstream prior and architecture decisions.
+    </li>
+    <li>
+      <strong>Model selection.</strong> Pick the inference engine and architecture
+      class. The first engine is a Bayesian neural network in the
+      Hern&aacute;ndez-Lobato lineage; further engines plug in behind the same
+      interface.
+    </li>
+    <li>
+      <strong>Knob panel.</strong> Set the priors, learning schedule, calibration
+      targets, and other tunables. Every knob has a defensible default; deviations
+      are recorded.
+    </li>
+    <li>
+      <strong>Geometric posterior viewing.</strong> Fit completes, posterior is
+      summarized as a geometric object the user can rotate, slice, and compare
+      against the calibration tier.
+    </li>
+  </ol>
+</section>
+
+<section class="overview-section">
+  <h3>Dataset tiers</h3>
+  <p>
+    FORGE is organized around four dataset tiers that anchor the calibration story:
+  </p>
+  <table class="content-table">
+    <thead>
+      <tr><th>Tier</th><th>Role</th><th>Example</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>C0 &mdash; Calibration</strong></td>
+        <td>Small, well-understood UCI-scale datasets where the right answer is known and posterior coverage can be measured</td>
+        <td>UCI Boston, Concrete, Wine (Hern&aacute;ndez-Lobato baseline triplet)</td>
+      </tr>
+      <tr>
+        <td><strong>C1 &mdash; Demonstration</strong></td>
+        <td>A larger, public, harder benchmark where the tool's posterior-quality story shows up clearly</td>
+        <td>FAIR Universe HiggsML</td>
+      </tr>
+      <tr>
+        <td><strong>C2 &mdash; Benchmarked</strong></td>
+        <td>Hyperparameter sweeps and posterior-shape vs. knob-setting studies</td>
+        <td>Internal sweep studies on calibration and demonstration tiers</td>
+      </tr>
+      <tr>
+        <td><strong>C3 &mdash; Application</strong></td>
+        <td>Field-deployment demo on a real research dataset, contingent on advisor approval</td>
+        <td>ATLAS MSVtx LLP search (provisional, pending Prof. Johns' approval)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="overview-section">
+  <h3>Repository structure</h3>
+  <p>
+    The project lives across three repositories &mdash; not five &mdash; mapping
+    cleanly to the three things being produced: a deployed application, research
+    artifacts, and documentation.
+  </p>
+  <table class="content-table">
+    <thead>
+      <tr><th>Repository</th><th>Contents</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <a href="https://github.com/N-Herling-Mk1/INFO_698_documentation"
+             target="_blank" rel="noopener">INFO_698_documentation</a>
+        </td>
+        <td>This site. Timeline, Gantt, proposal, mk-history, design diagrams, branding.</td>
+      </tr>
+      <tr>
+        <td>
+          <a href="https://github.com/N-Herling-Mk1/INFO_698_experiments"
+             target="_blank" rel="noopener">INFO_698_experiments</a>
+        </td>
+        <td>Research code: Hern&aacute;ndez-Lobato PoC, FAIR Universe HiggsML evaluation, hyperparameter sweeps, notebooks.</td>
+      </tr>
+      <tr>
+        <td>
+          <a href="https://github.com/N-Herling-Mk1/INFO_698_software"
+             target="_blank" rel="noopener">INFO_698_software</a>
+        </td>
+        <td>The deployed application: frontend, backend, worker, calibration.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    A stretch fourth repo (<code>forge-mcp</code>) is reserved for a Model Context
+    Protocol server that exposes FORGE to LLM agents. This is post-MVP; the core
+    proposal does not depend on it.
+  </p>
+</section>
+
+<section class="overview-section">
+  <h3>Architectural rule of thumb</h3>
+  <p>
+    Every backend endpoint is designed as if an LLM agent will be calling it:
+    stateless or explicit-state, JSON in / JSON out, Pydantic-typed. This makes
+    the deployed tool both human-usable today and agent-callable when the MCP
+    stretch goal lands.
+  </p>
+</section>
+
+<section class="overview-section">
+  <h3>Timeline at a glance</h3>
+  <p>
+    The build is scoped to 13 weeks with one week of intro, one week of planning,
+    seven weeks of design and implementation, two weeks of testing, one week of
+    write-up, and one week for final deliverables. Week 10 is held explicitly as a
+    recovery buffer. See the <a href="#timeline" data-go-panel="timeline">Project
+    Timeline</a> and <a href="#gantt" data-go-panel="gantt">Gantt Chart</a> for
+    the full schedule.
+  </p>
+</section>
