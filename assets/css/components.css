@@ -123,7 +123,7 @@
   margin: 0 0.12em;
   /* The dot character sits low on the line by default;
      translateY raises it to the optical center of the cap-height letters */
-  transform: translateY(-0.05em);
+  transform: translateY(-0.18em);
   line-height: 1;
 }
 
@@ -316,16 +316,45 @@
 }
 
 .splash-card {
+  position: relative;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 18px 20px;
   background: #FFFFFF;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.18s ease, box-shadow 0.25s ease, transform 0.18s ease;
   cursor: pointer;
+  z-index: 0;
 }
+
+/* Warm red glow behind the card on hover.
+   The ::before is positioned slightly larger than the card so the glow
+   "spills" out from the edges, sitting beneath via z-index: -1. */
+.splash-card::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: calc(var(--radius) + 8px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(232, 70, 50, 0.45) 0%,
+    rgba(232, 70, 50, 0.22) 35%,
+    rgba(232, 70, 50, 0.08) 65%,
+    rgba(232, 70, 50, 0)   100%
+  );
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
 .splash-card:hover {
-  border-color: var(--color-navy-soft);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(232, 70, 50, 0.55);
+  box-shadow: 0 2px 8px rgba(232, 70, 50, 0.08);
+  transform: translateY(-1px);
+}
+
+.splash-card:hover::before {
+  opacity: 1;
 }
 
 .splash-card h3 {
@@ -640,5 +669,17 @@
 
 /* h3 hue for section heads inside any panel */
 .main-panel h3 {
+  color: var(--color-navy);
+}
+
+/* Old-style (text) figures — the "3" with the descender hook below the baseline.
+   Georgia and most serifs support both lining and old-style numerals via OpenType. */
+.oldstyle-num {
+  font-family: var(--font-serif);
+  font-feature-settings: "onum" 1, "lnum" 0;
+  font-variant-numeric: oldstyle-nums;
+  font-style: italic;
+  font-size: 1.08em;
+  letter-spacing: 0.01em;
   color: var(--color-navy);
 }
