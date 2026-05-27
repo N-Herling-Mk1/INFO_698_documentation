@@ -24,6 +24,14 @@
   --color-warn:         #B8893B;
   --color-danger:       #A8453B;
 
+  /* Hot palette — sampled from the FORGE logo flame */
+  --color-amber:        #E8893E;   /* warm Gaussian half, flame outer halo */
+  --color-gold:         #FFC857;   /* wordmark, outer flame */
+  --color-ember:        #FF4D1F;   /* hot red-orange, warm Gaussian saturated */
+  --color-flame:        #FF7A0D;   /* mid-flame orange */
+  --color-ignite:       #FFB800;   /* saturated yellow-gold, flame core */
+  --color-magenta:      #FF2D7A;   /* point-source accent, far-right starfield */
+
   /* Phase colors — desaturated, restrained */
   --phase-intro:        #A8C5BA;
   --phase-planning:     #6BA292;
@@ -58,7 +66,7 @@ html, body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }

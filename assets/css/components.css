@@ -129,7 +129,7 @@
 }
 
 .branding-commentary em {
-  color: var(--color-text-faint);
+  color: var(--color-accent);
   font-style: italic;
 }
 
