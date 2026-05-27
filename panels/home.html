@@ -4,7 +4,10 @@
     <img src="assets/img/official_Forge_logo.png" alt="FORGE official project logo" class="hero-logo">
   </a>
   <div class="hero-text">
-    <h1 class="hero-title">FORGE</h1>
+    <div class="hero-title-wrap">
+      <canvas class="hero-effect-canvas" id="hero-ember-canvas"></canvas>
+      <h1 class="hero-title"><span class="forge-letter">F</span><span class="forge-dot">&middot;</span><span class="forge-letter">O</span><span class="forge-dot">&middot;</span><span class="forge-letter">R</span><span class="forge-dot">&middot;</span><span class="forge-letter">G</span><span class="forge-dot">&middot;</span><span class="forge-letter">E</span></h1>
+    </div>
     <p class="hero-tagline">A general-purpose Bayesian posterior exploration tool for scientific machine learning.</p>
     <p class="hero-meta">INFO 698 Capstone &middot; University of Arizona &middot; Nathan Herling</p>
   </div>
@@ -72,3 +75,32 @@
     </tr>
   </tbody>
 </table>
+
+<script>
+(function () {
+  function start() {
+    var canvas = document.getElementById('hero-ember-canvas');
+    if (!canvas || !window.EmberPulse) return false;
+    if (window.__heroEmber && typeof window.__heroEmber.stop === 'function') {
+      window.__heroEmber.stop();
+    }
+    window.__heroEmber = EmberPulse.attach(canvas, {
+      intensity: 2.50,
+      emberRate: 2.10,
+      pulse:     0.95
+    });
+    return true;
+  }
+
+  // If EmberPulse is already loaded (re-navigating to home), start immediately.
+  // Otherwise, load the script and start on its onload.
+  if (window.EmberPulse) {
+    start();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'assets/js/effects/emberPulse.js';
+    s.onload = function () { start(); };
+    document.head.appendChild(s);
+  }
+})();
+</script>
