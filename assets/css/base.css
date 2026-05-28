@@ -31,6 +31,7 @@
   --color-flame:        #FF7A0D;   /* mid-flame orange */
   --color-ignite:       #FFB800;   /* saturated yellow-gold, flame core */
   --color-magenta:      #FF2D7A;   /* point-source accent, far-right starfield */
+  --color-cyan:         #2DD4FF;   /* posterior accent, cool Gaussian half, FORGE logo cool side */
 
   /* Phase colors — desaturated, restrained */
   --phase-intro:        #A8C5BA;

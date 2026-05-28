@@ -13,6 +13,7 @@ const App = (() => {
     proposal: { type: "html", src: "panels/proposal.html" },
     video:    { type: "html", src: "panels/video.html" },
     branding: { type: "html", src: "panels/branding.html" },
+    sheen_test: { type: "html", src: "panels/sheen_test.html" },
     poster:   { type: "html", src: "panels/poster.html" },
     writeup:  { type: "html", src: "panels/writeup.html" },
   };
@@ -89,7 +90,15 @@ const App = (() => {
   }
 
   function onHashChange() {
-    loadPanel(getCurrentPanel());
+    const hash = (window.location.hash || "").replace(/^#/, "");
+    // If the hash is a known panel, load that panel.
+    // Otherwise, it's an in-page anchor (e.g. references jump) — let the browser handle it.
+    if (PANELS[hash]) {
+      loadPanel(hash);
+    } else if (!hash) {
+      loadPanel(DEFAULT_PANEL);
+    }
+    // else: unknown hash, leave it alone — the browser will scroll to it if a matching id exists.
   }
 
   function init() {

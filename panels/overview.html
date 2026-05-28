@@ -1,160 +1,746 @@
 <h2>Project Overview</h2>
 
 <p class="lead">
-  FORGE is a web-hosted Bayesian posterior exploration tool. The dataset is locked;
-  the methodology is open. What varies between users is <em>how each chose to look
-  at the data and reason about it</em> &mdash; FORGE is the instrument that makes
-  those choices visible, comparable, and replayable.
+  FORGE is a web-hosted platform for Bayesian exploration of machine learning models.
+  The <strong>mk_1</strong> release ships with three reproduced, well-known results spanning
+  very different domains: <strong>(1)</strong> music genre recognition using a CNN with
+  Bayesian components, <strong>(2)</strong> phonon density-of-states regression, and
+  <strong>(3)</strong> the ATLAS Long-Lived Particle (LLP) detection problem from
+  high-energy physics. The reproductions are performed by the author ahead of time and
+  preloaded onto the site &mdash; users do not retrain from scratch; they inherit working
+  baselines with documented performance.
 </p>
 
-<section class="overview-section">
-  <h3>The acronym</h3>
-  <p>
-    <strong>FORGE</strong> &mdash; <strong>F</strong>unctional-posterior
-    <strong>O</strong>bservatory for <strong>R</strong>efinement and
-    <strong>G</strong>eometric <strong>E</strong>xploration. Reads as a noun
-    phrase: <em>"FORGE is a functional-posterior observatory&hellip;"</em>
-  </p>
-</section>
+<p>
+  Three experiments are deliberate. The domains are intentionally heterogeneous (audio,
+  condensed matter, particle physics) to demonstrate that the FORGE pattern generalizes
+  across model classes; the author's prior familiarity with each one allows mk_1 to ship
+  faithful reproductions rather than approximations; and shipping three instead of one is
+  a redundancy strategy &mdash; if one reproduction proves intractable on the mk_1
+  timeline, the platform still demonstrates the concept on the remaining two.
+</p>
 
-<section class="overview-section">
-  <h3>What the tool does</h3>
-  <p>
-    FORGE takes a locked benchmark dataset, exposes the modeling pipeline as
-    user-controllable knobs (priors, architecture, hyperparameters, calibration
-    targets), and lets a user fit a model, generate a posterior, and view it
-    geometrically. The same dataset, fit by different users with different
-    methodological choices, produces different posteriors &mdash; and FORGE
-    surfaces those differences directly.
-  </p>
-  <p>
-    The thesis claim is: <strong>Bayesian methodology made explorable</strong>.
-    Posterior shape is not just a number; it is an object that can be looked at,
-    compared, and questioned.
-  </p>
-</section>
+<p>
+  From those baselines, users can introduce Bayesian components into the existing models
+  &mdash; for example, variational layers, Monte Carlo dropout
+  (<a href="#ref-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>),
+  Flipout layers, or full Bayesian neural network replacements &mdash; and retrain,
+  comparing the resulting posteriors against the original deterministic baselines. This is
+  the proof of concept for mk_1. The longer-term goal is a platform where
+  <strong>epistemic uncertainty</strong> can be explored systematically across model
+  classes, framing a single underlying question:
+  <em>can this model be improved, or has it reached its epistemic limit?</em>
+</p>
 
-<section class="overview-section">
-  <h3>User flow</h3>
-  <ol>
-    <li>
-      <strong>EDA layer.</strong> Explore the locked dataset before any model is
-      fit. Feature distributions, missingness, pairwise correlations, subgroup
-      structure. EDA outputs feed downstream prior and architecture decisions.
-    </li>
-    <li>
-      <strong>Model selection.</strong> Pick the inference engine and architecture
-      class. The first engine is a Bayesian neural network in the
-      Hern&aacute;ndez-Lobato lineage; further engines plug in behind the same
-      interface.
-    </li>
-    <li>
-      <strong>Knob panel.</strong> Set the priors, learning schedule, calibration
-      targets, and other tunables. Every knob has a defensible default; deviations
-      are recorded.
-    </li>
-    <li>
-      <strong>Geometric posterior viewing.</strong> Fit completes, posterior is
-      summarized as a geometric object the user can rotate, slice, and compare
-      against the calibration tier.
-    </li>
-  </ol>
-</section>
+<h3>Bayesian Analysis: Epistemic Exploration vs. Point Estimates</h3>
 
-<section class="overview-section">
-  <h3>Dataset tiers</h3>
-  <p>
-    FORGE is organized around four dataset tiers that anchor the calibration story:
-  </p>
-  <table class="content-table">
-    <thead>
-      <tr><th>Tier</th><th>Role</th><th>Example</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>C0 &mdash; Calibration</strong></td>
-        <td>Small, well-understood UCI-scale datasets where the right answer is known and posterior coverage can be measured</td>
-        <td>UCI Boston, Concrete, Wine (Hern&aacute;ndez-Lobato baseline triplet)</td>
-      </tr>
-      <tr>
-        <td><strong>C1 &mdash; Demonstration</strong></td>
-        <td>A larger, public, harder benchmark where the tool's posterior-quality story shows up clearly</td>
-        <td>FAIR Universe HiggsML</td>
-      </tr>
-      <tr>
-        <td><strong>C2 &mdash; Benchmarked</strong></td>
-        <td>Hyperparameter sweeps and posterior-shape vs. knob-setting studies</td>
-        <td>Internal sweep studies on calibration and demonstration tiers</td>
-      </tr>
-      <tr>
-        <td><strong>C3 &mdash; Application</strong></td>
-        <td>Field-deployment demo on a real research dataset, contingent on advisor approval</td>
-        <td>ATLAS MSVtx LLP search (provisional, pending Prof. Johns' approval)</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+<p>
+  Before describing the experiments themselves, it is worth stating clearly <em>why</em>
+  FORGE is built around Bayesian inference rather than ordinary deterministic models.
+  The reason lives in the difference between a single prediction and a posterior
+  distribution over predictions &mdash; between a point estimate that hides what the
+  model does not know, and a distribution that makes its ignorance legible.
+</p>
 
-<section class="overview-section">
-  <h3>Repository structure</h3>
-  <p>
-    The project lives across three repositories &mdash; not five &mdash; mapping
-    cleanly to the three things being produced: a deployed application, research
-    artifacts, and documentation.
-  </p>
-  <table class="content-table">
-    <thead>
-      <tr><th>Repository</th><th>Contents</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <a href="https://github.com/N-Herling-Mk1/INFO_698_documentation"
-             target="_blank" rel="noopener">INFO_698_documentation</a>
-        </td>
-        <td>This site. Timeline, Gantt, proposal, mk-history, design diagrams, branding.</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://github.com/N-Herling-Mk1/INFO_698_experiments"
-             target="_blank" rel="noopener">INFO_698_experiments</a>
-        </td>
-        <td>Research code: Hern&aacute;ndez-Lobato PoC, FAIR Universe HiggsML evaluation, hyperparameter sweeps, notebooks.</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://github.com/N-Herling-Mk1/INFO_698_software"
-             target="_blank" rel="noopener">INFO_698_software</a>
-        </td>
-        <td>The deployed application: frontend, backend, worker, calibration.</td>
-      </tr>
-    </tbody>
-  </table>
-  <p>
-    A stretch fourth repo (<code>forge-mcp</code>) is reserved for a Model Context
-    Protocol server that exposes FORGE to LLM agents. This is post-MVP; the core
-    proposal does not depend on it.
-  </p>
-</section>
+<p>
+  A conventional neural network, once trained, returns one number per input: the genre
+  is hip-hop with probability 0.83; the phonon DOS at 200&nbsp;cm<sup>&minus;1</sup> is
+  0.014; this event is signal-like with score 0.91. These are point estimates. They
+  are the most likely value under the trained weights, but they reveal nothing about
+  how confident the model would be if the same input were shown to a slightly
+  different but equally valid version of the same network &mdash; one trained on a
+  different bootstrap of the data, or initialized with different random seeds, or
+  given a slightly different architecture. In other words, point estimates collapse
+  away the model's <strong>epistemic uncertainty</strong>: the uncertainty arising
+  from incomplete knowledge, finite training data, or genuine ambiguity in the
+  decision boundary.
+</p>
 
-<section class="overview-section">
-  <h3>Architectural rule of thumb</h3>
-  <p>
-    Every backend endpoint is designed as if an LLM agent will be calling it:
-    stateless or explicit-state, JSON in / JSON out, Pydantic-typed. This makes
-    the deployed tool both human-usable today and agent-callable when the MCP
-    stretch goal lands.
-  </p>
-</section>
+<p>
+  Bayesian inference replaces the single set of trained weights with a
+  <em>posterior distribution</em> over weights given the data: <em>p(w | D)</em>.
+  Every prediction now produces not a single number but a distribution of plausible
+  predictions, one for each sample drawn from that posterior. The
+  <strong>width</strong> of that distribution is the model's epistemic uncertainty
+  made visible. A narrow posterior at a given input means the model's predictions are
+  stable across the space of plausible weight configurations &mdash; the model is
+  genuinely confident, and that confidence is earned. A wide posterior means
+  different equally-valid versions of the model would disagree about the answer
+  &mdash; the model's apparent confidence in a point estimate would be borrowed, not
+  earned.
+</p>
 
-<section class="overview-section">
-  <h3>Timeline at a glance</h3>
-  <p>
-    The build is scoped to 13 weeks with one week of intro, one week of planning,
-    seven weeks of design and implementation, two weeks of testing, one week of
-    write-up, and one week for final deliverables. Week 10 is held explicitly as a
-    recovery buffer. See the <a href="#timeline" data-go-panel="timeline">Project
-    Timeline</a> and <a href="#gantt" data-go-panel="gantt">Gantt Chart</a> for
-    the full schedule.
+<p>
+  This is the diagnostic capability FORGE exposes to users. The visualization below
+  shows a single hypothetical prediction in both modes: as a point estimate (left),
+  and as a Bayesian posterior (right). The point estimate looks confident. The
+  posterior shows the model's actual uncertainty &mdash; and crucially, it shows the
+  point estimate sitting near the edge of the credible region, suggesting the model's
+  apparent confidence is not as well-supported as it looks.
+</p>
+
+<div class="diagram-wrap">
+  <p class="diagram-title">Point Estimate vs. Bayesian Posterior</p>
+  <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" role="img"
+       aria-label="Point estimate versus Bayesian posterior comparison">
+    <defs>
+      <!-- Cyan→magenta gradient for the posterior fill -->
+      <linearGradient id="posteriorGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#2DD4FF" stop-opacity="0.18"/>
+        <stop offset="50%"  stop-color="#7A7FFF" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#FF2D7A" stop-opacity="0.18"/>
+      </linearGradient>
+      <linearGradient id="posteriorEdge" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#2DD4FF"/>
+        <stop offset="100%" stop-color="#FF2D7A"/>
+      </linearGradient>
+    </defs>
+
+    <!-- LEFT PANEL: Point estimate -->
+    <g transform="translate(20,30)">
+      <text x="170" y="0" text-anchor="middle" font-family="Georgia, serif"
+            font-size="14" fill="#1A2238" font-weight="600">Point Estimate</text>
+      <text x="170" y="18" text-anchor="middle" font-family="system-ui, sans-serif"
+            font-size="11" fill="#5C657A">deterministic model output</text>
+
+      <!-- Axis -->
+      <line x1="20" y1="200" x2="320" y2="200" stroke="#5C657A" stroke-width="1"/>
+      <text x="20" y="218" font-size="10" fill="#5C657A" font-family="system-ui">0.0</text>
+      <text x="320" y="218" font-size="10" fill="#5C657A" font-family="system-ui"
+            text-anchor="end">1.0</text>
+      <text x="170" y="235" font-size="11" fill="#5C657A" font-family="system-ui"
+            text-anchor="middle" font-style="italic">prediction</text>
+
+      <!-- Point estimate marker (vertical line + dot) -->
+      <line x1="220" y1="60" x2="220" y2="200" stroke="#FF2D7A" stroke-width="2"
+            stroke-dasharray="3,3"/>
+      <circle cx="220" cy="90" r="6" fill="#FF2D7A"/>
+      <text x="220" y="55" text-anchor="middle" font-family="system-ui"
+            font-size="11" fill="#FF2D7A" font-weight="600">0.83</text>
+
+      <!-- "Single answer" annotation -->
+      <text x="170" y="125" text-anchor="middle" font-family="system-ui, sans-serif"
+            font-size="10" fill="#8C94A6" font-style="italic">single best estimate</text>
+      <text x="170" y="140" text-anchor="middle" font-family="system-ui, sans-serif"
+            font-size="10" fill="#8C94A6" font-style="italic">no width information</text>
+    </g>
+
+    <!-- VERTICAL DIVIDER -->
+    <line x1="395" y1="40" x2="395" y2="240" stroke="#D9DCE3" stroke-width="1"
+          stroke-dasharray="2,4"/>
+
+    <!-- RIGHT PANEL: Bayesian posterior -->
+    <g transform="translate(420,30)">
+      <text x="170" y="0" text-anchor="middle" font-family="Georgia, serif"
+            font-size="14" fill="#1A2238" font-weight="600">Bayesian Posterior</text>
+      <text x="170" y="18" text-anchor="middle" font-family="system-ui, sans-serif"
+            font-size="11" fill="#5C657A">distribution over plausible predictions</text>
+
+      <!-- Axis -->
+      <line x1="20" y1="200" x2="320" y2="200" stroke="#5C657A" stroke-width="1"/>
+      <text x="20" y="218" font-size="10" fill="#5C657A" font-family="system-ui">0.0</text>
+      <text x="320" y="218" font-size="10" fill="#5C657A" font-family="system-ui"
+            text-anchor="end">1.0</text>
+      <text x="170" y="235" font-size="11" fill="#5C657A" font-family="system-ui"
+            text-anchor="middle" font-style="italic">prediction</text>
+
+      <!-- Posterior distribution curve (Gaussian-like, mode around 0.62) -->
+      <!-- Built from a series of x,y points: bell curve centered at 188 (x-axis pos for 0.62) -->
+      <path d="M 20,200
+               L 30,199 L 45,197 L 60,193 L 75,186 L 90,176 L 105,162
+               L 120,144 L 135,123 L 150,103 L 165,86 L 180,75
+               L 188,71 L 195,73 L 210,82 L 225,98 L 240,118
+               L 255,140 L 270,162 L 285,178 L 300,190 L 315,197 L 320,199
+               L 320,200 Z"
+            fill="url(#posteriorGrad)" stroke="url(#posteriorEdge)" stroke-width="1.5"/>
+
+      <!-- 95% credible region brackets -->
+      <line x1="100" y1="200" x2="100" y2="207" stroke="#2DD4FF" stroke-width="2"/>
+      <line x1="280" y1="200" x2="280" y2="207" stroke="#FF2D7A" stroke-width="2"/>
+      <line x1="100" y1="205" x2="280" y2="205" stroke="#888"
+            stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="190" y="218" text-anchor="middle" font-size="10" fill="#5C657A"
+            font-family="system-ui" font-style="italic">95% credible region</text>
+
+      <!-- Mode marker -->
+      <circle cx="188" cy="71" r="4" fill="#7A7FFF"/>
+      <text x="188" y="62" text-anchor="middle" font-size="10" fill="#5C657A"
+            font-family="system-ui">mode = 0.62</text>
+
+      <!-- Mark where the point estimate WOULD sit (0.83) -->
+      <line x1="269" y1="105" x2="269" y2="200" stroke="#FF2D7A" stroke-width="1.5"
+            stroke-dasharray="3,3" opacity="0.7"/>
+      <circle cx="269" cy="105" r="3.5" fill="#FF2D7A" opacity="0.8"/>
+      <text x="269" y="98" text-anchor="middle" font-size="9" fill="#FF2D7A"
+            font-family="system-ui">point estimate
+            <tspan x="269" dy="10">would sit here</tspan></text>
+    </g>
+  </svg>
+
+  <p class="diagram-caption">
+    <strong>Figure 1.</strong> <em>Left:</em> a deterministic point estimate reports a single number (0.83) with
+    no width. <em>Right:</em> the same problem solved with Bayesian inference yields a
+    full posterior &mdash; here roughly centered at 0.62, with a 95% credible region
+    spanning ~0.30 to ~0.88. The point estimate sits near the upper edge of the
+    credible region; the posterior tells the user this prediction is less well
+    supported than the deterministic output suggested. This is the kind of
+    second-look diagnostic FORGE makes routine.
   </p>
-</section>
+</div>
+
+<p>
+  The cost of moving from a point estimate to a posterior is computational. Sampling
+  from a posterior &mdash; whether via Markov Chain Monte Carlo (HMC, NUTS),
+  variational approximation, dropout-as-Bayesian, or last-layer Gaussian heads
+  &mdash; takes longer than a single forward pass. FORGE addresses this with a
+  preloaded baseline architecture where most of the model is deterministic and only
+  the final classification or regression layer is Bayesian. This last-layer
+  configuration is fast enough to retrain and resample within the timescale of an
+  interactive session, while still surfacing the epistemic structure of the model's
+  decision boundary &mdash; which is, after all, where the interesting questions live.
+</p>
+
+<p>
+  The remainder of this overview describes how this Bayesian-exploration capability is
+  delivered: which three experiments are reproduced, what users see during exploratory
+  data analysis, and how the model-building interface lets users introduce Bayesian
+  components into the baselines.
+</p>
+
+<h3>The Three Experiments</h3>
+
+<h4>(1) Music genre recognition — CNN with Bayesian classification head</h4>
+
+<p>
+  The genre-recognition experiment extends the BEARDOWN architecture
+  (<a href="#ref-herling-attili-2025">Herling &amp; Attili, 2025</a>): a multimodal CNN
+  that classifies 30-second audio clips into one of ten genres using the GTZAN dataset
+  (blues, classical, country, disco, hip-hop, jazz, metal, pop, reggae, rock). The model
+  uses two parallel encoders &mdash; a convolutional encoder on spectrogram images and a
+  dense encoder on 58 engineered audio features (MFCCs, spectral centroid, chroma
+  statistics, rhythmic descriptors) &mdash; fused into a single representation and passed
+  through a Bayesian classification head. The original work introduced the Robust Ranking
+  Metric (RRM), a composite score combining accuracy, fold stability, and posterior
+  variance, validated against accuracy alone for model selection. Foundational work on
+  CNN-based genre recognition (<a href="#ref-sridhar-2024">Sridhar, 2024</a>) and Bayesian
+  approximation via dropout (<a href="#ref-gal-ghahramani-2016">Gal &amp; Ghahramani,
+  2016</a>) anchors the methodology. FORGE preloads the trained baseline (target ~76%
+  validation accuracy, the achieved BEARDOWN performance) and exposes the
+  Bayesian-head hyperparameters as user-tunable knobs for posterior exploration.
+</p>
+
+<h4>(2) Phonon density-of-states regression — equivariant graph neural network</h4>
+
+<p>
+  The phonon experiment reproduces the Euclidean neural network architecture of
+  <a href="#ref-chen-2021">Chen et al. (2021)</a>: an E(3)-equivariant graph network that
+  predicts phonon density-of-states (DOS) curves from crystal structures alone, using only
+  atomic species and positions as input. The model is trained on ~1,500 crystalline solids
+  curated from the DFPT phonon database of
+  <a href="#ref-petretto-2018">Petretto et al. (2018)</a> via the Materials Project. The
+  published baseline reports that 70% of test materials fall within 10% relative error on
+  the average phonon frequency. Crucially, the published model produces
+  <em>point predictions only</em> &mdash; no uncertainty quantification, no calibration
+  metrics. FORGE's contribution on this experiment is precisely that gap: a Bayesian
+  extension of the architecture (e.g., a Bayesian last-layer head over the 51-point DOS
+  output) producing calibrated credible intervals on the phonon DOS curve and on derived
+  thermodynamic quantities such as vibrational entropy and heat capacity. Calibration
+  coverage on the held-out test set becomes the load-bearing metric beyond raw MSE.
+</p>
+
+<h4>(3) ATLAS Long-Lived Particle (LLP) detection — displaced muon-spectrometer vertices</h4>
+
+<p>
+  The third experiment applies FORGE to displaced-vertex searches for Long-Lived Particles
+  in the ATLAS detector at the LHC. The reproduction draws on prior thesis work on hidden
+  sector scalars producing displaced muon-spectrometer vertices (MSVtx), characteristic of
+  decays where the parent particle's lifetime is long enough to traverse measurable
+  detector distance before decaying. The baseline model is a deterministic multilayer
+  perceptron trained to discriminate signal events (HSS&rarr;LLP) from QCD background. The
+  Bayesian extension adds posterior inference (full HMC over the output layer was used in
+  the author's prior work) to surface where the classifier is genuinely uncertain versus
+  confidently wrong &mdash; an epistemic distinction that point predictions cannot make.
+  This is also the experiment most directly tied to the author's ongoing ATLAS research
+  and will benefit from the same RRM-style reliability metric developed in the genre
+  recognition project.
+</p>
+
+<h3>Reproduction Targets &amp; Performance Metrics</h3>
+
+<p>
+  Each reproduction commits up front to a specific set of performance targets drawn
+  from the source work. These targets are FORGE's empirical contract &mdash; the
+  numbers that decide whether a baseline is "reproduced" or not. Confidence intervals
+  and posterior coverage become FORGE's <em>additional</em> contribution on top of
+  these published baselines.
+</p>
+
+<h4>(1) Genre Recognition — BEARDOWN baseline targets</h4>
+
+<p>
+  Targets are drawn from the BEARDOWN final report
+  (<a href="#ref-herling-attili-2025">Herling &amp; Attili, 2025</a>),
+  specifically Sweep 1 (broad randomized hyperparameter sweep, 20 configurations,
+  3-fold cross-validation, GTZAN 30-second clips, k = 3 folds).
+</p>
+
+<table class="metric-table">
+  <thead>
+    <tr><th>Metric</th><th>Target / Range</th><th>Source</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Validation accuracy (sweep range)</td>
+      <td>0.63 &ndash; 0.77</td>
+      <td>Table A4</td>
+    </tr>
+    <tr>
+      <td>Validation accuracy (best config)</td>
+      <td>&ge; 0.75 (cfg_14: 0.7659)</td>
+      <td>Table A4</td>
+    </tr>
+    <tr>
+      <td>Mean validation accuracy (sweep)</td>
+      <td>0.7185 (&sigma; &asymp; 0.035)</td>
+      <td>Table 1</td>
+    </tr>
+    <tr>
+      <td>Per-genre F1 (best config)</td>
+      <td>0.46 (rock) &ndash; 0.89 (classical)</td>
+      <td>Table A2</td>
+    </tr>
+    <tr>
+      <td>Per-genre precision (best config)</td>
+      <td>0.51 (rock) &ndash; 0.90 (classical)</td>
+      <td>Table A2</td>
+    </tr>
+    <tr>
+      <td>Per-genre recall (best config)</td>
+      <td>0.47 (rock) &ndash; 0.90 (classical)</td>
+      <td>Table A2</td>
+    </tr>
+    <tr>
+      <td>Per-genre AUC (one-vs-rest)</td>
+      <td>0.91 (rock, reggae) &ndash; 1.00 (classical, metal)</td>
+      <td>Fig A1</td>
+    </tr>
+    <tr>
+      <td>Posterior &sigma; distribution (best config)</td>
+      <td>centered ~0.42; stable configs in 0.10 &ndash; 0.18</td>
+      <td>Table A5</td>
+    </tr>
+    <tr>
+      <td>RRM correlation with accuracy</td>
+      <td>r &asymp; 0.62</td>
+      <td>Q2 §2.c, Fig 7</td>
+    </tr>
+    <tr>
+      <td>RRM correlation with off-diagonal noise</td>
+      <td>r &asymp; 0.26</td>
+      <td>Q2 §2.c, Fig 7</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  FORGE's added value on this experiment: surfacing the posterior &sigma; distribution
+  directly in the UI alongside the accuracy metrics, so users can see when a
+  high-accuracy configuration (cfg_14) actually has epistemically diffuse weights
+  (a long &sigma; tail), versus a model that is both accurate and confident
+  (narrow &sigma;, like cfg_13).
+</p>
+
+<h4>(2) Phonon DOS — Chen et al. baseline targets</h4>
+
+<p>
+  Targets are drawn from <a href="#ref-chen-2021">Chen et al. (2021)</a>, trained on
+  ~1,500 crystalline solids from the DFPT phonon database
+  (<a href="#ref-petretto-2018">Petretto et al., 2018</a>). The published baseline
+  produces point predictions only; FORGE's contribution is calibration coverage,
+  flagged in the table.
+</p>
+
+<table class="metric-table">
+  <thead>
+    <tr><th>Metric</th><th>Target / Range</th><th>Source</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MSE on phonon DOS curve (per element)</td>
+      <td>10<sup>&minus;3</sup> to 10<sup>&minus;1</sup></td>
+      <td>Chen et al. Fig 2b</td>
+    </tr>
+    <tr>
+      <td>Relative error on avg phonon freq &omega;&#x0304;</td>
+      <td>70% of test materials within 10% relative error</td>
+      <td>Chen et al. Fig 2c</td>
+    </tr>
+    <tr>
+      <td>Generalization to unseen elements</td>
+      <td>qualitative: main DOS features preserved</td>
+      <td>Chen et al. Fig 2d</td>
+    </tr>
+    <tr>
+      <td>Training set size</td>
+      <td>~1,500 crystals, 64+ atomic species</td>
+      <td>Chen et al. §2</td>
+    </tr>
+    <tr>
+      <td>DOS curve resolution</td>
+      <td>51 frequency bins, 0 &ndash; 1000 cm<sup>&minus;1</sup></td>
+      <td>repo data file</td>
+    </tr>
+    <tr class="forge-contribution">
+      <td>Calibration coverage on DOS predictions</td>
+      <td><em>not reported in Chen et al.</em> &mdash; FORGE contribution</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr class="forge-contribution">
+      <td>Credible intervals on derived C<sub>v</sub>(T), S<sub>vib</sub>(T)</td>
+      <td><em>not reported in Chen et al.</em> &mdash; FORGE contribution</td>
+      <td>&mdash;</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Reproduction success on this experiment means: match Chen's 70%-within-10% target
+  on average phonon frequency on the held-out test set, <em>and</em> additionally
+  report calibration coverage (e.g., 90% credible intervals containing the true DOS
+  value at ~90% of held-out points) &mdash; a metric the original paper does not
+  attempt.
+</p>
+
+<h4>(3) ATLAS LLP Detection — baseline targets</h4>
+
+<p>
+  Targets and reference numbers for the ATLAS LLP reproduction will be added in the
+  next revision once the source citation is finalized. The metric categories below
+  are standard for binary signal/background classification in HEP and will be
+  populated with concrete values from the reference work.
+</p>
+
+<table class="metric-table">
+  <thead>
+    <tr><th>Metric</th><th>Target / Range</th><th>Source</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Accuracy</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr><td>Precision</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr><td>Recall</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr><td>F1 score</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr><td>ROC AUC (signal vs. background)</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr><td>Signal efficiency at fixed background rate</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr><td>ABCD closure quality</td><td><em>TBD</em></td><td>Schott thesis (forthcoming)</td></tr>
+    <tr class="forge-contribution">
+      <td>Posterior spread (HMC) on output layer</td>
+      <td><em>FORGE contribution &mdash; baseline reports point predictions only</em></td>
+      <td>&mdash;</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>EDA Pipeline</h3>
+
+<p>
+  When a user opens an experiment in FORGE, they first land on the
+  <strong>Exploratory Data Analysis</strong> view for that experiment's dataset. The EDA
+  view is dataset-specific but follows a consistent schema across the three experiments:
+  per-feature distributions, class balance (where applicable), missing-data audits, and
+  any pre-flagged anomalies the author documented during reproduction.
+</p>
+
+<p>
+  For the <strong>genre recognition</strong> experiment, EDA surfaces:
+  per-genre spectrogram averages (the mean STFT image per class, viridis-colored),
+  MFCC-coefficient distributions (mean and variance of each of the 20 MFCC bands,
+  faceted by genre), missing-modality alignment summary (~10% of GTZAN tracks fail
+  spectrogram&ndash;feature alignment in the original pipeline, a fact users see
+  explicitly), and per-class sample counts after alignment.
+</p>
+
+<p>
+  For the <strong>phonon DOS</strong> experiment, EDA surfaces:
+  the periodic-table distribution of training elements (a heatmap over 64 unique atomic
+  species), distribution of phonon DOS curve shapes (clustered by structural family),
+  bandgap and density covariates from the Materials Project metadata, and a per-element
+  per-frequency mean DOS surface showing where the model has dense training coverage
+  versus sparse regions where extrapolation will dominate.
+</p>
+
+<p>
+  For the <strong>ATLAS LLP</strong> experiment, EDA surfaces:
+  kinematic feature distributions (vertex displacement, transverse momentum, invariant
+  mass, isolation variables) split between signal MC and background data, class
+  imbalance summary (signal events are ~10<sup>&minus;3</sup>&ndash;10<sup>&minus;4</sup>
+  of background), the ABCD-plane density structure used for closure validation, and
+  the cutflow yield table showing how preselection cuts reshape the population.
+</p>
+
+<p>
+  All EDA plots are rendered server-side and cached; the user does not retrain anything
+  to reach the EDA view. EDA is the user's <em>onramp</em> to a dataset they may not have
+  seen before.
+</p>
+
+<h3>Model Building &amp; Retraining</h3>
+
+<p>
+  After EDA, the user moves to the <strong>Model</strong> view, which shows the baseline
+  architecture diagrammed layer-by-layer with the existing Bayesian/deterministic split
+  color-coded. For each model layer, the user sees: what it does, what its input/output
+  dimensions are, whether it is currently deterministic or Bayesian, and what
+  modifications FORGE supports.
+</p>
+
+<p>
+  The available modifications fall into a small, finite list of Bayesian techniques
+  (the exact menu depends on what proves applicable to each architecture during mk_1
+  development):
+</p>
+
+<ul>
+  <li><strong>Monte Carlo dropout</strong>
+    (<a href="#ref-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>) &mdash;
+    interpret dropout at test time as approximate variational inference; cheap and
+    drop-in for most architectures.</li>
+  <li><strong>Variational layers (Flipout)</strong> &mdash; replace a dense layer with
+    a variational equivalent that maintains a Gaussian posterior over its weights;
+    used in the BEARDOWN classification head.</li>
+  <li><strong>Last-layer Bayesian inference</strong> &mdash; freeze the deterministic
+    feature extractor and place a posterior over only the output layer weights. Fast,
+    HMC-tractable, and often sufficient for surfacing epistemic uncertainty at decision
+    boundaries.</li>
+  <li><strong>Full Bayesian Neural Network</strong> &mdash; replace all layers with
+    Bayesian equivalents. Expensive but maximally expressive; typically reserved for
+    small architectures or as a stretch comparison.</li>
+</ul>
+
+<p>
+  The user selects a configuration, the system retrains (or fine-tunes from the
+  deterministic baseline where applicable), and the resulting posterior is surfaced in
+  a <strong>Posterior</strong> view: per-prediction credible intervals, calibration
+  coverage curves, and side-by-side comparison against the deterministic baseline. The
+  retraining loop is intended to be fast enough for meaningful exploration &mdash; on the
+  order of minutes, not hours &mdash; which constrains the Bayesian variants FORGE can
+  realistically support and is part of why last-layer methods are emphasized.
+</p>
+
+<p>
+  All trained model artifacts and their posterior samples are saved per-user so users can
+  return to a previous configuration, compare two configurations, or share a configuration
+  with a collaborator via URL.
+</p>
+
+<h3>What FORGE is Not</h3>
+
+<p>
+  Scope boundaries that matter for mk_1:
+</p>
+
+<ul>
+  <li><strong>Not a notebook environment.</strong> FORGE is not Jupyter-in-the-browser.
+    Users cannot write arbitrary code; they choose between documented Bayesian
+    configurations.</li>
+  <li><strong>Not a general-purpose training framework.</strong> The three experiments
+    are first-class; new arbitrary datasets are not.</li>
+  <li><strong>Not a paper repository.</strong> FORGE does not host the source papers
+    themselves; it cites them and links to canonical versions.</li>
+  <li><strong>Not a replacement for domain expertise.</strong> The EDA and posterior
+    views surface diagnostic information, but interpretation still requires the user to
+    understand their domain. FORGE is a tool for trained researchers, not a black-box
+    auto-ML product.</li>
+</ul>
+
+<h3>Three-Repository Structure</h3>
+
+<p>
+  As described on the
+  <a href="#home" data-go-panel="home">Home page</a>, the project spans three repositories:
+  this <strong>documentation</strong> repo, an <strong>experiments</strong> repo for
+  research code and reproductions, and a <strong>software</strong> repo for the deployed
+  application. The documentation repo carries the proposal, schedule, branding, and
+  write-up; the experiments repo holds the actual reproduction code for the three
+  baselines plus the Bayesian extensions; the software repo holds the frontend, backend,
+  worker, and calibration components of the deployed FORGE platform.
+</p>
+
+<h3 id="references">References</h3>
+
+<ol class="bib-list">
+  <li id="ref-chen-2021">
+    <strong>Chen, Z., Andrejevic, N., Smidt, T., Ding, Z., Xu, Q., Chi, Y.-T., Nguyen,
+    Q.T., Alatas, A., Kong, J., Li, M.</strong> (2021).
+    Direct prediction of phonon density of states with Euclidean neural networks.
+    <em>Advanced Science</em> <strong>8</strong>, 2004214.
+    <a href="https://doi.org/10.1002/advs.202004214" target="_blank" rel="noopener">DOI:10.1002/advs.202004214</a>
+    &middot;
+    <a href="https://arxiv.org/abs/2009.05163" target="_blank" rel="noopener">arXiv:2009.05163</a>
+    &middot;
+    <a href="https://github.com/zhantaochen/phonondos_e3nn" target="_blank" rel="noopener">code</a>
+  </li>
+  <li id="ref-gal-ghahramani-2016">
+    <strong>Gal, Y. &amp; Ghahramani, Z.</strong> (2016).
+    Dropout as a Bayesian approximation: representing model uncertainty in deep learning.
+    <em>Proceedings of the 33rd International Conference on Machine Learning (ICML)</em>.
+    <a href="https://proceedings.mlr.press/v48/gal16.pdf" target="_blank" rel="noopener">PDF</a>
+  </li>
+  <li id="ref-herling-attili-2025">
+    <strong>Herling, N. &amp; Attili, N.</strong> (2025).
+    BEARDOWN: A Bayesian Deep Neural Network (DBNN) for Music Genre Classification.
+    INFO 510 Final Project, University of Arizona.
+    <a href="https://github.com/N-Herling-Mk1/INFO_510_FA_25_Final_Proj" target="_blank" rel="noopener">GitHub</a>
+  </li>
+  <li id="ref-petretto-2018">
+    <strong>Petretto, G., Dwaraknath, S., Miranda, H.P.C., Winston, D., Giantomassi, M.,
+    van Setten, M.J., Gonze, X., Persson, K.A., Hautier, G., Rignanese, G.-M.</strong>
+    (2018).
+    High-throughput density-functional perturbation theory phonons for inorganic materials.
+    <em>Scientific Data</em> <strong>5</strong>, 180065.
+    <a href="https://www.nature.com/articles/sdata201865" target="_blank" rel="noopener">DOI:10.1038/sdata.2018.65</a>
+  </li>
+  <li id="ref-schott-thesis">
+    <strong>Schott, M.</strong> (forthcoming citation).
+    [Long-Lived Particle searches via displaced muon-spectrometer vertices.] Doctoral
+    thesis &mdash; full bibliographic record to be added in next revision.
+  </li>
+  <li id="ref-sridhar-2024">
+    <strong>Sridhar, A.</strong> (2024).
+    Attention-Guided Spectrogram Sequence Modeling with CNNs for Music Genre
+    Classification.
+    <a href="https://arxiv.org/abs/2411.14474" target="_blank" rel="noopener">arXiv:2411.14474</a>
+  </li>
+</ol>
+
+<style>
+  .main-panel h3 {
+    margin-top: 2.2em;
+    margin-bottom: 0.6em;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.2;
+
+    color: var(--color-navy);
+
+    /* Ember underline accent */
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--color-ember, #FF4D1F);
+  }
+
+  .main-panel h4 {
+    margin-top: 1.6em;
+    margin-bottom: 0.4em;
+    color: var(--color-navy);
+    font-size: 1.05rem;
+    font-family: var(--font-serif);
+    font-weight: 600;
+  }
+
+  /* Diagram block — posterior vs. point */
+  .diagram-wrap {
+    margin: 1.5em 0 2em;
+    padding: 16px 18px 12px;
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+  .diagram-title {
+    margin: 0 0 12px 0;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-navy);
+    letter-spacing: 0.01em;
+  }
+  .diagram-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+  .diagram-caption {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    margin: 10px 4px 0;
+    line-height: 1.5;
+    font-family: var(--font-serif);
+  }
+  .diagram-caption strong {
+    color: var(--color-text);
+    font-family: var(--font-serif);
+  }
+
+  /* Metric tables for reproduction targets */
+  table.metric-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8em 0 1.4em;
+    font-size: 0.92rem;
+  }
+  table.metric-table thead th {
+    background: var(--color-bg-alt);
+    color: var(--color-navy);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--color-border);
+    font-size: 0.9rem;
+  }
+  table.metric-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-border-soft);
+    vertical-align: top;
+    line-height: 1.45;
+  }
+  table.metric-table tbody td:nth-child(1) {
+    width: 38%;
+    color: var(--color-text);
+  }
+  table.metric-table tbody td:nth-child(2) {
+    width: 42%;
+    color: var(--color-text);
+    font-family: var(--font-mono, "SF Mono", Menlo, Consolas, monospace);
+    font-size: 0.86rem;
+  }
+  table.metric-table tbody td:nth-child(3) {
+    width: 20%;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+  table.metric-table tbody tr.forge-contribution td {
+    background: linear-gradient(
+      90deg,
+      rgba(45, 212, 255, 0.05) 0%,
+      rgba(255, 45, 122, 0.05) 100%
+    );
+    border-left: 3px solid;
+    border-image: linear-gradient(
+      180deg,
+      var(--color-cyan, #2DD4FF) 0%,
+      var(--color-magenta, #FF2D7A) 100%
+    ) 1;
+  }
+  table.metric-table tbody tr.forge-contribution td:first-child {
+    color: var(--color-navy);
+    font-weight: 600;
+  }
+
+  ol.bib-list {
+    padding-left: 1.4em;
+    margin-top: 0.6em;
+  }
+  ol.bib-list li {
+    margin-bottom: 1em;
+    line-height: 1.55;
+    color: var(--color-text);
+  }
+  ol.bib-list li:target {
+    background-color: rgba(255, 200, 87, 0.18);
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: background-color 1.5s ease;
+  }
+</style>
