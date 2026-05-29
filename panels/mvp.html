@@ -1,0 +1,352 @@
+<h2>MVP Plan</h2>
+<p class="lead">
+  FORGE is built in three maturity rungs, not three different products. The same
+  application &mdash; data locked, methodology exposed &mdash; is carried up a ladder:
+  first proven locally, then deployed, then opened to an LLM agent. The science underneath
+  all three is identical, so the project always has a complete deliverable no matter how
+  high the ladder is climbed.
+</p>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  Acronyms are decoded on hover throughout this page (look for the dotted underline).
+  A full <a href="#acronym-glossary">acronym glossary</a> sits at the bottom of the page.
+</p>
+
+<h3>The three rungs</h3>
+<div class="splash-grid">
+  <div class="splash-card" data-go-panel="gantt">
+    <h3>Phase 1 &mdash; local + logging</h3>
+    <p><span class="status-badge status-planned">Weeks 2&ndash;5</span></p>
+    <p>
+      Fully functional full stack on localhost via <code>docker compose</code>: FastAPI backend,
+      the LLLA + HMC worker, the knob panel, the calibration tier, and a resource-logging layer
+      that records memory and time per run. This rung is also the instrument the experiments run on.
+    </p>
+  </div>
+  <div class="splash-card" data-go-panel="gantt">
+    <h3>MVP &mdash; deployed</h3>
+    <p><span class="status-badge status-planned">Weeks 6&ndash;7</span></p>
+    <p>
+      Identical behaviour to Phase 1, fully deployed. The <em>same</em> Docker images run on the
+      cloud host; the static frontend on GitHub Pages points at the deployed API. The only thing
+      that changes between local and deployed is one environment variable.
+    </p>
+  </div>
+  <div class="splash-card" data-go-panel="gantt">
+    <h3>Stretch &mdash; + MCP</h3>
+    <p><span class="status-badge status-planned">Weeks 8&ndash;9</span></p>
+    <p>
+      The same backend, exposed a third way: an MCP server that advertises the compute functions
+      as tools an LLM (e.g. Claude Desktop) can call. No new infrastructure &mdash; a thin manifest
+      file that forwards to the endpoints already built in Phases 1&ndash;2.
+    </p>
+  </div>
+</div>
+
+<h3>Architecture: one backend, three front doors, two compute paths</h3>
+<p>
+  Every rung reuses a single backend. What changes is <em>who calls it</em> and <em>which
+  hardware runs the heavy work</em>. The interactive path (LLLA) is closed-form and must be
+  instant, so it lives on an always-on CPU box; the heavy path (HMC/NUTS) runs for minutes and
+  benefits from a GPU, so it runs serverless and scales to zero &mdash; paying only while a job runs.
+</p>
+
+<div style="margin: 18px 0; overflow-x: auto;">
+<svg width="100%" viewBox="0 0 720 236" role="img" aria-label="FORGE architecture: three front doors feed one FastAPI backend, which splits into a CPU fast path and a serverless GPU heavy path over a shared data store." style="min-width: 560px;">
+  <defs>
+    <marker id="mvp-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="var(--color-navy-soft)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <g font-family="system-ui, sans-serif">
+    <rect x="20" y="20" width="170" height="56" rx="6" fill="var(--color-navy-soft)"/>
+    <text x="105" y="42" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">Web UI &mdash; manual</text>
+    <text x="105" y="60" text-anchor="middle" fill="#E8EAF0" font-size="11">human moves sliders</text>
+
+    <rect x="20" y="92" width="170" height="56" rx="6" fill="var(--color-navy-soft)"/>
+    <text x="105" y="114" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">Web UI &mdash; agent</text>
+    <text x="105" y="132" text-anchor="middle" fill="#E8EAF0" font-size="11">optional, in-app</text>
+
+    <rect x="20" y="164" width="170" height="56" rx="6" fill="var(--color-navy-soft)"/>
+    <text x="105" y="186" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">MCP server</text>
+    <text x="105" y="204" text-anchor="middle" fill="#E8EAF0" font-size="11">external Claude client</text>
+
+    <rect x="270" y="80" width="170" height="80" rx="6" fill="var(--color-navy)"/>
+    <text x="355" y="114" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">FastAPI backend</text>
+    <text x="355" y="134" text-anchor="middle" fill="#A8B4CC" font-size="11">stateless &middot; JSON &middot; typed</text>
+
+    <rect x="270" y="176" width="170" height="44" rx="6" fill="var(--color-bg-muted)" stroke="var(--color-border)" stroke-width="1"/>
+    <text x="355" y="196" text-anchor="middle" fill="var(--color-navy)" font-size="12" font-weight="600">Data + registry</text>
+    <text x="355" y="212" text-anchor="middle" fill="var(--color-text-muted)" font-size="11">C0&ndash;C3 calibration CI</text>
+
+    <rect x="520" y="36" width="180" height="56" rx="6" fill="var(--phase-planning)"/>
+    <text x="610" y="58" text-anchor="middle" fill="#0B2B22" font-size="13" font-weight="600">LLLA fast path</text>
+    <text x="610" y="76" text-anchor="middle" fill="#0B2B22" font-size="11">CPU &middot; always-on</text>
+
+    <rect x="520" y="140" width="180" height="56" rx="6" fill="var(--color-accent)"/>
+    <text x="610" y="162" text-anchor="middle" fill="#3A2207" font-size="13" font-weight="600">HMC / NUTS</text>
+    <text x="610" y="180" text-anchor="middle" fill="#3A2207" font-size="11">GPU &middot; scale-to-zero</text>
+
+    <line x1="190" y1="48"  x2="266" y2="108" stroke="var(--color-navy-soft)" stroke-width="1.5" marker-end="url(#mvp-arrow)"/>
+    <line x1="190" y1="120" x2="266" y2="120" stroke="var(--color-navy-soft)" stroke-width="1.5" marker-end="url(#mvp-arrow)"/>
+    <line x1="190" y1="192" x2="266" y2="134" stroke="var(--color-navy-soft)" stroke-width="1.5" marker-end="url(#mvp-arrow)"/>
+    <line x1="440" y1="104" x2="516" y2="66"  stroke="var(--color-navy-soft)" stroke-width="1.5" marker-end="url(#mvp-arrow)"/>
+    <line x1="440" y1="136" x2="516" y2="168" stroke="var(--color-navy-soft)" stroke-width="1.5" marker-end="url(#mvp-arrow)"/>
+    <line x1="355" y1="160" x2="355" y2="174" stroke="var(--color-navy-soft)" stroke-width="1.5" marker-end="url(#mvp-arrow)"/>
+  </g>
+</svg>
+</div>
+
+<h3>Hosting &amp; cost</h3>
+<p>
+  Target budget: <strong>~$25/month</strong>. That figure is the size of one always-on CPU box,
+  which is the only component that must run continuously. A warm GPU is deliberately excluded
+  &mdash; dedicated GPU machines start near $100/month and a warm card runs $300+/month, so the
+  heavy path is serverless and effectively $0 at idle. Figures below are planning estimates as of
+  May 2026 and should be re-checked before committing.
+</p>
+<table class="content-table">
+  <thead>
+    <tr><th>Layer</th><th>Where</th><th>Cost</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Frontend (static)</td><td>GitHub Pages + custom domain</td><td>~$1/mo</td>
+      <td>Domain only; Pages + TLS are free. Static-only, which is why the backend lives elsewhere.</td>
+    </tr>
+    <tr>
+      <td>Backend API + LLLA</td><td>Fly.io (or Render)</td><td>~$10&ndash;25/mo</td>
+      <td>Always-on CPU box, ~2&nbsp;GB RAM. Fly is usage-based (~$10&ndash;15); Render Standard is a flat $25.</td>
+    </tr>
+    <tr>
+      <td>HMC heavy jobs</td><td>Modal (serverless GPU)</td><td>~$0 baseline</td>
+      <td>Scale-to-zero, per-second; pennies per multi-minute job; free monthly credits cover dev runs.</td>
+    </tr>
+    <tr>
+      <td>Database</td><td>Deferred (SQLite-in-container)</td><td>$0</td>
+      <td>Stateless / explicit-job-ID design means managed Postgres ($7&ndash;20/mo) is not needed for the MVP.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Resource-logging feature (Phase 1)</h3>
+<p>
+  Phase 1 ships a logging layer whose purpose is to turn Phase 2's infrastructure sizing into an
+  empirical question instead of a guess. As each model and Bayesian-library run executes, a
+  <code>@profile_run</code> wrapper records per-run telemetry; fitting a simple model to that log
+  predicts memory and cost at the larger Phase 2 scales <em>before</em> any bigger instance is paid for.
+</p>
+<table class="content-table">
+  <thead>
+    <tr><th>Recorded per run</th><th>Why</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>run type (LLLA / HMC), config knobs, <code>n_samples</code> / <code>n_chains</code></td><td>the independent variables of the cost model</td></tr>
+    <tr><td>dataset id + size, parameter count</td><td>scale inputs to extrapolate from</td></tr>
+    <tr><td>peak resident memory (RSS)</td><td>decides which instance tier is needed</td></tr>
+    <tr><td>wall-clock time, CPU time</td><td>&times; host $/hr &rarr; per-job cost (esp. serverless GPU)</td></tr>
+    <tr><td>timestamp, tier/host</td><td>provenance; separates local vs deployed runs</td></tr>
+  </tbody>
+</table>
+<p>
+  One implementation note that matters: memory is measured as true process peak RSS, sampled on a
+  background thread (e.g. <code>psutil</code>), <em>not</em> with <code>tracemalloc</code>. JAX/XLA
+  and PyTorch allocate tensors outside the Python heap, so a heap-only tool would undercount badly.
+  The log is appended as JSONL (or a small SQLite table). Its output &mdash; fitted curves of
+  <code>mem &asymp; f(n_params, n_samples, data_size)</code> and <code>time &asymp; f(&middot;)</code>
+  &mdash; becomes both the Phase 2 budget justification and a figure in the write-up.
+</p>
+
+<h3>Schedule</h3>
+<p>
+  The schedule follows the course phases &mdash; introduction, planning, design/implementation,
+  testing, paper, hand-in. The substantive work is standing up the three reproduction projects
+  &mdash; genre recognition, phonon DOS, and the ATLAS long-lived-particle search &mdash; inside the MVP phase-1
+  architecture in the software repo, each driven to functional ground-truth results before the next
+  begins. Once all three are integrated (Week 5), the remaining implementation weeks layer Bayesian
+  and visualization techniques across all three as needed. Day-resolved dates live in the
+  <a href="#timeline" data-go-panel="timeline">Timeline</a> and
+  <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
+</p>
+<div class="phase-legend">
+  <span><i style="background:rgba(107,162,146,0.55)"></i>MVP &mdash; phase 1</span>
+  <span><i style="background:rgba(90,123,168,0.55)"></i>MVP</span>
+  <span><i style="background:rgba(198,125,62,0.5)"></i>MVP &mdash; stretch</span>
+  <span><i style="background:rgba(150,120,196,0.55)"></i>Testing</span>
+  <span><i style="background:rgba(212,178,86,0.6)"></i>Paper / poster &middot; final repo</span>
+  <span><i style="background:rgba(95,165,110,0.6)"></i>Turn in</span>
+</div>
+<table class="content-table schedule-table">
+  <thead>
+    <tr><th>Week</th><th>Dates</th><th>Phase</th><th>Focus</th></tr>
+  </thead>
+  <tbody>
+    <tr class="ph-neutral"><td>W0</td><td>May 18&ndash;22</td><td>Introduction</td><td>1st class meeting</td></tr>
+    <tr class="ph-neutral"><td>W1</td><td>May 25&ndash;29</td><td>Planning</td><td>Project planning; scaffold the software repo + phase-1 architecture</td></tr>
+    <tr class="ph-mvp1"><td>W2</td><td>Jun 1&ndash;5</td><td>MVP &mdash; phase 1</td><td>Genre-recognition repo up and running &mdash; functional experiment, ground-truth results</td></tr>
+    <tr class="ph-mvp1"><td>W3</td><td>Jun 8&ndash;12</td><td>MVP &mdash; phase 1</td><td>Phonon repo up and running &mdash; functional experiment, ground-truth results</td></tr>
+    <tr class="ph-mvp1"><td>W4</td><td>Jun 15&ndash;19</td><td>MVP &mdash; phase 1</td><td>ATLAS repo up and running &mdash; functional experiment, ground-truth results</td></tr>
+    <tr class="ph-mvp1"><td>W5</td><td>Jun 22&ndash;26</td><td>MVP &mdash; phase 1</td><td>Integrate all three into the phase-1 architecture</td></tr>
+    <tr class="ph-mvp"><td>W6</td><td>Jun 29&ndash;Jul 3</td><td>MVP</td><td>Deploy the stack &mdash; same Docker images on cloud; frontend points at the deployed API</td></tr>
+    <tr class="ph-mvp"><td>W7</td><td>Jul 6&ndash;10</td><td>MVP</td><td>Deployed end-to-end; Bayesian / visualization layer across the three as needed</td></tr>
+    <tr class="ph-stretch"><td>W8</td><td>Jul 13&ndash;17</td><td>MVP &mdash; stretch</td><td>MCP server &mdash; tools + descriptions forwarding to the backend</td></tr>
+    <tr class="ph-stretch"><td>W9</td><td>Jul 20&ndash;24</td><td>MVP &mdash; stretch</td><td>MCP tested via Claude Desktop</td></tr>
+    <tr class="ph-test"><td>W10</td><td>Jul 27&ndash;31</td><td>Testing</td><td>Test the three pipelines + platform end-to-end; fixes and hardening</td></tr>
+    <tr class="ph-paper"><td>W11</td><td>Aug 3&ndash;7</td><td>Paper / poster &middot; final repo</td><td>Paper + poster presentation work; final repo cleanup</td></tr>
+    <tr class="ph-turnin"><td>W12</td><td>Aug 10&ndash;12</td><td>Turn in</td><td>Final adjustments / hand-in (short week)</td></tr>
+  </tbody>
+</table>
+
+<h3>Risk &amp; descope</h3>
+<p>
+  Because the three reproductions are the core deliverable, <strong>getting all three running to
+  ground-truth inside the phase-1 architecture (by Week 5) is the guaranteed floor</strong> &mdash; a
+  complete capstone even if later work is trimmed. The Bayesian and visualization layer is the
+  substantive middle; deployment and the MCP server remain stretch goals beyond it. If the testing
+  weeks tighten, the descope order is the MCP stretch first, then the depth of the
+  Bayesian/visualization refinements &mdash; never the three baseline reproductions or testing, which
+  carry the write-up. Week 12 is a short Monday&ndash;Wednesday week, so final assembly must be
+  substantially complete by the end of Week 11.
+</p>
+
+<h3 id="acronym-glossary">Acronym glossary</h3>
+<div class="acro-glossary">
+  <table class="content-table acro-table">
+    <thead>
+      <tr><th>Acronym</th><th>Stands for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>API</strong></td><td>Application Programming Interface</td></tr>
+      <tr><td><strong>BNN</strong></td><td>Bayesian Neural Network</td></tr>
+      <tr><td><strong>C0&ndash;C3</strong></td><td>Calibration tiers &mdash; analytic ground-truth datasets scored against in CI</td></tr>
+      <tr><td><strong>CI</strong></td><td>Continuous Integration (automated checks on every push)</td></tr>
+      <tr><td><strong>CPU</strong></td><td>Central Processing Unit</td></tr>
+      <tr><td><strong>D4</strong></td><td>Dataset tier 4 &mdash; the benchmarked tier (FAIR Universe HiggsML)</td></tr>
+      <tr><td><strong>FAIR Universe HiggsML</strong></td><td>NeurIPS 2024 Higgs machine-learning uncertainty-quantification challenge dataset</td></tr>
+      <tr><td><strong>FORGE</strong></td><td>Functional-posterior Observatory for Refinement and Geometric Exploration</td></tr>
+      <tr><td><strong>GB</strong></td><td>Gigabyte</td></tr>
+      <tr><td><strong>GPU</strong></td><td>Graphics Processing Unit</td></tr>
+      <tr><td><strong>H1 / H2 / H3</strong></td><td>The three project hypotheses &mdash; visualization fidelity; sampler correctness/efficiency; hyperparameter&rarr;posterior-geometry (the keystone)</td></tr>
+      <tr><td><strong>HMC</strong></td><td>Hamiltonian Monte Carlo</td></tr>
+      <tr><td><strong>ID</strong></td><td>Identifier (e.g. job ID)</td></tr>
+      <tr><td><strong>JAX / XLA</strong></td><td>Accelerated array + linear-algebra libraries (NumPyro's backend)</td></tr>
+      <tr><td><strong>JSON / JSONL</strong></td><td>JavaScript Object Notation / JSON Lines (one object per line)</td></tr>
+      <tr><td><strong>LLLA</strong></td><td>Last-Layer Laplace Approximation (the closed-form fast path)</td></tr>
+    </tbody>
+  </table>
+  <table class="content-table acro-table">
+    <thead>
+      <tr><th>Acronym</th><th>Stands for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>LLM</strong></td><td>Large Language Model</td></tr>
+      <tr><td><strong>MaxEnt</strong></td><td>Maximum Entropy</td></tr>
+      <tr><td><strong>MCP</strong></td><td>Model Context Protocol</td></tr>
+      <tr><td><strong>MSVtx</strong></td><td>Muon-Spectrometer Vertices (the ATLAS long-lived-particle analysis)</td></tr>
+      <tr><td><strong>MVP</strong></td><td>Minimum Viable Product</td></tr>
+      <tr><td><strong>NLL</strong></td><td>Negative Log-Likelihood</td></tr>
+      <tr><td><strong>NUTS</strong></td><td>No-U-Turn Sampler (adaptive HMC)</td></tr>
+      <tr><td><strong>PCA / fPCA</strong></td><td>(functional) Principal Component Analysis</td></tr>
+      <tr><td><strong>PoC</strong></td><td>Proof of Concept</td></tr>
+      <tr><td><strong>RAM</strong></td><td>Random-Access Memory</td></tr>
+      <tr><td><strong>RMSE</strong></td><td>Root-Mean-Square Error</td></tr>
+      <tr><td><strong>RSS</strong></td><td>Resident Set Size (true process memory footprint)</td></tr>
+      <tr><td><strong>SQLite</strong></td><td>Lightweight embedded SQL database</td></tr>
+      <tr><td><strong>TLS</strong></td><td>Transport Layer Security (HTTPS encryption)</td></tr>
+      <tr><td><strong>UCI</strong></td><td>University of California, Irvine &mdash; its machine-learning dataset repository</td></tr>
+      <tr><td><strong>UI / UX</strong></td><td>User Interface / User Experience</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .acro-glossary { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:0 24px; align-items:start; }
+  table.acro-table { font-size:0.76rem; }
+  table.acro-table th, table.acro-table td { padding:3px 8px; }
+  abbr.acro { text-decoration:none; border-bottom:1px dotted var(--color-navy-soft); cursor:help; }
+  table.schedule-table td:nth-child(2) { white-space: nowrap; width: 1%; }
+  table.schedule-table tr.ph-mvp1 td    { background: rgba(107,162,146,0.16); }
+  table.schedule-table tr.ph-mvp td     { background: rgba(90,123,168,0.16); }
+  table.schedule-table tr.ph-stretch td { background: rgba(198,125,62,0.15); }
+  table.schedule-table tr.ph-test td    { background: rgba(150,120,196,0.16); }
+  table.schedule-table tr.ph-paper td   { background: rgba(212,178,86,0.18); }
+  table.schedule-table tr.ph-turnin td  { background: rgba(95,165,110,0.18); }
+  table.schedule-table tr.ph-neutral td { background: rgba(120,132,156,0.10); }
+  .phase-legend { display:flex; flex-wrap:wrap; gap:8px 16px; margin:10px 0 14px; font-size:0.82rem; color:var(--color-text-muted); }
+  .phase-legend span { display:inline-flex; align-items:center; gap:6px; }
+  .phase-legend i { width:14px; height:14px; border-radius:3px; display:inline-block; }
+</style>
+
+<script>
+(function () {
+  var root = document.getElementById("main-panel");
+  var gloss = document.querySelector(".acro-glossary");
+  if (!root || !gloss) return;
+
+  var map = {};
+  gloss.querySelectorAll("tbody tr").forEach(function (tr) {
+    var c = tr.querySelectorAll("td");
+    if (c.length < 2) return;
+    var term = c[0].textContent.trim();
+    var def = c[1].textContent.trim();
+    term.split(/\s*\/\s*/).forEach(function (piece) {
+      piece = piece.trim();
+      if (!piece) return;
+      var rng = piece.match(/^([A-Za-z]+)(\d)[\u2013-]([A-Za-z]*)(\d)$/);
+      if (rng) { map[rng[1] + rng[2]] = def; map[(rng[3] || rng[1]) + rng[4]] = def; return; }
+      map[piece] = def;
+    });
+  });
+
+  var ALLOW = ["MaxEnt", "SQLite", "HiggsML", "MSVtx", "fPCA"];
+  var tokens = Object.keys(map).filter(function (t) {
+    return t.length >= 2 && (/^[A-Z0-9]+$/.test(t) || /^[A-Z]\d$/.test(t) || ALLOW.indexOf(t) !== -1);
+  });
+  if (!tokens.length) return;
+  tokens.sort(function (a, b) { return b.length - a.length; });
+  var rx = new RegExp("\\b(" + tokens.map(function (t) {
+    return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }).join("|") + ")\\b", "g");
+
+  var SKIP = { SCRIPT:1, STYLE:1, ABBR:1, A:1, CODE:1, SVG:1, H3:0 };
+  function skip(node) {
+    for (var el = node.parentNode; el && el !== root.parentNode; el = el.parentNode) {
+      if (el.nodeType !== 1) continue;
+      var tag = (el.tagName || "").toUpperCase();
+      if (SKIP[tag]) return true;
+      if (el.id === "acronym-glossary") return true;
+      if (el.classList && el.classList.contains("acro-glossary")) return true;
+    }
+    return false;
+  }
+
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: function (n) {
+      if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      if (skip(n)) return NodeFilter.FILTER_REJECT;
+      rx.lastIndex = 0;
+      return rx.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  var targets = [], t;
+  while ((t = walker.nextNode())) targets.push(t);
+
+  targets.forEach(function (node) {
+    var text = node.nodeValue, frag = document.createDocumentFragment(), last = 0, m;
+    rx.lastIndex = 0;
+    while ((m = rx.exec(text))) {
+      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var ab = document.createElement("abbr");
+      ab.className = "acro";
+      ab.title = map[m[1]] || "";
+      ab.textContent = m[1];
+      frag.appendChild(ab);
+      last = m.index + m[1].length;
+    }
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
+})();
+</script>

@@ -1,61 +1,65 @@
 <h2>Project Timeline</h2>
 <p>
-  This page presents the 13-week project schedule. Major activity blocks are grouped
-  by phase: <em>Planning</em>, <em>Design / Implementation</em>, <em>Testing</em>,
-  <em>Write-up</em>, and <em>Deliverables</em>. Specific calendar dates are bound to
-  the Week 0 anchor in the <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
+  This page presents the 13-week project schedule, color-coded by phase:
+  <em>Intro</em>, <em>Planning</em>, <em>Design / Implementation</em>, <em>Testing</em>,
+  <em>Write-up</em>, and <em>Deliverables</em>. Calendar dates are anchored to the Week&nbsp;0
+  start (May&nbsp;18) and mirrored in the <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
 </p>
 
+<div class="phase-legend">
+  <span><i style="background:rgba(120,132,156,0.45)"></i>Intro / Planning</span>
+  <span><i style="background:rgba(107,162,146,0.55)"></i>Design / Implementation</span>
+  <span><i style="background:rgba(150,120,196,0.55)"></i>Testing</span>
+  <span><i style="background:rgba(212,178,86,0.6)"></i>Write-up</span>
+  <span><i style="background:rgba(95,165,110,0.6)"></i>Deliverables</span>
+</div>
+
 <h3>Phase Overview</h3>
-<table class="content-table">
+<table class="content-table tl-sched tl-po">
   <thead>
-    <tr><th>Phase</th><th>Weeks</th><th>Purpose</th></tr>
+    <tr><th>Phase</th><th>Weeks</th><th>Dates</th><th>Purpose</th></tr>
   </thead>
   <tbody>
-    <tr><td>Intro</td><td>0</td><td>Course orientation, repo bootstrap, mentor sync</td></tr>
-    <tr><td>Planning</td><td>1</td><td>Scope lock, proposal v1, milestone schedule</td></tr>
-    <tr><td>Design / Implementation</td><td>2–8</td><td>Build the FORGE application across the calibration, demonstration, and sweep tiers</td></tr>
-    <tr><td>Testing</td><td>9–10</td><td>Unit, integration, calibration checks; user-facing UX pass</td></tr>
-    <tr><td>Write-up</td><td>11</td><td>Final paper, iShowcase materials, demo prep</td></tr>
-    <tr><td>Deliverables</td><td>12</td><td>Final submission, iShowcase, repository freeze</td></tr>
+    <tr class="ph-neutral"><td>Intro</td><td>0</td><td>May 18&ndash;22</td><td>Course orientation; bootstrap the three project repositories; mentor sync</td></tr>
+    <tr class="ph-neutral"><td>Planning</td><td>1</td><td>May 25&ndash;29</td><td>Scope lock, proposal v1, milestone schedule; scaffold the software repo + phase-1 architecture</td></tr>
+    <tr class="ph-design"><td>Design / Implementation</td><td>2&ndash;8</td><td>Jun 1&ndash;Jul 17</td><td>Stand up the three reproduction projects in the phase-1 architecture and integrate them, then add the Bayesian / visualization layer and the deploy and MCP rungs</td></tr>
+    <tr class="ph-test"><td>Testing</td><td>9&ndash;10</td><td>Jul 20&ndash;31</td><td>Unit, integration, and ground-truth checks; user-facing UX pass</td></tr>
+    <tr class="ph-writeup"><td>Write-up</td><td>11</td><td>Aug 3&ndash;7</td><td>Final paper, iShowcase materials, demo prep</td></tr>
+    <tr class="ph-deliver"><td>Deliverables</td><td>12</td><td>Aug 10&ndash;12</td><td>Final submission, iShowcase, repository freeze</td></tr>
   </tbody>
 </table>
 
 <h3>Weekly Schedule</h3>
-<ul>
-  <li><strong>Week 0 — Intro.</strong> Course orientation. Bootstrap the three project
-      repositories. Initial mentor sync to confirm scope.</li>
-  <li><strong>Week 1 — Planning.</strong> Lock project scope. Submit proposal v1 with the
-      milestone schedule and Gantt. Identify integration risks early.</li>
-  <li><strong>Weeks 2–8 — Design / Implementation.</strong> Seven-week build phase with one
-      substantive deliverable per week:
-    <ul>
-      <li>W2: Architecture sketch; calibration-tier scaffold</li>
-      <li>W3: Backend skeleton, data loader, posterior interface</li>
-      <li>W4: Hernández-Lobato proof-of-concept reproducing baseline metrics</li>
-      <li>W5: Frontend MVP wired to backend; demo gallery shell</li>
-      <li>W6: FAIR Universe HiggsML evaluation pipeline running end-to-end</li>
-      <li>W7: Worker process and hyperparameter sweep harness</li>
-      <li>W8: Full integration pass; end-to-end smoke test passing</li>
-    </ul>
-  </li>
-  <li><strong>Weeks 9–10 — Testing.</strong> W9 covers unit and integration tests plus
-      calibration sanity checks. W10 is user-facing testing, bug triage, and UX polish —
-      this is the slack week if any earlier deliverable slips.</li>
-  <li><strong>Week 11 — Write-up.</strong> Final paper drafted and revised. iShowcase poster
-      and demo materials prepared. Practice run of the live demo.</li>
-  <li><strong>Week 12 — Deliverables.</strong> Final submission. iShowcase presentation.
-      Repository freeze and tag <code>v1.0</code> cut across all three repos.</li>
-</ul>
+<table class="content-table tl-sched tl-wk">
+  <thead>
+    <tr><th>Week</th><th>Dates</th><th>Phase</th><th>Focus</th></tr>
+  </thead>
+  <tbody>
+    <tr class="ph-neutral"><td>W0</td><td>May 18&ndash;22</td><td>Intro</td><td>Course orientation; bootstrap the three project repositories (genre recognition, phonon DOS, ATLAS); mentor sync to confirm scope</td></tr>
+    <tr class="ph-neutral"><td>W1</td><td>May 25&ndash;29</td><td>Planning</td><td>Lock scope; submit proposal v1 with milestone schedule + Gantt; scaffold the phase-1 architecture; identify integration risks</td></tr>
+    <tr class="ph-design"><td>W2</td><td>Jun 1&ndash;5</td><td>Design / Implementation</td><td>Genre-recognition repo up and running &mdash; functional experiment, ground-truth results</td></tr>
+    <tr class="ph-design"><td>W3</td><td>Jun 8&ndash;12</td><td>Design / Implementation</td><td>Phonon repo up and running &mdash; functional experiment, ground-truth results</td></tr>
+    <tr class="ph-design"><td>W4</td><td>Jun 15&ndash;19</td><td>Design / Implementation</td><td>ATLAS repo up and running &mdash; functional experiment, ground-truth results</td></tr>
+    <tr class="ph-design"><td>W5</td><td>Jun 22&ndash;26</td><td>Design / Implementation</td><td>Integrate all three into the MVP phase-1 architecture (full local stack)</td></tr>
+    <tr class="ph-design"><td>W6</td><td>Jun 29&ndash;Jul 3</td><td>Design / Implementation</td><td>Deploy the stack (MVP); begin the Bayesian / visualization layer</td></tr>
+    <tr class="ph-design"><td>W7</td><td>Jul 6&ndash;10</td><td>Design / Implementation</td><td>Bayesian + visualization techniques across all three projects</td></tr>
+    <tr class="ph-design"><td>W8</td><td>Jul 13&ndash;17</td><td>Design / Implementation</td><td>MCP server (stretch); full integration pass, end-to-end smoke test passing</td></tr>
+    <tr class="ph-test"><td>W9</td><td>Jul 20&ndash;24</td><td>Testing</td><td>Unit and integration tests; ground-truth sanity checks across the three pipelines</td></tr>
+    <tr class="ph-test"><td>W10</td><td>Jul 27&ndash;31</td><td>Testing</td><td>User-facing testing, bug triage, UX polish; slack week if an earlier deliverable slips</td></tr>
+    <tr class="ph-writeup"><td>W11</td><td>Aug 3&ndash;7</td><td>Write-up</td><td>Final paper drafted and revised; iShowcase poster + demo materials; live-demo practice run</td></tr>
+    <tr class="ph-deliver"><td>W12</td><td>Aug 10&ndash;12</td><td>Deliverables</td><td>Final submission; iShowcase presentation; repo freeze and tag <code>v1.0</code> across all three repos</td></tr>
+  </tbody>
+</table>
 
 <h3>Risk Management</h3>
 <p>
-  The schedule reserves Week 10 explicitly as a recovery buffer. If a Design /
-  Implementation milestone slips by one week, the integration smoke test (W8) shifts
-  into W9 and the testing window compresses to W10 only. A two-week slip triggers a
-  scope-cut conversation with the advisor — the FAIR Universe HiggsML evaluation tier
-  (W6) is the documented descope candidate, since the calibration tier (W2–W4) is the
-  load-bearing piece of the writeup.
+  The schedule reserves Week&nbsp;10 explicitly as a recovery buffer. Because the three reproductions
+  are the load-bearing piece of the write-up, the guaranteed floor is all three running to ground-truth
+  inside the phase-1 architecture by Week&nbsp;5. If a Design / Implementation milestone slips by one
+  week, the integration smoke test (W8) shifts into W9 and the testing window compresses to W10 only.
+  A larger slip triggers a scope-cut conversation with the advisor; the documented descope order is the
+  MCP server (W8) first, then the depth of the Bayesian / visualization layer (W6&ndash;W7) &mdash;
+  never the three baseline reproductions (W2&ndash;W5) or testing.
 </p>
 
 <h3>Tracking</h3>
@@ -64,3 +68,16 @@
   whose source of truth is <code>data/gantt.json</code> in this repository. The Gantt is
   updated weekly; git commits provide the frozen paper trail.
 </p>
+
+<style>
+  table.tl-po td:nth-child(3) { white-space: nowrap; width: 1%; }
+  table.tl-wk td:nth-child(2) { white-space: nowrap; width: 1%; }
+  table.tl-sched tr.ph-neutral td { background: rgba(120,132,156,0.10); }
+  table.tl-sched tr.ph-design  td { background: rgba(107,162,146,0.16); }
+  table.tl-sched tr.ph-test    td { background: rgba(150,120,196,0.16); }
+  table.tl-sched tr.ph-writeup td { background: rgba(212,178,86,0.18); }
+  table.tl-sched tr.ph-deliver td { background: rgba(95,165,110,0.18); }
+  .phase-legend { display:flex; flex-wrap:wrap; gap:8px 16px; margin:10px 0 14px; font-size:0.82rem; color:var(--color-text-muted); }
+  .phase-legend span { display:inline-flex; align-items:center; gap:6px; }
+  .phase-legend i { width:14px; height:14px; border-radius:3px; display:inline-block; }
+</style>
