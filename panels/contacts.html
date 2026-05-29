@@ -1,0 +1,117 @@
+<h2>Contacts</h2>
+<p>
+  The people behind FORGE &mdash; the project author, the faculty advisor, and the
+  course instructor. Reach out by email, or follow the profile links below.
+</p>
+
+<div class="contacts-grid">
+
+  <!-- Project author -->
+  <div class="contact-card">
+    <h3 class="contact-name">Nathan Herling</h3>
+    <p class="contact-role">MS Candidate, Data Science</p>
+    <p class="contact-affil">University of Arizona</p>
+    <ul class="contact-links">
+      <li>
+        <span class="contact-link-label">Email</span>
+        <a href="mailto:nth@arizona.edu">nth@arizona.edu</a>
+      </li>
+      <li>
+        <span class="contact-link-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/nathan-herling-618542327/" target="_blank" rel="noopener noreferrer">linkedin.com/in/nathan-herling &#x2197;</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Faculty advisor -->
+  <div class="contact-card">
+    <h3 class="contact-name">Ken Johns</h3>
+    <p class="contact-role">Project Advisor</p>
+    <p class="contact-affil">University Distinguished Professor of Physics, University of Arizona</p>
+    <ul class="contact-links">
+      <li>
+        <span class="contact-link-label">Email</span>
+        <a href="mailto:kjohns@arizona.edu">kjohns@arizona.edu</a>
+      </li>
+      <li>
+        <span class="contact-link-label">Faculty page</span>
+        <a href="https://physics.arizona.edu/people/ken-johns" target="_blank" rel="noopener noreferrer">physics.arizona.edu &#x2197;</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Course instructor -->
+  <div class="contact-card">
+    <h3 class="contact-name">Nitika Sharma, PhD</h3>
+    <p class="contact-role">Course Instructor</p>
+    <p class="contact-affil">University of Arizona</p>
+    <ul class="contact-links">
+      <li>
+        <span class="contact-link-label">Google Scholar</span>
+        <a href="https://scholar.google.com/citations?user=0M4nub4AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">scholar.google.com &#x2197;</a>
+      </li>
+      <li>
+        <span class="contact-link-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/nitika-sharma-phd-8377a736/" target="_blank" rel="noopener noreferrer">linkedin.com/in/nitika-sharma-phd &#x2197;</a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<style>
+  .contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-top: 1.4em;
+  }
+  .contact-card {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .contact-name {
+    margin: 0 0 2px 0;
+    font-size: 1.2rem;
+    color: var(--color-navy);
+  }
+  .contact-role {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .contact-affil {
+    margin: 6px 0 14px 0;
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.35;
+  }
+  .contact-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .contact-links li {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .contact-links li:last-child { margin-bottom: 0; }
+  .contact-link-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-bottom: 1px;
+  }
+  .contact-links a {
+    font-size: 0.92rem;
+    word-break: break-word;
+  }
+</style>

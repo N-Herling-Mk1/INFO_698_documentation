@@ -141,45 +141,56 @@
   text-transform: uppercase;
 }
 
-/* ---- Right side: byline ---- */
+/* ---- Right side: bylines (stacked vertically) ---- */
+.banner-bylines {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+}
+
 .banner-byline {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 3px;
-  line-height: 1.2;
+  gap: 2px;
+  line-height: 1.15;
 }
 
 .banner-byline-name {
-  font-size: 1.75rem;                /* ~24px — prominent */
+  font-size: 1.4rem;                 /* sized so two stacked bylines fit the banner height */
   color: #FFFFFF;
   font-family: var(--font-serif);
   letter-spacing: 0.02em;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .banner-byline-role {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   color: rgba(255,255,255,0.7);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  margin-top: 4px;
+  margin-top: 2px;
+  white-space: nowrap;
 }
 
 /* ---- U of A pill ---- */
 .banner-uofa-wrap {
   background: #FFFFFF;
   border-radius: var(--radius);
-  padding: 8px 14px;
+  padding: 8px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 84px;
+  height: 108px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  flex-shrink: 0;
 }
 
 .banner-uofa {
-  height: 64px;
+  height: 88px;
   width: auto;
   display: block;
 }

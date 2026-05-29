@@ -3,6 +3,9 @@
    Granular phase Gantt: phase-grouped spanning bars, milestone
    diamonds, a "today" marker, and a legend. Single contributor.
    Reads data/gantt.json. Drop-in for Gantt.render(el).
+   .
+   Building the DOM with .js..
+   "building the DOM in JS"
    =========================================================== */
 const Gantt = (() => {
 
@@ -388,9 +391,19 @@ const Gantt = (() => {
       cap.appendChild(capTitle);
 
       const intro = document.createElement("p");
-      intro.textContent = "Thirteen-week project schedule (single contributor). Week 0 anchor: "
-        + (data.week0_start || "(not set \u2014 edit data/gantt.json)")
-        + ". Bars span the weeks each task is active; diamonds mark milestones; the vertical line marks today.";
+
+      const wk = document.createElement("b");
+      wk.textContent = data.week0_start || "(not set \u2014 edit data/gantt.json)";
+
+      intro.append(
+        "Thirteen-week project schedule (single contributor).",
+        document.createElement("br"),
+        "Week 0 anchor: ",
+        wk,
+        ".",
+        document.createElement("br"),
+        "Bars span the weeks each task is active; diamonds mark milestones; the vertical line marks today."
+      );
       cap.appendChild(intro);
 
       cap.appendChild(buildLegend());
