@@ -36,6 +36,7 @@ const App = (() => {
   async function loadPanel(panelKey) {
     const main = document.getElementById("main-panel");
     if (!main) return;
+    main.classList.remove("has-gantt");  // cleared each load; Gantt.render re-adds it for its own panel
     main.innerHTML = '<div class="loading">Loading&hellip;</div>';
     setActiveLink(panelKey);
 

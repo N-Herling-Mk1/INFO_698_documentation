@@ -3,9 +3,6 @@
    Granular phase Gantt: phase-grouped spanning bars, milestone
    diamonds, a "today" marker, and a legend. Single contributor.
    Reads data/gantt.json. Drop-in for Gantt.render(el).
-   .
-   Building the DOM with .js..
-   "building the DOM in JS"
    =========================================================== */
 const Gantt = (() => {
 
@@ -80,6 +77,29 @@ const Gantt = (() => {
 .forge-gantt .fg-capture { background:var(--color-bg,#fff); }
 .forge-gantt .fg-cap-title { font-family:var(--font-serif,Georgia,serif); color:var(--color-navy,#0F1F3D); font-size:1.05rem; margin:0 0 .5em; }
 .forge-gantt .fg-cap-title .stamp { font-family:var(--font-sans,system-ui,sans-serif); font-size:0.82rem; color:var(--color-text-muted,#5C657A); }
+.forge-gantt .fg-bar { cursor:pointer; }
+.forge-gantt .fg-bar:hover { filter:brightness(1.08); outline:2px solid var(--color-navy,#0F1F3D); outline-offset:1px; }
+.forge-gantt .fg-bar.is-selected { outline:2px solid var(--color-accent,#C67D3E); outline-offset:1px; box-shadow:0 0 0 3px rgba(198,125,62,0.25); }
+.forge-gantt .fg-body { display:flex; gap:20px; align-items:flex-start; }
+.forge-gantt .fg-body .fg-chart-col { flex:1 1 auto; min-width:0; }
+.forge-gantt .fg-detail { flex:0 0 300px; align-self:stretch; border:1px solid var(--color-border,#D9DCE3); border-left:3px solid var(--color-accent,#C67D3E); border-radius:var(--radius,4px); background:var(--color-bg-alt,#F4F6FA); padding:14px 16px; position:sticky; top:16px; }
+.forge-gantt .fg-detail h3 { margin:0 0 2px; font-size:1.05rem; color:var(--color-navy,#0F1F3D); }
+.forge-gantt .fg-detail .fg-detail-sub { margin:0 0 12px; font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--color-accent,#C67D3E); font-weight:600; }
+.forge-gantt .fg-detail .fg-hint { color:var(--color-text-muted,#5C657A); font-size:0.9rem; line-height:1.4; }
+.forge-gantt table.fg-todo { width:100%; border-collapse:collapse; font-size:0.86rem; }
+.forge-gantt table.fg-todo th { text-align:left; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-text-faint,#8C94A6); border-bottom:1px solid var(--color-border,#D9DCE3); padding:0 0 6px; font-weight:600; }
+.forge-gantt table.fg-todo th.fg-st-col { text-align:right; }
+.forge-gantt table.fg-todo td { padding:8px 0; border-bottom:1px solid var(--color-border-soft,#E8EAF0); vertical-align:top; color:var(--color-text,#1A2238); }
+.forge-gantt table.fg-todo tr:last-child td { border-bottom:none; }
+.forge-gantt table.fg-todo td.fg-st-col { text-align:right; white-space:nowrap; }
+.forge-gantt .fg-pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:0.7rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; }
+.forge-gantt .fg-pill.todo { background:var(--color-bg-muted,#EDF0F5); color:var(--color-text-muted,#5C657A); }
+.forge-gantt .fg-pill.done { background:rgba(74,138,110,0.16); color:var(--color-success,#4A8A6E); }
+.forge-gantt table.fg-todo tr.is-done td.fg-task-col { color:var(--color-text-muted,#5C657A); text-decoration:line-through; }
+@media (max-width: 900px) {
+  .forge-gantt .fg-body { flex-direction:column; }
+  .forge-gantt .fg-detail { flex-basis:auto; width:100%; position:static; }
+}
 `;
 
   function injectStyle() {
@@ -175,7 +195,10 @@ const Gantt = (() => {
         bar.className = "fg-bar " + (PHASE[t.phase] ? PHASE[t.phase].cls : "") + " " + statusClass(t.status);
         bar.style.gridColumn = (start + 1) + " / " + (end + 2);
         const span = (end === start) ? ("W" + start) : ("W" + start + "\u2013W" + end);
-        bar.title = t.name + " (" + span + ")";
+        bar.title = t.name + " (" + span + ") \u2014 click for week details";
+        bar.dataset.week = String(start);
+        bar.setAttribute("role", "button");
+        bar.tabIndex = 0;
         tk.appendChild(bar);
         r.appendChild(tk);
         chart.appendChild(r);
@@ -306,6 +329,10 @@ const Gantt = (() => {
     const scroll = capEl.querySelector(".fg-scroll");
     const prevOverflow = scroll ? scroll.style.overflow : null;
     const prevWidth = capEl.style.width;
+    // Hide the detail side-panel during capture — the weekly screenshot should be the chart alone.
+    const detail = capEl.querySelector(".fg-detail");
+    const prevDetailDisplay = detail ? detail.style.display : null;
+    if (detail) detail.style.display = "none";
     try {
       await ensureHtml2Canvas();
       // Widen so the entire timeline is captured even when it normally scrolls.
@@ -339,17 +366,66 @@ const Gantt = (() => {
     } finally {
       if (scroll) scroll.style.overflow = prevOverflow;
       capEl.style.width = prevWidth;
+      if (detail) detail.style.display = prevDetailDisplay;
       btn.disabled = false;
       btn.textContent = original;
     }
+  }
+
+  // Build the right-hand detail panel container (starts with a hint).
+  function buildDetailPanel() {
+    const d = document.createElement("aside");
+    d.className = "fg-detail";
+    d.innerHTML = "<h3>Week details</h3>"
+      + "<p class=\"fg-detail-sub\">Tasks &amp; status</p>"
+      + "<p class=\"fg-hint\">Click any colored bar in the chart to see that week's task list here.</p>";
+    return d;
+  }
+
+  // Render one week's task list (from weekly_todos.json) into the detail panel.
+  function renderWeekDetail(panel, week, todos) {
+    const wk = todos && todos.weeks ? todos.weeks[String(week)] : null;
+    const head = "<h3>Week " + week + "</h3>"
+      + "<p class=\"fg-detail-sub\">" + ((wk && wk.label) ? esc(wk.label) : "Tasks &amp; status") + "</p>";
+
+    if (!wk || !Array.isArray(wk.tasks) || !wk.tasks.length) {
+      panel.innerHTML = head
+        + "<p class=\"fg-hint\">No tasks recorded for this week yet. "
+        + "Add them to <code>data/weekly_todos.json</code> under week \"" + week + "\".</p>";
+      return;
+    }
+
+    let rows = "";
+    wk.tasks.forEach(t => {
+      const done = (t.status || "").toLowerCase() === "done";
+      rows += "<tr class=\"" + (done ? "is-done" : "") + "\">"
+        + "<td class=\"fg-task-col\">" + esc(t.name || "") + "</td>"
+        + "<td class=\"fg-st-col\"><span class=\"fg-pill " + (done ? "done" : "todo") + "\">"
+        + (done ? "done" : "todo") + "</span></td>"
+        + "</tr>";
+    });
+    panel.innerHTML = head
+      + "<table class=\"fg-todo\"><thead><tr>"
+      + "<th class=\"fg-task-col\">Task</th><th class=\"fg-st-col\">Status</th>"
+      + "</tr></thead><tbody>" + rows + "</tbody></table>";
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]));
   }
 
   async function render(container) {
     injectStyle();
     container.innerHTML = "";
     container.classList.add("forge-gantt");
+    // Fallback for browsers without :has() — flag the main panel so it can go full-width.
+    const mp = container.closest(".main-panel");
+    if (mp) mp.classList.add("has-gantt");
     try {
       const data = await DataStore.fetchJSON("data/gantt.json");
+      let todos = null;
+      try { todos = await DataStore.fetchJSON("data/weekly_todos.json"); }
+      catch (e) { todos = null; }  // panel still works, just shows the "add to JSON" hint
 
       // ---- header: title (left) + actions (right) -----------------------
       const header = document.createElement("div");
@@ -391,28 +467,44 @@ const Gantt = (() => {
       cap.appendChild(capTitle);
 
       const intro = document.createElement("p");
-
-      const wk = document.createElement("b");
-      wk.textContent = data.week0_start || "(not set \u2014 edit data/gantt.json)";
-
-      intro.append(
-        "Thirteen-week project schedule (single contributor).",
-        document.createElement("br"),
-        "Week 0 anchor: ",
-        wk,
-        ".",
-        document.createElement("br"),
-        "Bars span the weeks each task is active; diamonds mark milestones; the vertical line marks today."
-      );
+      intro.textContent = "Thirteen-week project schedule (single contributor). Week 0 anchor: "
+        + (data.week0_start || "(not set \u2014 edit data/gantt.json)")
+        + ". Bars span the weeks each task is active; diamonds mark milestones; the vertical line marks today.";
       cap.appendChild(intro);
 
       cap.appendChild(buildLegend());
       cap.appendChild(buildStatusKey());
 
+      // two-column body: chart (left, in capture region) + detail panel (right)
+      const body = document.createElement("div");
+      body.className = "fg-body";
+
+      const chartCol = document.createElement("div");
+      chartCol.className = "fg-chart-col";
       const scroll = document.createElement("div");
       scroll.className = "fg-scroll";
       scroll.appendChild(buildChart(data));
-      cap.appendChild(scroll);
+      chartCol.appendChild(scroll);
+      body.appendChild(chartCol);
+
+      const detail = buildDetailPanel();
+      body.appendChild(detail);
+
+      cap.appendChild(body);
+
+      // clicking (or Enter/Space on) a bar loads that week's task list
+      function selectWeek(bar) {
+        const wk = parseInt(bar.dataset.week, 10);
+        chartCol.querySelectorAll(".fg-bar.is-selected").forEach(b => b.classList.remove("is-selected"));
+        bar.classList.add("is-selected");
+        renderWeekDetail(detail, wk, todos);
+      }
+      chartCol.querySelectorAll(".fg-bar").forEach(bar => {
+        bar.addEventListener("click", () => selectWeek(bar));
+        bar.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectWeek(bar); }
+        });
+      });
 
       const msKey = buildMsKey(data);
       if (msKey) {

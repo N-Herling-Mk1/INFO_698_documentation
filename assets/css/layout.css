@@ -273,6 +273,10 @@
 
 .main-panel h2:first-child { margin-top: 0; }
 
+/* The Gantt page needs the full available width (chart + side detail panel),
+   so it opts out of the main-panel max-width cap. Other panels stay capped. */
+.main-panel:has(.forge-gantt), .main-panel.has-gantt { max-width: none; }
+
 .loading { color: var(--color-text-faint); font-style: italic; }
 
 /* ---- Footer ---- */
