@@ -1,10 +1,13 @@
 # assets/docs/
 
-Place these documents here. They are referenced by the site:
+Documents served as static assets and referenced by the site:
 
-- `proposal.pdf` — compiled from the .docx, referenced by `panels/proposal.html`
-- `proposal.docx` — editable Word source (the template you're filling out)
+- `Project_Proposal_Hybrid.pdf` — compiled from the .docx; embedded by `panels/proposal.html`
+- `Project_Proposal_Hybrid.docx` — editable Word source (the template being filled out)
 - `poster.pdf` — iShowcase poster (future, Week 11)
 - `final_writeup.pdf` — final paper (future, Week 11–12)
 
-Files in this folder are served as static assets. Anyone with the site URL can view or download them.
+To refresh the embedded proposal after editing the .docx, re-export it to PDF
+(same base name) and replace `Project_Proposal_Hybrid.pdf`.
+
+Anyone with the site URL can view or download files in this folder.

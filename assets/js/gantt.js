@@ -6,6 +6,9 @@
    =========================================================== */
 const Gantt = (() => {
 
+  // Course weekly Gantt-upload form (decoded from the QR code). Opens in a new window.
+  const UPLOAD_URL = "https://uarizona.co1.qualtrics.com/jfe/form/SV_6FLtz2X1GPXvVuC?Q_CHL=qr";
+
   const PHASE = {
     "Intro":         { cls: "fg-intro",   group: "Intro / Planning" },
     "Planning":      { cls: "fg-intro",   group: "Intro / Planning" },
@@ -63,6 +66,17 @@ const Gantt = (() => {
 .forge-gantt .fg-mskey { margin:8px 0 0; padding-left:1.2rem; font-size:0.82rem; color:var(--color-text-muted,#5A7BA8); }
 .forge-gantt .fg-mskey li { margin:3px 0; }
 .forge-gantt .gantt-meta { margin-top:14px; font-size:0.8rem; color:var(--color-text-muted,#5A7BA8); }
+.forge-gantt .fg-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:1.4em; }
+.forge-gantt .fg-header .fg-h2 { margin:0; }
+.forge-gantt .fg-actions { display:flex; gap:10px; align-items:center; flex:none; }
+.forge-gantt .fg-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; font-family:var(--font-sans,system-ui,sans-serif); font-size:0.82rem; font-weight:500; line-height:1; border:1px solid var(--color-navy,#0F1F3D); border-radius:var(--radius,4px); background:#fff; color:var(--color-navy,#0F1F3D); text-decoration:none; cursor:pointer; transition:background .12s ease,color .12s ease,border-color .12s ease; }
+.forge-gantt .fg-btn:hover { background:var(--color-bg-alt,#F4F6FA); border-color:var(--color-navy,#0F1F3D); }
+.forge-gantt .fg-btn[disabled] { opacity:.55; cursor:progress; }
+.forge-gantt .fg-btn-accent { background:var(--color-navy,#0F1F3D); color:#fff; }
+.forge-gantt .fg-btn-accent:hover { background:var(--color-navy-mid,#2A4D7A); color:#fff; border-color:var(--color-navy-mid,#2A4D7A); }
+.forge-gantt .fg-capture { background:var(--color-bg,#fff); }
+.forge-gantt .fg-cap-title { font-family:var(--font-serif,Georgia,serif); color:var(--color-navy,#0F1F3D); font-size:1.05rem; margin:0 0 .5em; }
+.forge-gantt .fg-cap-title .stamp { font-family:var(--font-sans,system-ui,sans-serif); font-size:0.82rem; color:var(--color-text-muted,#5C657A); }
 `;
 
   function injectStyle() {
@@ -267,6 +281,66 @@ const Gantt = (() => {
     return ol;
   }
 
+  // Lazy-load html2canvas — only fetched the first time the user exports a PNG.
+  function ensureHtml2Canvas() {
+    if (window.html2canvas) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+      s.crossOrigin = "anonymous";
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("could not load the screenshot library (are you offline?)"));
+      document.head.appendChild(s);
+    });
+  }
+
+  // Rasterize the capture region to PNG and trigger a download. This is the file
+  // that gets uploaded weekly via the QR-code form.
+  async function downloadPng(capEl, btn) {
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Rendering\u2026";
+    const scroll = capEl.querySelector(".fg-scroll");
+    const prevOverflow = scroll ? scroll.style.overflow : null;
+    const prevWidth = capEl.style.width;
+    try {
+      await ensureHtml2Canvas();
+      // Widen so the entire timeline is captured even when it normally scrolls.
+      const chart = capEl.querySelector(".fg-chart");
+      const needed = chart ? chart.scrollWidth : capEl.scrollWidth;
+      const target = Math.max(capEl.clientWidth, needed) + 4;
+      if (scroll) scroll.style.overflow = "visible";
+      capEl.style.width = target + "px";
+
+      let bg = getComputedStyle(document.body).backgroundColor;
+      if (!bg || bg === "rgba(0, 0, 0, 0)" || bg === "transparent") bg = "#FFFFFF";
+
+      const canvas = await window.html2canvas(capEl, {
+        backgroundColor: bg,
+        scale: 2,
+        width: target,
+        windowWidth: target,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+      });
+
+      const stamp = new Date().toISOString().slice(0, 10);
+      const a = document.createElement("a");
+      a.download = "forge-gantt-" + stamp + ".png";
+      a.href = canvas.toDataURL("image/png");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (e) {
+      alert("Could not generate the PNG: " + (e && e.message ? e.message : e));
+    } finally {
+      if (scroll) scroll.style.overflow = prevOverflow;
+      capEl.style.width = prevWidth;
+      btn.disabled = false;
+      btn.textContent = original;
+    }
+  }
+
   async function render(container) {
     injectStyle();
     container.innerHTML = "";
@@ -274,30 +348,65 @@ const Gantt = (() => {
     try {
       const data = await DataStore.fetchJSON("data/gantt.json");
 
+      // ---- header: title (left) + actions (right) -----------------------
+      const header = document.createElement("div");
+      header.className = "fg-header";
       const h2 = document.createElement("h2");
+      h2.className = "fg-h2";
       h2.textContent = "Gantt Chart";
-      container.appendChild(h2);
+      const actions = document.createElement("div");
+      actions.className = "fg-actions";
+      const dlBtn = document.createElement("button");
+      dlBtn.type = "button";
+      dlBtn.className = "fg-btn";
+      dlBtn.textContent = "\u2B07 Download PNG";
+      dlBtn.title = "Save a PNG snapshot of the current Gantt chart (this is the file you upload weekly)";
+      const upLink = document.createElement("a");
+      upLink.className = "fg-btn fg-btn-accent";
+      upLink.href = UPLOAD_URL;
+      upLink.target = "_blank";
+      upLink.rel = "noopener noreferrer";
+      upLink.textContent = "Weekly upload \u2197";
+      upLink.title = "Open the course weekly-upload form in a new window";
+      actions.appendChild(dlBtn);
+      actions.appendChild(upLink);
+      header.appendChild(h2);
+      header.appendChild(actions);
+      container.appendChild(header);
+
+      // ---- capture region: everything below is what the PNG export grabs --
+      const cap = document.createElement("div");
+      cap.id = "fg-capture";
+      cap.className = "fg-capture";
+
+      const capTitle = document.createElement("p");
+      capTitle.className = "fg-cap-title";
+      capTitle.innerHTML = "FORGE \u2014 Project Gantt "
+        + "<span class=\"stamp\">snapshot "
+        + new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+        + "</span>";
+      cap.appendChild(capTitle);
 
       const intro = document.createElement("p");
       intro.textContent = "Thirteen-week project schedule (single contributor). Week 0 anchor: "
         + (data.week0_start || "(not set \u2014 edit data/gantt.json)")
         + ". Bars span the weeks each task is active; diamonds mark milestones; the vertical line marks today.";
-      container.appendChild(intro);
+      cap.appendChild(intro);
 
-      container.appendChild(buildLegend());
-      container.appendChild(buildStatusKey());
+      cap.appendChild(buildLegend());
+      cap.appendChild(buildStatusKey());
 
       const scroll = document.createElement("div");
       scroll.className = "fg-scroll";
       scroll.appendChild(buildChart(data));
-      container.appendChild(scroll);
+      cap.appendChild(scroll);
 
       const msKey = buildMsKey(data);
       if (msKey) {
         const h3 = document.createElement("h3");
         h3.textContent = "Milestones";
-        container.appendChild(h3);
-        container.appendChild(msKey);
+        cap.appendChild(h3);
+        cap.appendChild(msKey);
       }
 
       const meta = document.createElement("div");
@@ -305,7 +414,12 @@ const Gantt = (() => {
       meta.innerHTML = "<strong>Last updated:</strong> " + (data.last_updated || "\u2014")
         + " &nbsp;|&nbsp; <strong>Source:</strong> <code>data/gantt.json</code>"
         + " &nbsp;|&nbsp; Update workflow: edit JSON, commit, push.";
-      container.appendChild(meta);
+      cap.appendChild(meta);
+
+      container.appendChild(cap);
+
+      // wire the screenshot/download action
+      dlBtn.addEventListener("click", () => downloadPng(cap, dlBtn));
 
     } catch (err) {
       const notice = document.createElement("div");

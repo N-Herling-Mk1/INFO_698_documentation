@@ -18,7 +18,7 @@ INFO_698_documentation/
 │   ├── js/                       # app.js (router), gantt.js (renderer), data.js (fetch)
 │   ├── img/                      # logo, diagrams
 │   ├── video/                    # project video (.mp4)
-│   └── docs/                     # proposal.pdf, proposal.docx, poster.pdf, etc.
+│   └── docs/                     # Project_Proposal_Hybrid.pdf/.docx, poster.pdf, etc.
 ├── data/
 │   └── gantt.json                # SINGLE SOURCE OF TRUTH for the Gantt
 ├── panels/                       # HTML fragments loaded into the main panel
