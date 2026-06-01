@@ -1,0 +1,75 @@
+name: Build LaTeX & Deploy
+
+# Compiles every *.tex in assets/docs to PDF, commits the PDFs back to the
+# repo, then deploys the site (so the freshly built PDFs go live immediately).
+#
+# Why this also deploys: commits made by GITHUB_TOKEN do not trigger other
+# workflows, so the PDF commit alone would NOT wake up pages.yml. Deploying
+# here guarantees the new PDFs are published. pages.yml still handles pushes
+# that only touch site content (html/css/js) — see its paths-ignore.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.tex'
+      - '**.sty'
+      - '.github/workflows/build-latex.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write      # commit the rebuilt PDFs
+  pages: write         # deploy
+  id-token: write      # deploy
+
+concurrency:
+  group: "pages"       # shared with pages.yml so deploys never overlap
+  cancel-in-progress: false
+
+# Fixed timestamp => deterministic PDF metadata => byte-stable output.
+# This is what keeps proposal_original.pdf from churning on every run:
+# unchanged source + fixed date = identical bytes = nothing to commit.
+env:
+  SOURCE_DATE_EPOCH: "1717200000"
+  FORCE_SOURCE_DATE: "1"
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile all .tex in assets/docs
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: assets/docs
+          root_file: "*.tex"
+          glob_root_file: true
+          # latexmk (the default) runs pdflatex enough times to resolve the TOC.
+
+      - name: Remove LaTeX aux files (keep the site clean)
+        run: |
+          cd assets/docs
+          rm -f *.aux *.log *.out *.toc *.fls *.fdb_latexmk *.synctex.gz *.lof *.lot
+
+      - name: Commit rebuilt PDFs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: rebuild proposal PDF(s) from LaTeX [skip ci]"
+          file_pattern: "assets/docs/*.pdf"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

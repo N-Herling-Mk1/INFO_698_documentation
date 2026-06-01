@@ -14,4 +14,13 @@ Thumbs.db
 .idea/
 *.swp
 
-# Build artifacts (none expected — site is fully static)
+# LaTeX aux files (PDFs are committed by CI; aux files are not)
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz

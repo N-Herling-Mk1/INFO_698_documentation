@@ -2,21 +2,85 @@
 <p>
   The Statement of Work for FORGE — the contract between the project, the faculty
   advisor, and the course. A software/data-research hybrid: sections&nbsp;2 and&nbsp;3 carry
-  both the product track (2a, 3a) and the research track (2b, 3b). Embedded below;
-  download links underneath.
+  both the product track (2a, 3a) and the research track (2b, 3b). The proposal is
+  authored in LaTeX and rebuilt to PDF automatically on every push. Use the toggle to
+  switch between the live working draft and the frozen original template.
 </p>
 
-<div class="embed-wrapper">
-  <embed src="assets/docs/Project_Proposal_Hybrid.pdf" type="application/pdf" class="embed-pdf"
+<div class="proposal-toggle" role="group" aria-label="Choose proposal version"
+     style="display:flex; gap:10px; margin:4px 0 12px; flex-wrap:wrap;">
+  <button type="button" class="btn pv-btn" data-doc="working" aria-pressed="true"
+          style="cursor:pointer;">Working draft</button>
+  <button type="button" class="btn btn-secondary pv-btn" data-doc="original" aria-pressed="false"
+          style="cursor:pointer;">Original template</button>
+</div>
+
+<p id="pv-caption" style="margin:0 0 14px; color:var(--color-text-muted); font-size:0.88rem;">
+  Working draft — your in-progress proposal, rebuilt from LaTeX on every push.
+</p>
+
+<div id="pv-embed-wrapper" class="embed-wrapper">
+  <embed src="assets/docs/proposal.pdf" type="application/pdf" class="embed-pdf"
          aria-label="FORGE project proposal PDF">
 </div>
 
 <div class="download-row">
-  <a class="btn" href="assets/docs/Project_Proposal_Hybrid.pdf" download>Download PDF</a>
-  <a class="btn btn-secondary" href="assets/docs/Project_Proposal_Hybrid.docx" download>Download DOCX (editable)</a>
+  <a class="btn" id="pv-dl-pdf" href="assets/docs/proposal.pdf" download>Download PDF</a>
+  <a class="btn btn-secondary" id="pv-dl-tex" href="assets/docs/proposal.tex" download>Download LaTeX source</a>
 </div>
 
-<p style="margin-top: 20px; color: var(--color-text-muted); font-size: 0.88rem;">
+<p style="margin-top:20px; color:var(--color-text-muted); font-size:0.88rem;">
   <em>If the embedded viewer does not display the document, your browser may not support
   inline PDF rendering. Use the download buttons above.</em>
 </p>
+
+<script>
+  // Toggle between the live working draft and the frozen original template.
+  // Wrapped in an IIFE because app.js re-executes panel scripts on every load.
+  (function () {
+    var DOCS = {
+      working: {
+        pdf: "assets/docs/proposal.pdf",
+        tex: "assets/docs/proposal.tex",
+        caption: "Working draft — your in-progress proposal, rebuilt from LaTeX on every push."
+      },
+      original: {
+        pdf: "assets/docs/proposal_original.pdf",
+        tex: "assets/docs/proposal_original.tex",
+        caption: "Original template — the pristine reference with all guidance, frozen and unchanging."
+      }
+    };
+
+    var wrapper = document.getElementById("pv-embed-wrapper");
+    var caption = document.getElementById("pv-caption");
+    var dlPdf   = document.getElementById("pv-dl-pdf");
+    var dlTex   = document.getElementById("pv-dl-tex");
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".pv-btn"));
+
+    function show(key) {
+      var d = DOCS[key];
+      if (!d || !wrapper) return;
+      // Rebuild the <embed> node so the PDF reliably reloads across browsers
+      // (simply swapping the src attribute is unreliable for embedded PDFs).
+      wrapper.innerHTML =
+        '<embed src="' + d.pdf + '" type="application/pdf" class="embed-pdf" ' +
+        'aria-label="FORGE project proposal PDF">';
+      if (dlPdf)   dlPdf.setAttribute("href", d.pdf);
+      if (dlTex)   dlTex.setAttribute("href", d.tex);
+      if (caption) caption.textContent = d.caption;
+      buttons.forEach(function (b) {
+        var on = b.getAttribute("data-doc") === key;
+        b.classList.toggle("btn-secondary", !on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () {
+        show(b.getAttribute("data-doc"));
+      });
+    });
+
+    show("working");
+  })();
+</script>

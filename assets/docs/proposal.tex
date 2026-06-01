@@ -1,0 +1,345 @@
+% =====================================================================
+%  proposal.tex   —   WORKING COPY  (edit this one)
+%
+%  This is YOUR proposal. Fill in each section and delete the red
+%  \begin{guidance}...\end{guidance} blocks as you go. The frozen
+%  reference template (with all guidance) lives in proposal_original.tex.
+%
+%  Compiles to proposal.pdf  ("Working draft" on the site).
+%  To hide ALL remaining guidance at once for a clean submission,
+%  set \showguidance to 0 below.
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage{forge-proposal}
+\renewcommand{\showguidance}{1}   % set to 0 to hide all remaining guidance
+
+\begin{document}
+
+% ---- Title block ----------------------------------------------------
+\begin{center}
+  {\Huge\bfseries FORGE}\\[4pt]
+  {\large\color{forgemute} Functional-posterior Observatory for Refinement and Geometric Exploration}\\[14pt]
+  {\Large\color{forgemute} Project Proposal \& Statement of Work}\\[18pt]
+  {\large Nathan Herling, Project Manager}\\[10pt]
+  {\large Team: Nathan Herling \textnormal{(solo capstone)}}\\[12pt]
+  {\large Faculty Advisor: Prof.\ Kenneth Johns \textnormal{(UA ATLAS HEP Group)}}\\[14pt]
+  {\large Date: June 1, 2026}
+\end{center}
+
+\vspace{10pt}
+
+\vspace{6pt}
+
+\clearpage
+
+% ---- Revision History -----------------------------------------------
+\section*{Revision History}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|c|Y|c|}
+\hline
+\textbf{Version} & \textbf{Summary of Changes} & \textbf{Date} \\ \hline
+0.1 & Converted template to LaTeX; title page and Executive Summary drafted & 06/01/26 \\ \hline
+ & & \\ \hline
+ & & \\ \hline
+\end{tabularx}
+
+\begin{guidance}
+Keep this as a high-level summary of major revisions only. For a short document like the SOW you may only need 2--3 versions.
+\end{guidance}
+
+% ---- Table of Contents ----------------------------------------------
+\begingroup
+\renewcommand{\contentsname}{Contents}
+\tableofcontents
+\endgroup
+
+\begin{guidance}
+The table of contents above is generated automatically. Use a page break before the Executive Summary, then start a new page where it makes sense for clarity, balanced with keeping excessive white space out of your document.
+\end{guidance}
+
+\clearpage
+
+% =====================================================================
+%  1. EXECUTIVE SUMMARY
+% =====================================================================
+\propsec{1}{Executive Summary}
+\sectionauthor{Nathan Herling}
+
+FORGE (Functional-posterior Observatory for Refinement and Geometric Exploration) is a web-hosted dashboard that turns the posterior distribution of a Bayesian neural network (BNN) into an interactive, explorable object. Rather than reporting a single prediction, a BNN produces a distribution over possible models; FORGE ingests that sampled posterior and renders its geometry --- credible regions, per-weight uncertainty, and the spread of predictions in function space --- so a researcher can see, at a glance, both what the model has learned and where it remains unsure.
+
+Bayesian methods are increasingly used in high-energy physics precisely because they quantify uncertainty, but their posteriors are high-dimensional and effectively opaque. Existing tooling tends to collapse that richness into a single error bar, without revealing whether the uncertainty is \emph{aleatoric} (irreducible noise in the data) or \emph{epistemic} (a gap the model could close with more or more diverse training data) --- a distinction that is central to deciding what to do next.\footnote{The aleatoric/epistemic framing follows A.\ Kendall and Y.\ Gal, ``What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?'', NeurIPS 2017. \gnote{Replace/expand with your preferred citations before submission.}} FORGE differentiates itself by making that distinction visible and navigable directly in the browser, lowering the barrier to interpreting model uncertainty for both specialists and reviewers.
+
+The work is carried out by Nathan Herling under Prof.\ Kenneth Johns in the University of Arizona ATLAS High-Energy-Physics group, across three repositories (documentation, experiments, and software) with a tiered dataset structure (C0--C3). The dashboard is validated against the ATLAS Run~3 search for long-lived hidden-sector scalars, where trustworthy uncertainty matters. By the end of the term, FORGE will deliver a deployed, web-hosted observatory that loads HMC-sampled posteriors and supports interactive geometric exploration. Table~\ref{tab:resp} lists the preliminary division of subsystem responsibilities.
+
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|l|Y|}
+\hline
+\textbf{Team Member} & \textbf{Subsystem responsibility} \\ \hline
+Nathan Herling & Posterior sampling pipeline (HMC) and data tiers (C0--C3) \\ \hline
+Nathan Herling & Geometry \& visualization engine (credible regions, function-space spread) \\ \hline
+Nathan Herling & Web dashboard, hosting, and deployment \\ \hline
+Nathan Herling & Validation against the ATLAS Run~3 long-lived-particle search \\ \hline
+\end{tabularx}
+\caption{Preliminary Subsystem Responsibilities}
+\label{tab:resp}
+\end{table}
+
+% =====================================================================
+%  2. USER / MARKET RESEARCH
+% =====================================================================
+\propsec{2}{User/Market research}
+\begin{guidance}
+This section describes who your product is for and what they want. One of the worst things product developers can do is create a product that no one wants, needs, or will pay for. Look at the macro market to evaluate existing products and market opportunity, and the micro market by performing empathy interviews with potential users.
+
+Overall market: Do some basic research about the size and scope of the market your product will be in.
+
+Existing competitors: List your closest competitors and how your product will be differentiated from them.
+
+User insights: Use empathy interviews to identify needs and pain points, and detail how your product will address them.
+\end{guidance}
+
+% ---- 2b ----
+\propsec{2b}{Literature Review/Market research}
+\begin{guidance}
+This section describes who your research project is for, what they want, and what other work has been done in your topic area. It illustrates that you understand the existing research and prior work.
+
+Overall research landscape: Do some basic research about existing research, cite papers, and clarify how your project will contribute new knowledge or use novel approaches on existing data sets.
+
+User insights: Listen to potential users of your research output; list the key insights and pain points discovered and detail how your project will address them.
+\end{guidance}
+
+% =====================================================================
+%  3. PRODUCT FEATURES
+% =====================================================================
+\propsec{3}{Product Features}
+\begin{guidance}
+This section describes the scope and features of the product created by the project --- what the project will PRODUCE.
+
+The key objectives are to:
+\begin{itemize}[nosep,leftmargin=1.4em]
+  \item list all the key features of the product (``What does it do?'') and who will do them. Include enough work to fulfill the class requirements, but not so much as to create a recipe for failure. Include a minimum feature list and a stretch feature list prioritized by functionality.
+  \item summarize the parameters for each feature.
+  \item briefly elaborate on the relationship between the product and the business need it addresses. (``Why does the user want this feature? What benefit does it provide?'')
+\end{itemize}
+
+A feature is an item that would be listed on the sales pitch to get a customer interested --- a description of what the product accomplishes, not engineering specs. Limit the scope to only what you can accomplish; this also protects against feature creep. Use tables and bulleted lists to keep it concise.
+\end{guidance}
+
+\propsub{}{Feature 1: Wireless Transmission of Data}
+\sectionauthor{the owner of the subsystem that implements this feature should write this section}
+\begin{guidance}
+Write a sentence to briefly describe the feature and introduce the table of parameters. Define the requirements --- usually min and max measurable values. Example: ``The system will transmit the water level readings from the remote unit located at the retention pond to the main unit located in the construction office. The requirements for transmission are summarized in Table~2.''
+\end{guidance}
+
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|Y|c|c|Y|}
+\hline
+\textit{Parameter} & \textit{Min} & \textit{Max} & \textit{Comments} \\ \hline
+\textit{Transmission Distance} & \textit{n/a} & \textit{500\,m} & \textit{Without obstructions, e.g.\ trees} \\ \hline
+\textit{Transmission Time} & \textit{n/a} & \textit{200\,ms} & \textit{1 full data packet} \\ \hline
+\textit{Wireless Transmitter Power Consumption} & \textit{1\,mW} & \textit{500\,mW} & \textit{Min during sleep mode, max during active transmission} \\ \hline
+\end{tabularx}
+\caption{Wireless Transmission Parameters}
+\end{table}
+
+\propsub{}{Feature 2: Temperature Sensing and Logging}
+\sectionauthor{the owner of the subsystem that implements this feature should write this section}
+\begin{guidance}
+Repeat the format from Feature~1 as needed. You should have a minimum of 3 key features and a maximum of 8. Most projects will have 4 or 5.
+\end{guidance}
+
+% ---- 3b ----
+\propsec{3b}{Research Project Deliverables}
+\begin{guidance}
+This section describes the scope and features of the analysis created by the project --- what the project will PRODUCE. Write a draft, but this is what your mentor will especially help you with. This is often the breakdown of what will and will not be considered a passing project, so make this detailed.
+
+\textbf{Final Presentation Format.} How will your final project be submitted? Will it culminate in a paper with introduction, methods, and results sections and at least 5 peer-reviewed citations, under 10 pages, with at least two informative graphics? Will it culminate in an R Shiny application available on GitHub?
+
+\textbf{What Analysis Is Being Run?} Once the data is in, what analyses exactly should be run? E.g.\ what type of neural network, what type of correlation analysis, etc.
+
+\textbf{What Accuracy Is Expected?} If you're running a model, what do you expect --- 100\% accuracy? 65\% across multiple outputs? An $R^2$ of 0.6? What happens if the model isn't very accurate?
+
+\textbf{What if the Analysis doesn't work?} Is a null result acceptable, or do you need to do work to circumvent that?
+
+\textbf{What if the Data Isn't Available?} For projects requiring data scraping --- what happens if your data is not scrapable? How will you salvage your project?
+\end{guidance}
+
+% =====================================================================
+%  4. PROJECT TIMELINE & GANTT CHART
+% =====================================================================
+\propsec{4}{Project Timeline \& Gantt Chart}
+\begin{guidance}
+List the major deliverables and decision points of the project. Track your work over time using the Gantt chart and continually update and submit it in weekly check-ins. Milestones from the course schedule are pre-populated; add the dates for the current semester and your project-specific objectives and deadlines.
+
+A very common mistake is to build the schedule to have a functional project by Demo day, leaving no time for testing and modification (allow 6--8 weeks for testing minimum) and no time to recover if early dates slip. At this stage you should have about 10--15 items in addition to the milestones from the master schedule.
+\end{guidance}
+
+\begin{longtable}{|p{10cm}|c|}
+\hline
+\textbf{Milestone} & \textbf{Date} \\ \hline
+\endfirsthead
+\hline
+\textbf{Milestone} & \textbf{Date} \\ \hline
+\endhead
+Team Formation & 1/29/24 \\ \hline
+ & \\ \hline
+ & \\ \hline
+Signed proposal & 2/19/24 \\ \hline
+ & \\ \hline
+ & \\ \hline
+ & \\ \hline
+ & \\ \hline
+ & \\ \hline
+ & \\ \hline
+Poster Demo & 4/23/24 \\ \hline
+ & \\ \hline
+iShowcase & 5/1/24 \\ \hline
+\caption{Milestone Schedule}
+\end{longtable}
+
+\begin{guidance}
+Some items to consider as examples: determining sub-system partitioning and assignments; preliminary hardware selection; selecting a microcontroller / programming language / application framework; individual sub-system builds complete; individual sub-system testing complete; complete system build integrating the sub-systems; full-function testing complete; full feature demonstration.
+
+A Gantt chart is a visual representation of the project timeline linked to a schedule with task ownership and dependencies. Refer to the Gantt Chart module on D2L for instructions and resources.
+\end{guidance}
+
+% =====================================================================
+%  5. ETHICS
+% =====================================================================
+\propsec{5}{Ethics}
+\begin{guidance}
+Data ethics is a key consideration in any product we create. Include a completed ethics chart (see examples on D2L). For each question, answer Y / N / M (Yes / No / Maybe) for general use and for the data-breach scenario.
+\end{guidance}
+
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{|c|p{9.5cm}|c|c|}
+\hline
+\textbf{\#} & \textbf{Question} & \textbf{Generally} & \textbf{Data Breach} \\ \hline
+\endfirsthead
+\hline
+\textbf{\#} & \textbf{Question} & \textbf{Generally} & \textbf{Data Breach} \\ \hline
+\endhead
+1 & Could a user sell drugs or other illegal items on your platform? & Y/N/M & Y/N/M \\ \hline
+2 & Could a user of your platform engage in sex trafficking? & Y/N/M & Y/N/M \\ \hline
+3 & Could a user sell class notes or cheat on their homework on your platform? & Y/N/M & Y/N/M \\ \hline
+4 & Could a stalker use your project to find someone? & Y/N/M & Y/N/M \\ \hline
+5 & Could your app be used to spy on or track individuals? & Y/N/M & Y/N/M \\ \hline
+6 & Could your app/software access the camera or microphone and record things without users being aware? & Y/N/M & Y/N/M \\ \hline
+7 & If someone uses your platform, could they be re-traumatized or have their mental health impacted in some way? & Y/N/M & Y/N/M \\ \hline
+8 & Could your algorithm promote material that would traumatize or upset individuals? & Y/N/M & Y/N/M \\ \hline
+9 & Would your users be upset if the data you collect was given to someone else? & Y/N/M & Y/N/M \\ \hline
+10 & Could a data leak potentially lead to identity theft? & Y/N/M & Y/N/M \\ \hline
+11 & If your site was hacked, would users potentially lose their job, spouse, or family? & Y/N/M & Y/N/M \\ \hline
+12 & Should there be an age limitation on your product? & Y/N/M & Y/N/M \\ \hline
+13 & Could someone use your product to find, contact, and potentially commit elder abuse? & Y/N/M & Y/N/M \\ \hline
+14 & If the data on your platform was breached, could it be used to blackmail the users? & Y/N/M & Y/N/M \\ \hline
+15 & Does the existence of your project imply that a particular racial group, gender, religion, or other protected category is inherently bad, gross, or unwanted? & Y/N/M & Y/N/M \\ \hline
+16 & Could your product be used to commit hate crimes against a specific group? & Y/N/M & Y/N/M \\ \hline
+17 & Does the primary content of your game or algorithm focus on something considered deeply unethical? & Y/N/M & Y/N/M \\ \hline
+18 & Does your game or software contain race, gender, or other stereotypes? & Y/N/M & Y/N/M \\ \hline
+19 & Could users of your app scam other individuals? & Y/N/M & Y/N/M \\ \hline
+20 & Is your particular algorithm biased toward predicting correctly only for one race, gender, or other group? & Y/N/M & Y/N/M \\ \hline
+21 & Are the users of your project aware of how their data will be used? & Y/N/M & Y/N/M \\ \hline
+22 & What are the possible misinterpretations of your results? & Y/N/M & Y/N/M \\ \hline
+23 & Does the use or purchase of your data potentially contribute to a dangerous group or regime? & Y/N/M & Y/N/M \\ \hline
+24 & Could your virtual reality environment cause injury to the user? & Y/N/M & Y/N/M \\ \hline
+25 & Are your study participants or game players aware that their data will be collected and used? & Y/N/M & Y/N/M \\ \hline
+26 & Does your game or app contain addictive design elements without benefit to the user? & Y/N/M & Y/N/M \\ \hline
+27 & Does your survey contain an aspect of compulsion or unusually large incentive that would command users to take it even to their detriment? & Y/N/M & Y/N/M \\ \hline
+28 & Could your research outcomes harm an individual or entity? & Y/N/M & Y/N/M \\ \hline
+\caption{Data Ethics Chart}
+\end{longtable}
+
+% =====================================================================
+%  6. APPROVALS
+% =====================================================================
+\propsec{6}{Approvals}
+\begin{guidance}
+The project proposal needs the approval of everyone to move forward. If approval is denied, rework the proposal and begin the approval cycle again. Consult the faculty advisor often. After the faculty advisor and team are comfortable with the SOW, only then should it go to the sponsor.
+
+Type the names in the ``Approver Name'' column; written signatures only in the ``Signature'' and ``Date'' columns. Give advisors and sponsors at least 3 business days of lead time. Your instructor signs after grading, if the document passes. Keep the language below.
+\end{guidance}
+
+\noindent The signatures of the people below indicate an understanding of the purpose and content of this document by those signing it. By signing this document, you indicate that you approve of the proposed project outlined in this Statement of Work, the division of work, the Ground Rules, and that the next steps may be taken to create a Product Specification and proceed with the project.
+
+\smallskip
+\noindent This document is based upon and supersedes the \placeholder{<PRD title>} Version~\placeholder{X.X}. Deviations (versus clarifications) from the PRD have been clearly noted. For any requirements not listed in this SOW, the PRD requirements shall remain in effect.
+
+\medskip
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\linewidth}{|Y|l|c|c|}
+\hline
+\textbf{Approver Name} & \textbf{Title} & \textbf{Signature} & \textbf{Date} \\ \hline
+\placeholder{Type names here} & Team Project Manager & & \\ \hline
+\placeholder{All team members must sign} & Team Member & & \\ \hline
+ & Team Member & & \\ \hline
+ & Advisor & & \\ \hline
+ & Instructor & & \\ \hline
+\end{tabularx}
+
+\begin{guidance}
+Before you submit to advisor/sponsor for review: refresh the table of contents; verify every table and figure has a number and caption with at least one introductory sentence; clean up white space and page breaks; make sure the revision block is correct.
+
+Before you submit for grading, update the author table below. It need not be 100\% accurate but should give the instructor a good idea of how much each person contributed. For tables and diagrams just put n/a for the word count.
+\end{guidance}
+
+\medskip
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\linewidth}{|Y|l|c|}
+\hline
+\textbf{Section} & \textbf{Author} & \textbf{Word Count} \\ \hline
+\textit{1. Executive Summary} & \textit{Jane Doe} & \textit{268} \\ \hline
+ & & \\ \hline
+ & & \\ \hline
+ & & \\ \hline
+\end{tabularx}
+
+% =====================================================================
+%  7. APPENDIX
+% =====================================================================
+\propsec{7}{Appendix}
+
+\propsub{A.}{Advisor Engagement}
+
+\propsubsub{Project Team Responsibilities}
+\begin{itemize}[leftmargin=1.4em]
+  \item The Project Manager will set up and facilitate a weekly call/meeting with the Faculty Advisor. The Project Team will provide weekly status updates including upcoming deliverables, critical issues, and any adjustments to the Project Plan.
+  \item Documents will be provided to the Faculty Advisor with adequate time for review and signature, with a minimum review time of 3 days prior to the document due date.
+  \item Design files will be provided to the Faculty Advisor as requested in an agreed format.
+  \item Support requirements will be clearly requested with the dates required and adequate time for fulfillment.
+  \item Modification requests to the Project Plan by the Faculty Advisor will be reviewed and agreed to within 1 week of the request.
+\end{itemize}
+
+\propsubsub{Faculty Advisor Responsibilities}
+\begin{itemize}[leftmargin=1.4em]
+  \item The Faculty Advisor will provide knowledge and expertise to help the group stretch their skills.
+  \item The Faculty Advisor will participate in a weekly or bi-weekly call/meeting to review status, upcoming deliverables, priorities, issues, and progress to the agreed Project Plan.
+  \item The Faculty Advisor will provide document review, feedback, and approval (or rejection, or approval with contingencies) with adequate time for the team to meet course due dates.
+  \item The Faculty Advisor will provide feedback on support requirements, including guidance on design decisions, design files, test plans, test procedures, and test results.
+  \item The Faculty Advisor shall provide technical advice and guidance, answering inquiries approximately 1 hour per week.
+  \item Modifications to the Project Plan by the Project Team will be resolved and documented within 1 week of the request.
+  \item Grade the finalized project using a skill-based rubric.
+  \item Attend iShowcase in May.
+\end{itemize}
+
+\propsub{B.}{Ground Rules}
+\begin{guidance}
+How the team will conduct the business of completing this project. Each team member must sign the Approvals section indicating their acknowledgement of these Ground Rules. Do not remove items from this list, but you may add items.
+\end{guidance}
+
+\noindent As a team and as individual team members, we agree to:
+\begin{itemize}[leftmargin=1.4em]
+  \item \textbf{Stay focused on our objectives and goals.} Each time the team meets, we will clearly define our objectives and desired outcomes at the beginning of the meeting, and politely remind team members if we are getting off track.
+  \item \textbf{``Sidebar'' issues that are relevant but not consistent with the immediate objectives.} Create a ``sidebar'' where off-topic but important matters can be listed and discussed later.
+  \item \textbf{Listen when others are speaking.} We will listen and consider others' input before adding our own comments.
+  \item \textbf{All viewpoints will have an opportunity to be heard.} We will make an effort to get each team member's viewpoint and ensure no one dominates the discussion.
+  \item \textbf{Differences of opinion will be discussed respectfully.} We will identify areas of agreement before assessing disagreement, weigh the merits of different opinions, and agree on a process for choosing a direction. All team members will respect and follow the decision.
+  \item \textbf{Look for the good points in new ideas.} We will explore the value in each idea as we assess and select our path forward.
+  \item \textbf{Focus on the future, not the past.} We will use past experience to inform decisions but focus the discussion on future objectives; blame is counterproductive.
+  \item \textbf{Agree upon specific action items and next steps.} At the end of each meeting we will summarize and agree on specific next steps, action items, and assignments.
+  \item \textbf{Accountability.} Each member is responsible for their individual assignments and contribution to the team objectives. We will honor our responsibilities and not let our team members down.
+\end{itemize}
+
+\end{document}

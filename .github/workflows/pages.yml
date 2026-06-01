@@ -1,8 +1,15 @@
 name: Deploy to GitHub Pages
 
+# Deploys the static site. LaTeX source pushes (*.tex / *.sty) are handled by
+# build-latex.yml instead — it compiles the PDFs AND deploys — so they are
+# ignored here to avoid two deploys racing for the same Pages environment.
+
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**.tex'
+      - '**.sty'
   workflow_dispatch:
 
 permissions:
