@@ -11,6 +11,7 @@ const App = (() => {
     timeline: { type: "html", src: "panels/timeline.html" },
     gantt:    { type: "dynamic", render: (el) => Gantt.render(el) },
     proposal: { type: "html", src: "panels/proposal.html" },
+    assignments: { type: "html", src: "panels/assignments.html" },
     mvp:      { type: "html", src: "panels/mvp.html" },
     contacts: { type: "html", src: "panels/contacts.html" },
     video:    { type: "html", src: "panels/video.html" },

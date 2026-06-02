@@ -1,0 +1,158 @@
+% =====================================================================
+%  forge-proposal.sty
+%  Shared preamble + macros for the FORGE INFO 698 proposal documents.
+%  Used by BOTH:
+%     proposal_original.tex   (frozen pristine template, DO NOT edit)
+%     proposal.tex            (working copy you edit)
+%
+%  Styling lives here so the two documents stay visually identical.
+%  Edit colors / fonts / spacing in ONE place: this file.
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{forge-proposal}[2026/06/01 FORGE INFO 698 proposal style]
+
+% ---- Page + fonts ---------------------------------------------------
+\RequirePackage[letterpaper,margin=1in]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+
+% ---- Fonts: match the Office/Word look (Calibri body, Cambria title) -------
+% On a full TeX Live (the CI container) these resolve to the metric-compatible
+% Calibri/Cambria clones (carlito / caladea). Anywhere they are missing, they
+% fall back to Arial/Times so the document still builds and previews.
+\RequirePackage{graphicx}
+\IfFileExists{caladea.sty}{\RequirePackage{caladea}}{\RequirePackage{mathptmx}}            % serif ~ Cambria
+\IfFileExists{carlito.sty}{\RequirePackage{carlito}}{\RequirePackage[scaled=0.95]{helvet}} % sans  ~ Calibri
+\renewcommand{\familydefault}{\sfdefault}   % body text in the sans face, like Word
+\graphicspath{{../img/}{./}}                % logo lives at assets/img/ in the repo
+
+\RequirePackage[protrusion=true,expansion=false]{microtype}
+\RequirePackage{parskip}
+
+% ---- Tables / layout helpers ---------------------------------------
+\RequirePackage{array}
+\RequirePackage{longtable}
+\RequirePackage{tabularx}
+\RequirePackage{booktabs}
+\RequirePackage{float}
+\RequirePackage{caption}
+\RequirePackage{enumitem}
+\RequirePackage{titlesec}
+\RequirePackage{xcolor}
+
+% ---- Links + TOC ----------------------------------------------------
+\RequirePackage[hidelinks,bookmarks=true]{hyperref}
+
+% ---- Colors (mirrors the website's design tokens) -------------------
+\definecolor{forgenavy}{HTML}{0F1F3D}
+\definecolor{forgeamber}{HTML}{C67D3E}
+\definecolor{forgemute}{HTML}{5C657A}
+\definecolor{guidered}{HTML}{C0211E}   % the "red italics" guidance color
+
+% ---- F.O.R.G.E color encoding (cool -> hot, mirrors the logo) -------
+% Darkened from the bright brand tones so they stay legible on white.
+% Edit these in one place to re-tune the wordmark.
+\definecolor{forgeF}{HTML}{1499B5}   % cyan   (cool Gaussian half)
+\definecolor{forgeO}{HTML}{2F7BB8}   % blue
+\definecolor{forgeR}{HTML}{D38A2B}   % gold/amber (pivot)
+\definecolor{forgeG}{HTML}{E8620C}   % flame
+\definecolor{forgeE}{HTML}{CE3318}   % ember  (warm Gaussian half)
+\definecolor{forgedot}{HTML}{C0392B} % interpunct dots
+
+% ---- Heading styles -------------------------------------------------
+\titleformat{\section}{\Large\bfseries\color{forgenavy}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{16pt}{6pt}
+\titleformat{\subsection}{\large\bfseries\color{forgenavy}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{forgenavy}}{}{0pt}{}
+
+\captionsetup{font={small,it},labelfont={bf},labelsep=colon}
+\setlength{\parskip}{8pt}
+\linespread{1.08}
+
+% =====================================================================
+%  GUIDANCE MACROS  (the red italic template text)
+% =====================================================================
+%  These reproduce the Word template's "red italics" instructions.
+%
+%  TO REMOVE *ALL* GUIDANCE AT ONCE (e.g. for the final submission):
+%     change       \newcommand{\showguidance}{1}
+%     to           \newcommand{\showguidance}{0}
+%  ...and every \guidance / \gnote / \placeholder collapses to nothing,
+%  while your real content stays put. Or just delete the blocks by hand
+%  as you fill each section in — whichever you prefer.
+% ---------------------------------------------------------------------
+\providecommand{\showguidance}{1}
+
+% Block guidance — multi-paragraph instructional text.
+\newenvironment{guidance}
+  {\ifnum\showguidance=1\relax
+     \par\smallskip\begingroup\color{guidered}\itshape\small
+   \else\expandafter\comment\fi}
+  {\ifnum\showguidance=1\relax\endgroup\par\smallskip\fi}
+
+% Inline guidance note (single short line).
+\newcommand{\gnote}[1]{\ifnum\showguidance=1\relax{\color{guidered}\itshape\small #1}\fi}
+
+% Red fill-in placeholder (e.g. on the title page).
+\newcommand{\placeholder}[1]{{\color{guidered}#1}}
+
+% "This section was written by ..." byline.
+\newcommand{\sectionauthor}[1]{\gnote{This section was written by #1.}\par}
+
+% A lightweight "comment / swallow" environment used when guidance is OFF.
+% (verbatim-style gobble of the environment body)
+\RequirePackage{verbatim} % provides \comment ... \endcomment
+
+% ---- Custom-numbered section headings -------------------------------
+%  The template uses non-standard numbers (1, 2, 2b, 3, 3b, ...), so we
+%  drive numbering manually but still get a real, page-accurate TOC.
+%  Usage:  \propsec{2b}{Literature Review/Market research}
+\newcommand{\propsec}[2]{%
+  \phantomsection
+  \addcontentsline{toc}{section}{#1.\hspace{0.4em}#2}%
+  \section*{#1.\hspace{0.4em}#2}%
+}
+\newcommand{\propsub}[2]{%
+  \phantomsection
+  \addcontentsline{toc}{subsection}{#1\hspace{0.4em}#2}%
+  \subsection*{#1\hspace{0.4em}#2}%
+}
+\newcommand{\propsubsub}[1]{%
+  \phantomsection
+  \addcontentsline{toc}{subsubsection}{#1}%
+  \subsubsection*{#1}%
+}
+
+% Standard grid-table column: wrapped, fixed width.
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% =====================================================================
+%  BRANDING  —  color-encoded wordmark + document masthead
+% =====================================================================
+% Color-encoded "F.O.R.G.E" set in the display serif, with red interpuncts
+% like the logo. Use inside any size group, e.g. {\Huge\forgewordmark}.
+\newcommand{\forgekern}{0.10em}
+\newcommand{\forgewordmark}{%
+  {\rmfamily\bfseries
+    \textcolor{forgeF}{F}\kern\forgekern\textcolor{forgedot}{\textperiodcentered}\kern\forgekern
+    \textcolor{forgeO}{O}\kern\forgekern\textcolor{forgedot}{\textperiodcentered}\kern\forgekern
+    \textcolor{forgeR}{R}\kern\forgekern\textcolor{forgedot}{\textperiodcentered}\kern\forgekern
+    \textcolor{forgeG}{G}\kern\forgekern\textcolor{forgedot}{\textperiodcentered}\kern\forgekern
+    \textcolor{forgeE}{E}%
+  }%
+}
+
+% Full document masthead: logo, color-encoded wordmark, expansion line, and
+% document type. #1 = expansion subtitle, #2 = document type line.
+\newcommand{\forgemasthead}[2]{%
+  \begin{center}
+    \includegraphics[width=3.5cm]{official_Forge_logo}\\[12pt]
+    {\Huge\forgewordmark}\\[10pt]
+    {\large\rmfamily\itshape\color{forgemute} #1}\\[14pt]
+    {\color{forgeamber}\rule{0.46\linewidth}{1.1pt}}\\[12pt]
+    {\Large\rmfamily\color{forgemute} #2}
+  \end{center}%
+}
+
+\endinput

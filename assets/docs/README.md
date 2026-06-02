@@ -13,7 +13,17 @@ The project proposal is authored in LaTeX and compiled to PDF automatically by
 | `proposal.pdf` | Compiled working draft (auto-built). Shown as **"Working draft"** on the site. |
 | `proposal_original.tex` | **Frozen reference — do not edit.** The pristine UA template with every red guidance note intact. |
 | `proposal_original.pdf` | Compiled original (auto-built, but byte-stable so it never changes). Shown as **"Original template"** on the site. |
-| `forge-proposal.sty` | Shared style/macros for both documents (colors, headings, the `guidance` environment, custom section numbering). Edit styling in one place here. |
+| `forge-proposal.sty` | Shared style/macros for both documents (fonts, colors, the F.O.R.G.E color-encoded masthead, the `guidance` environment, custom section numbering). Edit styling in one place here. |
+
+### Dependencies
+
+- **Logo:** the masthead pulls `assets/img/official_Forge_logo.png` (referenced as
+  `../img/official_Forge_logo.png` from this folder). It must be a *real* PNG — if you
+  re-export it, make sure it is genuinely PNG-encoded, not a JPEG renamed `.png`.
+- **Fonts:** the documents target the Office look (Calibri body / Cambria title) via the
+  metric-compatible `carlito` / `caladea` packages, which ship with a full TeX Live (the
+  CI container has them). Where those are missing, the style falls back to Arial/Times so
+  the build never fails — the layout is the same, only the exact letterforms differ.
 
 `panels/proposal.html` embeds these and offers a toggle between the working draft
 and the original template.

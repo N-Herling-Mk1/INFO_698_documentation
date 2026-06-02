@@ -1,0 +1,92 @@
+<h2 id="asg-top">Assignments</h2>
+<p>
+  Coursework deliverables, stored here for quick reference. Use the index to jump to an
+  assignment; each section embeds its PDF inline with download links underneath. Source
+  files live in <code>assets/docs/assignments/</code>.
+</p>
+
+<!-- ── Index / glossary ─────────────────────────────────────────── -->
+<nav class="asg-index" aria-label="Assignments index"
+     style="border:1px solid var(--color-border); border-radius:var(--radius);
+            background:var(--color-bg-alt); padding:14px 16px; margin:0 0 24px;">
+  <div style="font-weight:600; color:var(--color-navy); margin-bottom:8px;">Index</div>
+  <ol style="margin:0; padding-left:1.2em; line-height:1.9;">
+    <li>
+      <a class="asg-jump" href="#asg-01" data-target="asg-01">Assignment 1 — Title TBD</a>
+      <span style="color:var(--color-text-muted); font-size:0.85rem;">&nbsp;·&nbsp;Course TBD · Due TBD</span>
+    </li>
+    <li>
+      <a class="asg-jump" href="#asg-02" data-target="asg-02">Assignment 2 — Title TBD</a>
+      <span style="color:var(--color-text-muted); font-size:0.85rem;">&nbsp;·&nbsp;Course TBD · Due TBD</span>
+    </li>
+  </ol>
+</nav>
+
+<!-- ── Assignment 1 ─────────────────────────────────────────────── -->
+<section class="asg-item" id="asg-01" style="margin-bottom:32px;">
+  <h3 style="margin-bottom:4px;">Assignment 1 — Title TBD</h3>
+  <p style="margin:0 0 12px; color:var(--color-text-muted); font-size:0.9rem;">
+    Course TBD &nbsp;·&nbsp; Due TBD &nbsp;·&nbsp; Status: Not started
+  </p>
+
+  <div class="embed-wrapper">
+    <embed src="assets/docs/assignments/assignment_01.pdf" type="application/pdf"
+           class="embed-pdf" aria-label="Assignment 1 PDF">
+  </div>
+
+  <div class="download-row">
+    <a class="btn" href="assets/docs/assignments/assignment_01.pdf" download>Download PDF</a>
+    <a class="btn btn-secondary" href="assets/docs/assignments/assignment_01.tex" download>Download LaTeX source</a>
+  </div>
+
+  <p style="margin-top:10px;">
+    <a class="asg-jump" href="#asg-top" data-target="asg-top"
+       style="font-size:0.85rem; color:var(--color-text-muted);">▲ Back to index</a>
+  </p>
+</section>
+
+<!-- ── Assignment 2 ─────────────────────────────────────────────── -->
+<section class="asg-item" id="asg-02" style="margin-bottom:32px;">
+  <h3 style="margin-bottom:4px;">Assignment 2 — Title TBD</h3>
+  <p style="margin:0 0 12px; color:var(--color-text-muted); font-size:0.9rem;">
+    Course TBD &nbsp;·&nbsp; Due TBD &nbsp;·&nbsp; Status: Not started
+  </p>
+
+  <div class="embed-wrapper">
+    <embed src="assets/docs/assignments/assignment_02.pdf" type="application/pdf"
+           class="embed-pdf" aria-label="Assignment 2 PDF">
+  </div>
+
+  <div class="download-row">
+    <a class="btn" href="assets/docs/assignments/assignment_02.pdf" download>Download PDF</a>
+    <a class="btn btn-secondary" href="assets/docs/assignments/assignment_02.tex" download>Download LaTeX source</a>
+  </div>
+
+  <p style="margin-top:10px;">
+    <a class="asg-jump" href="#asg-top" data-target="asg-top"
+       style="font-size:0.85rem; color:var(--color-text-muted);">▲ Back to index</a>
+  </p>
+</section>
+
+<p style="color:var(--color-text-muted); font-size:0.88rem;">
+  <em>If an embedded viewer does not display a document, your browser may not support
+  inline PDF rendering — use the download buttons.</em>
+</p>
+
+<script>
+  // Smooth-scroll the index/back links WITHOUT changing the URL hash, so the
+  // SPA router (which keys off the hash) is never triggered by in-page jumps.
+  // Wrapped in an IIFE because app.js re-executes panel scripts on each load.
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll(".asg-jump"));
+    links.forEach(function (a) {
+      a.addEventListener("click", function (e) {
+        var id = a.getAttribute("data-target");
+        var target = id && document.getElementById(id);
+        if (!target) return;            // fall back to default if not found
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  })();
+</script>
