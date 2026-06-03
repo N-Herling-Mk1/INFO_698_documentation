@@ -1,0 +1,51 @@
+{
+  "last_updated": "2026-06-03",
+  "note": "Single source of truth for the FORGE glossary panel. Add an entry: { term, group, expansion, note? }. Commit and push.",
+  "group_order": [
+    "Project & process",
+    "Bayesian & statistics",
+    "Data & benchmarks",
+    "Software & protocols",
+    "Hardware & resources",
+    "Physics & ATLAS"
+  ],
+  "entries": [
+    { "term": "FORGE", "group": "Project & process", "expansion": "Functional-posterior Observatory for Refinement and Geometric Exploration" },
+    { "term": "MVP",   "group": "Project & process", "expansion": "Minimum Viable Product" },
+    { "term": "PoC",   "group": "Project & process", "expansion": "Proof of Concept" },
+    { "term": "H1 / H2 / H3", "group": "Project & process", "expansion": "The three project hypotheses", "note": "Visualization fidelity; sampler correctness/efficiency; hyperparameter → posterior-geometry (the keystone)." },
+
+    { "term": "BNN",   "group": "Bayesian & statistics", "expansion": "Bayesian Neural Network" },
+    { "term": "HMC",   "group": "Bayesian & statistics", "expansion": "Hamiltonian Monte Carlo", "note": "Gradient-based MCMC for drawing samples from a posterior over weights." },
+    { "term": "NUTS",  "group": "Bayesian & statistics", "expansion": "No-U-Turn Sampler", "note": "Adaptive HMC." },
+    { "term": "LLLA",  "group": "Bayesian & statistics", "expansion": "Last-Layer Laplace Approximation", "note": "The closed-form fast path." },
+    { "term": "MaxEnt","group": "Bayesian & statistics", "expansion": "Maximum Entropy" },
+    { "term": "NLL",   "group": "Bayesian & statistics", "expansion": "Negative Log-Likelihood" },
+    { "term": "RMSE",  "group": "Bayesian & statistics", "expansion": "Root-Mean-Square Error" },
+    { "term": "PCA / fPCA", "group": "Bayesian & statistics", "expansion": "(functional) Principal Component Analysis" },
+
+    { "term": "C0–C3", "group": "Data & benchmarks", "expansion": "Calibration tiers", "note": "Analytic ground-truth datasets scored against in CI." },
+    { "term": "D4",    "group": "Data & benchmarks", "expansion": "Dataset tier 4", "note": "The benchmarked tier (FAIR Universe HiggsML)." },
+    { "term": "FAIR Universe HiggsML", "group": "Data & benchmarks", "expansion": "", "note": "NeurIPS 2024 Higgs machine-learning uncertainty-quantification challenge dataset." },
+    { "term": "UCI",   "group": "Data & benchmarks", "expansion": "University of California, Irvine", "note": "Its machine-learning dataset repository." },
+
+    { "term": "API",   "group": "Software & protocols", "expansion": "Application Programming Interface" },
+    { "term": "CI",    "group": "Software & protocols", "expansion": "Continuous Integration", "note": "Automated checks run on every push." },
+    { "term": "MCP",   "group": "Software & protocols", "expansion": "Model Context Protocol" },
+    { "term": "LLM",   "group": "Software & protocols", "expansion": "Large Language Model" },
+    { "term": "JAX / XLA", "group": "Software & protocols", "expansion": "Accelerated array + linear-algebra libraries", "note": "NumPyro's backend." },
+    { "term": "JSON / JSONL", "group": "Software & protocols", "expansion": "JavaScript Object Notation / JSON Lines", "note": "JSONL: one object per line." },
+    { "term": "SQLite","group": "Software & protocols", "expansion": "", "note": "Lightweight embedded SQL database." },
+    { "term": "TLS",   "group": "Software & protocols", "expansion": "Transport Layer Security", "note": "HTTPS encryption." },
+    { "term": "ID",    "group": "Software & protocols", "expansion": "Identifier", "note": "e.g. job ID." },
+    { "term": "UI / UX", "group": "Software & protocols", "expansion": "User Interface / User Experience" },
+
+    { "term": "CPU",   "group": "Hardware & resources", "expansion": "Central Processing Unit" },
+    { "term": "GPU",   "group": "Hardware & resources", "expansion": "Graphics Processing Unit" },
+    { "term": "RAM",   "group": "Hardware & resources", "expansion": "Random-Access Memory" },
+    { "term": "GB",    "group": "Hardware & resources", "expansion": "Gigabyte" },
+    { "term": "RSS",   "group": "Hardware & resources", "expansion": "Resident Set Size", "note": "True process memory footprint." },
+
+    { "term": "MSVtx", "group": "Physics & ATLAS", "expansion": "Muon-Spectrometer Vertices", "note": "The ATLAS long-lived-particle analysis." }
+  ]
+}

@@ -1,0 +1,374 @@
+<h2>Project Research</h2>
+
+<p class="lead">
+  This panel collects the human-centered design work behind FORGE &mdash; the
+  problem framing that the project-design lecture series asks every team to do before
+  committing to a solution. It grows as each video is worked through; the
+  <a href="#research-log">lecture log</a> at the bottom tracks what has been covered.
+</p>
+
+<style>
+  /* Wide tables (research panel): on large screens fill available width up to
+     80vw, breaking out past the panel's reading-width cap toward the right;
+     on smaller screens fall back to full panel width (no fixed cap). */
+  .rt-wide .content-table { max-width: none; width: 100%; }
+  @media (min-width: 1200px) {
+    .rt-wide { width: min(80vw, calc(100vw - var(--sidenav-w, 240px) - 96px)); }
+  }
+</style>
+
+<!-- ===================================================================
+     SECTION BAND  —  copy this block to start a new research section.
+     Change the kicker (left) and title (right) only.
+     =================================================================== -->
+<div style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Problem Framing &ndash; User Problems</h3>
+</div>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  The framing here follows the point-of-view format from the lectures &mdash;
+  <strong>User&nbsp;+&nbsp;Need&nbsp;+&nbsp;Because</strong> (the insight that points toward a
+  solution, not merely a reason for the problem) &mdash; reframed into a
+  <strong>How&nbsp;Might&nbsp;We</strong> design challenge that stays open enough to admit more
+  than one solution.
+</p>
+
+<p>
+  FORGE answers two questions with one instrument, so it serves two users. They are not
+  redundant: the first asks a <em>decision</em> question with a cost attached
+  (&ldquo;more data, or am I done?&rdquo;); the second asks an open
+  <em>how</em> question (&ldquo;what is driving this uncertainty, and what happens if I change
+  it?&rdquo;). The diagnostician is the <strong>motivating problem</strong> &mdash; it is what
+  makes the work worth doing. The observatory is the <strong>capability problem</strong> &mdash;
+  it is what the tool literally does, and what hypotheses H1/H2/H3 test. The diagnostic use is
+  one application of the general instrument.
+</p>
+
+<div class="splash-grid">
+
+  <!-- USER 1: the diagnostician -->
+  <div class="splash-card" style="border-left:4px solid var(--color-cyan);">
+    <p><span class="status-badge status-planned">User 1 &middot; Diagnostician</span></p>
+    <h3 style="margin-top:6px;">&ldquo;Should I collect more data, or is this as good as it gets?&rdquo;</h3>
+
+    <p style="margin-top:12px; padding:10px 14px; background:var(--color-bg-alt); border-radius:var(--radius); font-style:italic; color:var(--color-text); border-left:3px solid var(--color-cyan);">
+      <strong style="font-style:normal; color:var(--color-cyan);">How might we</strong>
+      let a domain researcher see a model&rsquo;s epistemic uncertainty so that they can decide
+      whether more data would help &mdash; without making them build a Bayesian pipeline
+      themselves?
+    </p>
+
+    <dl style="margin:14px 0 0; line-height:1.5;">
+      <dt style="font-variant:small-caps; letter-spacing:0.05em; color:var(--color-cyan); font-weight:700; font-size:0.82rem;">User</dt>
+      <dd style="margin:2px 0 12px;">
+        Graduate researchers in data-rich physical sciences (HEP, condensed matter, materials)
+        who train their own neural-net classifiers or regressors but are
+        <em>not</em> Bayesian-ML specialists.
+      </dd>
+
+      <dt style="font-variant:small-caps; letter-spacing:0.05em; color:var(--color-cyan); font-weight:700; font-size:0.82rem;">Need</dt>
+      <dd style="margin:2px 0 12px;">
+        a way to see whether a trained model&rsquo;s confidence is <em>earned or borrowed</em>
+        &mdash; whether its remaining error is epistemic (fixable with more or better data, or a
+        different architecture) or irreducible &mdash;
+      </dd>
+
+      <dt style="font-variant:small-caps; letter-spacing:0.05em; color:var(--color-cyan); font-weight:700; font-size:0.82rem;">Because</dt>
+      <dd style="margin:2px 0 0;">
+        a single point estimate hides what the model does not know, and standing up a full
+        Bayesian pipeline (HMC/NUTS, calibration, last-layer Laplace) from scratch is enough
+        engineering that they skip it and ship overconfident models &mdash; so they cannot tell
+        whether to keep investing in data or stop.
+      </dd>
+    </dl>
+  </div>
+
+  <!-- USER 2: the observatory user -->
+  <div class="splash-card" style="border-left:4px solid var(--color-flame);">
+    <p><span class="status-badge status-planned">User 2 &middot; Observatory</span></p>
+    <h3 style="margin-top:6px;">&ldquo;What is driving this uncertainty, and what happens if I change it?&rdquo;</h3>
+
+    <p style="margin-top:12px; padding:10px 14px; background:var(--color-bg-alt); border-radius:var(--radius); font-style:italic; color:var(--color-text); border-left:3px solid var(--color-flame);">
+      <strong style="font-style:normal; color:var(--color-flame);">How might we</strong>
+      let someone reshape a posterior&rsquo;s geometry in real time &mdash; by turning a prior,
+      sampler, or architecture knob &mdash; so that they can build and test intuition about what
+      drives a model&rsquo;s uncertainty?
+    </p>
+
+    <dl style="margin:14px 0 0; line-height:1.5;">
+      <dt style="font-variant:small-caps; letter-spacing:0.05em; color:var(--color-flame); font-weight:700; font-size:0.82rem;">User</dt>
+      <dd style="margin:2px 0 12px;">
+        Practitioners and students working with Bayesian deep learning who want to understand how
+        their modeling choices shape the posterior &mdash; but who currently iterate through a slow
+        edit-code-and-wait loop with only trace plots and scalar diagnostics to look at.
+      </dd>
+
+      <dt style="font-variant:small-caps; letter-spacing:0.05em; color:var(--color-flame); font-weight:700; font-size:0.82rem;">Need</dt>
+      <dd style="margin:2px 0 12px;">
+        an interactive instrument to reshape the posterior in real time &mdash; turn a prior, a
+        sampler setting, a likelihood, an architecture knob &mdash; and immediately <em>see</em> the
+        geometry respond,
+      </dd>
+
+      <dt style="font-variant:small-caps; letter-spacing:0.05em; color:var(--color-flame); font-weight:700; font-size:0.82rem;">Because</dt>
+      <dd style="margin:2px 0 0;">
+        the normal Bayesian loop is slow (minutes per HMC run) and its outputs are scalars and trace
+        plots, not geometry you can steer &mdash; so intuition about <em>how</em> choices reshape the
+        posterior is expensive to build and slow to test.
+      </dd>
+    </dl>
+  </div>
+
+</div>
+
+<h3>Why the insight clause matters</h3>
+<p>
+  In both statements the <em>Because</em> is doing design-actionable work rather than restating the
+  problem. Each one is the same fact that justifies a piece of the architecture, stated as a user
+  pain: the cost of standing up a Bayesian pipeline (User 1) is exactly why FORGE preloads working
+  baselines; the slowness of the edit-and-wait loop (User 2) is exactly why the
+  <strong>LLLA closed-form fast path</strong> is non-negotiable for real-time knob responsiveness
+  (hypothesis H3). The problem framing and the technical design are the same claim seen from two
+  sides.
+</p>
+
+<!-- ===================================================================
+     SECTION:  User & Market Research — Gauging Project Novelty  (Video 2)
+     =================================================================== -->
+<div style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Market Research &ndash; Gauging Project Novelty</h3>
+</div>
+
+<p>
+  The market-research lecture asks one question: <em>is the project new or novel?</em> Because FORGE
+  has both a <strong>software</strong> and a <strong>research</strong> element, novelty is gauged on
+  two fronts &mdash; a scan of comparable tools and sites (what already exists, so the build is
+  differentiated and clear of others' ground) and a literature review (how the underlying methods
+  have been done before, so the contribution is genuinely new).
+</p>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  Method: search engines and LLMs for the software landscape; Google Scholar for the
+  &ldquo;research of research.&rdquo; Each comparable below overlaps FORGE on at least one axis
+  &mdash; interactive model exploration, posterior/uncertainty visualization, sampler diagnostics, or
+  Bayesian experimentation &mdash; and each is paired with the line that separates it from FORGE.
+</p>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">User and Market Research - - Comparable tools &amp; sites</h4>
+<div class="rt-wide">
+<table class="content-table">
+  <thead>
+    <tr>
+      <th style="width:23%;">Tool</th>
+      <th style="width:39%;">What it does</th>
+      <th>How FORGE differs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td colspan="3" style="background:var(--color-bg-muted); font-weight:700; font-size:0.82rem; letter-spacing:0.04em;">Interactive Bayesian / sampler explorers &mdash; closest in spirit</td></tr>
+    <tr>
+      <td><a href="https://chi-feng.github.io/mcmc-demo/" target="_blank" rel="noopener">MCMC Interactive Gallery</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching demo</span></td>
+      <td>Animated samplers (RWMH, HMC, NUTS, SVGD&hellip;) traversing fixed 2-D target densities.</td>
+      <td>Samples a <em>trained model's</em> weight posterior across domains, not toy targets; adds the knob panel and a deterministic baseline to compare against.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.tmpl.fi/gp/" target="_blank" rel="noopener">Gaussian process regression demo</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching demo</span></td>
+      <td>Place points, tune the kernel/noise, watch the GP posterior mean and credible band update live.</td>
+      <td>Closest knob-panel analogue, but 1-D GP regression on hand-placed points &mdash; not NN-weight posteriors (HMC/LLLA) over real benchmarks, and no deterministic-vs-Bayesian view.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.hudsong.dev/tools/mcmc" target="_blank" rel="noopener">Hudson Griffith &mdash; MCMC tool</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching demo</span></td>
+      <td>In-browser sampler visualizer on toy distributions.</td>
+      <td>Posterior of a trained model rather than a toy target; full reshape-and-compare workflow rather than sampling alone.</td>
+    </tr>
+    <tr>
+      <td><a href="https://elevanth.org/blog/2017/11/28/build-a-better-markov-chain/" target="_blank" rel="noopener">Why Walk When You Can Flow?</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">explainer (McElreath)</span></td>
+      <td>Explanatory animations contrasting Metropolis with HMC and flow-based sampling.</td>
+      <td>An essay with animations, not an interactive instrument operating on the user's own model.</td>
+    </tr>
+    <tr>
+      <td><a href="https://rpsychologist.com/d3/bayes/" target="_blank" rel="noopener">R Psychologist &mdash; Bayesian inference</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching demo</span></td>
+      <td>Sliders for sample size / effect / prior drive a live posterior update.</td>
+      <td>A single statistics problem; no machine-learning model, architecture, or sampler choice.</td>
+    </tr>
+    <tr>
+      <td><a href="https://playground.tensorflow.org" target="_blank" rel="noopener">TensorFlow Playground</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching demo</span></td>
+      <td>Deterministic NN sandbox; change features/architecture and watch the decision boundary react.</td>
+      <td>Deterministic only &mdash; no posteriors or uncertainty. FORGE adds the epistemic layer the Playground deliberately omits.</td>
+    </tr>
+    <tr>
+      <td><a href="https://cs.stanford.edu/people/karpathy/convnetjs/" target="_blank" rel="noopener">ConvNetJS demos</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching demo</span></td>
+      <td>In-browser deterministic NN training and decision-boundary visualization.</td>
+      <td>No uncertainty quantification or posterior distributions.</td>
+    </tr>
+
+    <tr><td colspan="3" style="background:var(--color-bg-muted); font-weight:700; font-size:0.82rem; letter-spacing:0.04em;">Posterior &amp; MCMC diagnostics &mdash; post-inference</td></tr>
+    <tr>
+      <td><a href="https://python.arviz.org/" target="_blank" rel="noopener">ArviZ</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source library</span></td>
+      <td>Bayesian exploratory analysis across PPLs: posterior viz, posterior-predictive checks, model comparison.</td>
+      <td>A library that needs samples you already have; FORGE is hosted and interactive, generating and reshaping posteriors in-session.</td>
+    </tr>
+    <tr>
+      <td><a href="https://mc-stan.org/bayesplot/" target="_blank" rel="noopener">bayesplot</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source library</span></td>
+      <td>Posterior and MCMC diagnostic plots (trace, R-hat, PPC) for fitted models.</td>
+      <td>Static plotting only &mdash; no live model interaction or knob-driven exploration.</td>
+    </tr>
+    <tr>
+      <td><a href="https://mc-stan.org/shinystan/" target="_blank" rel="noopener">ShinyStan</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source tool</span></td>
+      <td>GUI for exploring posterior samples and convergence diagnostics after a run.</td>
+      <td>Starts after inference; not model-architecture-centric; no prior/architecture experimentation with immediate feedback.</td>
+    </tr>
+
+    <tr><td colspan="3" style="background:var(--color-bg-muted); font-weight:700; font-size:0.82rem; letter-spacing:0.04em;">Probabilistic-programming frameworks</td></tr>
+    <tr>
+      <td><a href="https://www.pymc.io/" target="_blank" rel="noopener">PyMC</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source library</span></td>
+      <td>Probabilistic programming with HMC/NUTS inference and posterior analysis.</td>
+      <td>A code framework; FORGE is the no-code &ldquo;turn a knob, watch the posterior move&rdquo; layer on top of such engines.</td>
+    </tr>
+    <tr>
+      <td><a href="https://pyro.ai/" target="_blank" rel="noopener">Pyro</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source library</span></td>
+      <td>Probabilistic programming and Bayesian deep learning on PyTorch.</td>
+      <td>A research framework with no integrated visual posterior-exploration environment.</td>
+    </tr>
+    <tr>
+      <td><a href="https://jasp-stats.org/" target="_blank" rel="noopener">JASP</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source app</span></td>
+      <td>Point-and-click statistics with classical and Bayesian analyses, incl. posterior plots.</td>
+      <td>A statistics package, not machine-learning &mdash; no architecture or uncertainty-engineering workflow.</td>
+    </tr>
+
+    <tr><td colspan="3" style="background:var(--color-bg-muted); font-weight:700; font-size:0.82rem; letter-spacing:0.04em;">Production UQ &amp; model monitoring</td></tr>
+    <tr>
+      <td><a href="https://wandb.ai/" target="_blank" rel="noopener">Weights &amp; Biases</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">commercial</span></td>
+      <td>Experiment tracking, calibration analysis, uncertainty logging, performance diagnostics.</td>
+      <td>Deployed-model metrics, not posteriors; confidence numbers rather than Bayesian reasoning.</td>
+    </tr>
+    <tr>
+      <td><a href="https://whylabs.ai/" target="_blank" rel="noopener">WhyLabs</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">commercial</span></td>
+      <td>ML monitoring: drift detection, data quality, reliability signals.</td>
+      <td>Production monitoring; not Bayesian and no posterior exploration.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.evidentlyai.com/" target="_blank" rel="noopener">Evidently AI</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source / commercial</span></td>
+      <td>Dashboards for model quality, calibration, and drift on production predictions.</td>
+      <td>Operates on model outputs in production; no posterior distributions or Bayesian experimentation.</td>
+    </tr>
+
+    <tr><td colspan="3" style="background:var(--color-bg-muted); font-weight:700; font-size:0.82rem; letter-spacing:0.04em;">Architecture &amp; teaching</td></tr>
+    <tr>
+      <td><a href="https://netron.app/" target="_blank" rel="noopener">Netron</a><br><span style="color:var(--color-text-faint); font-size:0.78rem;">open-source app</span></td>
+      <td>Interactive neural-network architecture viewer.</td>
+      <td>Structure only &mdash; no uncertainty, posterior inference, or Bayesian reasoning.</td>
+    </tr>
+    <tr>
+      <td>Bayesian Modeling &amp; Computation (ArviZ team)<br><span style="color:var(--color-text-faint); font-size:0.78rem;">teaching resource</span></td>
+      <td>Educational material on exploratory Bayesian model analysis and uncertainty interpretation.</td>
+      <td>Reference material, not a model-manipulation platform.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4 style="font-family:var(--font-serif); margin:24px 0 6px; color:var(--color-text);">Literature Search &mdash; research landscape</h4>
+<p>
+  The &ldquo;research of research&rdquo; prong: peer-reviewed work that grounds FORGE's ingredients
+  and sharpens where its contribution is new.
+</p>
+<div class="rt-wide">
+<table class="content-table">
+  <thead>
+    <tr>
+      <th style="width:30%;">Reference</th>
+      <th style="width:34%;">Focus</th>
+      <th>Relevance to FORGE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Dearden, Friedman &amp; Andre &mdash; <em>Model-based Bayesian Exploration</em> (UAI, 1999)</td>
+      <td>Maintains a posterior over MDP models and uses value-of-information to drive reinforcement-learning exploration, sampling Q-value distributions instead of point estimates.</td>
+      <td>An early statement of the core FORGE logic &mdash; a posterior over models beats a point estimate for deciding where knowledge is lacking &mdash; but applied as an RL exploration algorithm, not a visualization tool.</td>
+    </tr>
+    <tr>
+      <td>Frazier &mdash; <em>A Tutorial on Bayesian Optimization</em> (2018)</td>
+      <td>GP surrogate plus acquisition functions; a posterior over an expensive black box with credible intervals, balancing exploration and exploitation.</td>
+      <td>Shares the &ldquo;visualize posterior uncertainty, decide where you're unsure&rdquo; pattern, but aimed at optimizing a function rather than diagnosing a trained model.</td>
+    </tr>
+    <tr>
+      <td>Wang, Jin, Schmitt &amp; Olhofer &mdash; <em>Recent Advances in Bayesian Optimization</em> (ACM Comput. Surv., 2023)</td>
+      <td>Comprehensive taxonomy of Bayesian optimization (GPs, acquisition functions, high-dimensional, multi-objective, multi-fidelity&hellip;).</td>
+      <td>Maps the BO field and confirms it is optimization-centric &mdash; useful breadth for positioning FORGE's model-diagnosis purpose as distinct.</td>
+    </tr>
+    <tr>
+      <td>Gabry, Simpson, Vehtari, Betancourt &amp; Gelman &mdash; <em>Visualization in Bayesian Workflow</em> (JRSS A, 2019)</td>
+      <td>The canonical reference for visualization across the whole Bayesian workflow: prior predictive, HMC diagnostics, posterior-predictive checks, LOO; companion to bayesplot.</td>
+      <td>The methodological backbone for FORGE's plots &mdash; but static, R-package workflow guidance rather than an interactive hosted dashboard.</td>
+    </tr>
+    <tr>
+      <td>Nussbaumer, Böck &amp; Cito &mdash; <em>Online and Interactive Bayesian Inference Debugging</em> (ICSE '26); tool: <em>InferLog Holmes</em></td>
+      <td>An online (during-inference) and interactive MCMC debugger inside VSCode, with live trace/posterior views and automatic warnings.</td>
+      <td>The closest prior art to FORGE's online, interactive ambition &mdash; but an IDE debugger for PPL code aimed at fixing inference, not a hosted multi-domain dashboard for exploring a trained model's epistemic uncertainty with knob-driven posterior reshaping and a deterministic-vs-Bayesian comparison.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4 style="font-family:var(--font-serif); margin:24px 0 6px; color:var(--color-text);">Where FORGE is novel</h4>
+<p>
+  The landscape splits cleanly: deterministic ML playgrounds, post-hoc posterior diagnostics
+  (libraries), probabilistic-programming frameworks, production UQ monitors, and interactive sampler
+  explainers on toy targets. The three closest interactive analogues each cover one slice &mdash; the
+  MCMC gallery and the GP demo animate sampling on fixed targets or 1-D regression; InferLog&nbsp;Holmes
+  debugs PPL inference live in an IDE. None is a <em>hosted dashboard</em> that simultaneously
+  <strong>(1)</strong> preloads trained models across heterogeneous domains, <strong>(2)</strong>
+  toggles deterministic&nbsp;&harr;&nbsp;Bayesian and compares posteriors against the baseline, and
+  <strong>(3)</strong> reshapes posterior geometry in real time through a knob panel backed by
+  closed-form LLLA plus heavy HMC. The literature grounds each ingredient &mdash; workflow
+  visualization, posterior-uncertainty with acquisition, posterior-over-models for decisions, online
+  interactive inference &mdash; but the <em>combination</em>, framed by &ldquo;is this model's
+  confidence earned or borrowed; has it reached its epistemic limit?&rdquo;, is the differentiated
+  contribution.
+</p>
+
+<div id="research-log" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Series Index &ndash; Lecture Log</h3>
+</div>
+<p>
+  A running record of the design lectures worked through, and what each contributed to the framing
+  above. New videos slot in here as they are covered.
+</p>
+
+<table class="content-table">
+  <thead>
+    <tr>
+      <th style="width:3rem;">#</th>
+      <th>Lecture</th>
+      <th>Tool introduced</th>
+      <th>Applied to FORGE as&hellip;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Problem statements &amp; How&nbsp;Might&nbsp;We</td>
+      <td>Point-of-view statement (User&nbsp;+&nbsp;Need&nbsp;+&nbsp;Because); How&nbsp;Might&nbsp;We reframe</td>
+      <td>The two user statements and HMW challenges above</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Market research &amp; review</td>
+      <td>Novelty check &mdash; software-market scan + literature review (&ldquo;research of research&rdquo;)</td>
+      <td>The comparable-tools and literature tables above, and the novelty statement</td>
+    </tr>
+    <tr>
+      <td colspan="4" style="color:var(--color-text-faint); font-style:italic;">
+        &hellip; more lectures to be added as the series is worked through.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
+  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;How might we&rdquo; statements help us design
+  solutions with a human-centered focus. What&rsquo;s a problem worth solving? &rarr; write a
+  problem statement: <em>User&nbsp;+&nbsp;Need&nbsp;+&nbsp;Because.</em>
+</p>

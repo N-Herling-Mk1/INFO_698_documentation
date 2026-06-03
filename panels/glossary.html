@@ -1,0 +1,155 @@
+<h2>Glossary</h2>
+
+<p class="lead">
+  Every acronym and term used across the FORGE documentation, grouped by area. The list is generated
+  from <code>data/glossary.json</code> &mdash; the single source of truth. To add or edit an entry,
+  change that file and push; this panel updates automatically.
+</p>
+
+<div class="gl-toolbar">
+  <input id="gl-search" type="search" placeholder="Filter terms&hellip;  (e.g. HMC, posterior, laplace)"
+         autocomplete="off" aria-label="Filter glossary terms">
+  <span id="gl-count" class="gl-count"></span>
+</div>
+
+<div id="gl-list">
+  <div class="loading">Loading glossary&hellip;</div>
+</div>
+
+<style>
+  .gl-toolbar {
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    margin:14px 0 8px;
+  }
+  #gl-search {
+    flex:1 1 320px; min-width:0;
+    font-family:var(--font-sans); font-size:0.9rem;
+    color:var(--color-text);
+    padding:8px 12px;
+    border:1px solid var(--color-border);
+    border-radius:var(--radius);
+    background:var(--color-bg);
+    transition:border-color 0.15s, box-shadow 0.15s;
+  }
+  #gl-search:focus {
+    outline:none;
+    border-color:var(--color-navy-soft);
+    box-shadow:0 0 0 3px rgba(90,123,168,0.15);
+  }
+  .gl-count { font-size:0.82rem; color:var(--color-text-muted); white-space:nowrap; }
+
+  .gl-cat {
+    font-family:var(--font-serif);
+    font-size:1.05rem; font-weight:600;
+    color:var(--color-text);
+    margin:26px 0 4px;
+    padding-bottom:5px;
+    border-bottom:2px solid var(--color-cyan);
+  }
+  .gl-cat:first-child { margin-top:14px; }
+
+  .gl-row {
+    display:grid;
+    grid-template-columns:170px 1fr;
+    gap:4px 20px;
+    padding:8px 0;
+    border-bottom:1px solid var(--color-border-soft);
+  }
+  .gl-term {
+    font-family:var(--font-mono);
+    font-size:0.86rem; font-weight:700;
+    color:var(--color-navy);
+    letter-spacing:0.01em;
+    word-break:break-word;
+  }
+  .gl-def {
+    font-size:0.9rem; color:var(--color-text); line-height:1.45;
+  }
+  .gl-defnote { color:var(--color-text-muted); font-style:italic; }
+  .gl-empty {
+    color:var(--color-text-faint); font-style:italic; padding:14px 0;
+  }
+  @media (max-width:560px) {
+    .gl-row { grid-template-columns:1fr; gap:2px; }
+    .gl-term { font-size:0.9rem; }
+  }
+</style>
+
+<script>
+(function () {
+  var listEl   = document.getElementById("gl-list");
+  var searchEl = document.getElementById("gl-search");
+  var countEl  = document.getElementById("gl-count");
+  if (!listEl) return;
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function defHtml(e) {
+    var primary = e.expansion || e.note || "";
+    var secondary = (e.expansion && e.note) ? e.note : "";
+    var html = esc(primary);
+    if (secondary) html += ' <span class="gl-defnote">&mdash; ' + esc(secondary) + "</span>";
+    return html;
+  }
+
+  function rowHtml(e) {
+    return '<div class="gl-row"><div class="gl-term">' + esc(e.term) +
+           '</div><div class="gl-def">' + defHtml(e) + "</div></div>";
+  }
+
+  function render(groups, order, shown, total) {
+    var html = order.filter(function (g) { return groups[g] && groups[g].length; })
+      .map(function (g) {
+        return '<div class="gl-cat">' + esc(g) + "</div>" +
+               groups[g].map(rowHtml).join("");
+      }).join("");
+    listEl.innerHTML = html || '<div class="gl-empty">No terms match that filter.</div>';
+    if (countEl) {
+      countEl.textContent = shown === total ? total + " terms"
+                                            : "Showing " + shown + " of " + total;
+    }
+  }
+
+  function group(entries) {
+    var by = {};
+    entries.forEach(function (e) {
+      var g = e.group || "Other";
+      (by[g] = by[g] || []).push(e);
+    });
+    Object.keys(by).forEach(function (g) {
+      by[g].sort(function (a, b) {
+        return a.term.toLowerCase().localeCompare(b.term.toLowerCase());
+      });
+    });
+    return by;
+  }
+
+  DataStore.fetchJSON("data/glossary.json").then(function (data) {
+    var all   = data.entries || [];
+    var total = all.length;
+    // group_order from JSON, then any extra groups appended alphabetically
+    var order = (data.group_order || []).slice();
+    Object.keys(group(all)).forEach(function (g) {
+      if (order.indexOf(g) === -1) order.push(g);
+    });
+
+    render(group(all), order, total, total);
+
+    if (searchEl) {
+      searchEl.addEventListener("input", function () {
+        var q = searchEl.value.trim().toLowerCase();
+        var hits = !q ? all : all.filter(function (e) {
+          return (e.term + " " + (e.expansion || "") + " " + (e.note || "") + " " + (e.group || ""))
+                   .toLowerCase().indexOf(q) !== -1;
+        });
+        render(group(hits), order, hits.length, total);
+      });
+    }
+  }).catch(function (err) {
+    listEl.innerHTML = '<div class="notice-error">Could not load glossary: ' + esc(err.message) + "</div>";
+  });
+})();
+</script>

@@ -143,15 +143,25 @@
   }%
 }
 
+% The expanded name with each acronym letter (the first letter of Functional,
+% Observatory, Refinement, Geometric, Exploration) colored to match the wordmark.
+\newcommand{\forgeexpansion}{%
+  \textcolor{forgeF}{F}unctional-posterior
+  \textcolor{forgeO}{O}bservatory for
+  \textcolor{forgeR}{R}efinement and
+  \textcolor{forgeG}{G}eometric
+  \textcolor{forgeE}{E}xploration%
+}
+
 % Full document masthead: logo, color-encoded wordmark, expansion line, and
 % document type. #1 = expansion subtitle, #2 = document type line.
 \newcommand{\forgemasthead}[2]{%
   \begin{center}
-    \includegraphics[width=3.5cm]{official_Forge_logo}\\[12pt]
-    {\Huge\forgewordmark}\\[10pt]
-    {\large\rmfamily\itshape\color{forgemute} #1}\\[14pt]
-    {\color{forgeamber}\rule{0.46\linewidth}{1.1pt}}\\[12pt]
-    {\Large\rmfamily\color{forgemute} #2}
+    \includegraphics[width=3.8cm]{official_Forge_logo}\\[14pt]
+    {\Huge\forgewordmark}\\[12pt]
+    {\Large\rmfamily\itshape\color{forgemute} #1}\\[16pt]
+    {\color{forgeamber}\rule{0.46\linewidth}{1.1pt}}\\[14pt]
+    {\LARGE\rmfamily\color{forgemute} #2}
   \end{center}%
 }
 
