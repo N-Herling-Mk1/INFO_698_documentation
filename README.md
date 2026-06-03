@@ -20,12 +20,16 @@ INFO_698_documentation/
 │   ├── video/                    # project video (.mp4)
 │   └── docs/                     # Project_Proposal_Hybrid.pdf/.docx, poster.pdf, etc.
 ├── data/
-│   └── gantt.json                # SINGLE SOURCE OF TRUTH for the Gantt
+│   ├── gantt.json                # SINGLE SOURCE OF TRUTH for the Gantt
+│   ├── weekly_todos.json         # per-week task lists for the Gantt detail panel
+│   └── glossary.json             # entries for the Glossary panel
 ├── panels/                       # HTML fragments loaded into the main panel
 ├── scripts/
 │   └── build_xlsx.py             # generates FORGE_INFO698_Gantt.xlsx from gantt.json
 ├── FORGE_INFO698_Gantt.xlsx      # generated artifact (committed for download)
-├── .github/workflows/pages.yml   # auto-deploys to GitHub Pages on push
+├── .github/workflows/
+│   ├── pages.yml                 # deploys the site on push (non-LaTeX changes)
+│   └── build-latex.yml           # compiles assets/docs/*.tex -> PDF, commits PDFs, deploys
 └── README.md
 ```
 
@@ -43,9 +47,46 @@ INFO_698_documentation/
    ```bash
    python scripts/build_xlsx.py
    ```
-3. **Commit and push.** GitHub Actions deploys the site automatically.
+3. **Commit and push** (see [Git & CI workflow](#git--ci-workflow) below). GitHub Actions deploys the site automatically.
 
 The git log is the change history. No PDF snapshots needed.
+
+## Git & CI workflow
+
+Two GitHub Actions run on push to `main`:
+
+- **`pages.yml`** — deploys the static site. Fires on any push that does *not* touch `*.tex`/`*.sty` (ordinary HTML/CSS/JS/JSON edits). It only deploys; it never writes back to the repo.
+- **`build-latex.yml`** — fires *only* when a push touches `*.tex` or `*.sty`. It compiles every `.tex` in `assets/docs/` to PDF, strips the LaTeX aux files, **commits the rebuilt PDFs back to `main`** (`ci: rebuild proposal PDF(s) … [skip ci]`), then deploys. The `[skip ci]` tag stops it from re-triggering itself, and a fixed `SOURCE_DATE_EPOCH` keeps unchanged source byte-identical — so it only commits when a PDF genuinely changes.
+
+**Consequence:** after a `.tex`/`.sty` push, the remote has a CI commit (the rebuilt PDF) that your local clone doesn't, so your *next* push is rejected until you pull it down. Site-only changes never trigger this.
+
+**One-time setup, per clone:**
+
+```bash
+git config pull.rebase true       # replay local work on top of incoming commits
+git config rebase.autoStash true  # don't let uncommitted edits block the pull
+```
+
+**Routine for every change:**
+
+```bash
+git add -A
+git commit -m "message"
+git pull        # brings down any CI PDF commit and rebases your work on top
+git push
+```
+
+If the push is still rejected (CI committed in the gap between your pull and push), just run `git pull && git push` again.
+
+If a rebase ever conflicts on a PDF you also built locally, take the CI copy and continue:
+
+```bash
+git checkout --theirs -- assets/docs/*.pdf
+git add assets/docs/*.pdf
+git rebase --continue
+```
+
+To sidestep that case entirely, let CI own the PDFs: `git rm --cached assets/docs/*.pdf`, then add `assets/docs/*.pdf` to `.gitignore`. They still live on the remote (CI commits them), so the site keeps serving them.
 
 ## Adding a new panel
 

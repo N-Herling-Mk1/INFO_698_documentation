@@ -1,5 +1,86 @@
 <h2>Project Overview</h2>
 
+<div class="elevator-pitch">
+  <span class="ep-kicker">Elevator Pitch</span>
+  <p>
+    FORGE is a web-hosted <span class="ep-em">observatory</span> for the question every trained
+    model hides: is its confidence <span class="ep-em">earned, or has it simply run out of
+    data?</span> Load a working model, flip it from a single point estimate to a full Bayesian
+    posterior, and <span class="ep-em">see and steer that uncertainty in real time</span> &mdash;
+    last-layer Laplace for instant feedback, HMC for ground truth. One interface, two needs:
+    explore whether a model has reached its <span class="ep-em">epistemic limit</span>, and
+    <span class="ep-em">visualize and tune</span> that uncertainty with Bayesian tools &mdash; with
+    no pipeline to build.
+  </p>
+  <div class="ep-needs">
+    <span class="ep-need ep-need-1"><span class="ep-need-n">1</span>Epistemic limit &amp; model/data exploration</span>
+    <span class="ep-need ep-need-2"><span class="ep-need-n">2</span>Visualization &amp; tuning with Bayesian tools</span>
+  </div>
+</div>
+
+<style>
+  .elevator-pitch {
+    position: relative;
+    margin: 0 0 1.9em;
+    padding: 22px 26px 20px;
+    background: linear-gradient(135deg, #0F1F3D 0%, #16294B 55%, #1B2233 100%);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 26px rgba(15, 31, 61, 0.22);
+  }
+  .elevator-pitch::before {                 /* cyan -> indigo -> magenta accent bar */
+    content: "";
+    position: absolute; left: 0; top: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--color-cyan) 0%, #7A7FFF 50%, var(--color-magenta) 100%);
+  }
+  .elevator-pitch .ep-kicker {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin: 2px 0 10px;
+  }
+  .elevator-pitch .ep-kicker::before { content: "\25B8  "; color: var(--color-ember); }
+  .elevator-pitch p {
+    margin: 0;
+    color: #E9EEF7;
+    font-family: var(--font-serif);
+    font-size: 1.08rem;
+    line-height: 1.6;
+  }
+  .elevator-pitch .ep-em { color: #FFFFFF; font-weight: 600; }
+  .elevator-pitch .ep-needs {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 16px; padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .elevator-pitch .ep-need {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.01em;
+    color: #CBD5E6;
+    padding: 5px 12px 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-left-width: 3px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .elevator-pitch .ep-need-1 { border-left-color: var(--color-cyan); }
+  .elevator-pitch .ep-need-2 { border-left-color: var(--color-magenta); }
+  .elevator-pitch .ep-need-n {
+    color: #FFFFFF; font-weight: 600; margin-right: 7px;
+  }
+  .elevator-pitch .ep-need-1 .ep-need-n { color: var(--color-cyan); }
+  .elevator-pitch .ep-need-2 .ep-need-n { color: var(--color-magenta); }
+  @media (max-width: 600px) {
+    .elevator-pitch { padding: 18px 18px 16px; }
+    .elevator-pitch p { font-size: 1rem; }
+  }
+</style>
+
+
 <p class="lead">
   FORGE is a web-hosted platform for Bayesian exploration of machine learning models.
   The <strong>mk_1</strong> release ships with three reproduced, well-known results spanning
