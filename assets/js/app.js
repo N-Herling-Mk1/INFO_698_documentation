@@ -13,6 +13,7 @@ const App = (() => {
     proposal: { type: "html", src: "panels/proposal.html" },
     mvp:      { type: "html", src: "panels/mvp.html" },
     research: { type: "html", src: "panels/research.html" },
+    literature: { type: "html", src: "panels/literature.html" },
     contacts: { type: "html", src: "panels/contacts.html" },
     glossary: { type: "html", src: "panels/glossary.html" },
     video:    { type: "html", src: "panels/video.html" },
@@ -23,6 +24,23 @@ const App = (() => {
   };
 
   const DEFAULT_PANEL = "home";
+
+  // When a [data-go-panel] link also carries [data-anchor], remember the target
+  // id here and scroll to it once the destination panel has rendered.
+  let pendingAnchor = null;
+
+  function applyPendingAnchor() {
+    if (!pendingAnchor) return;
+    const id = pendingAnchor;
+    pendingAnchor = null;
+    requestAnimationFrame(() => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.classList.add("ref-flash");
+      setTimeout(() => target.classList.remove("ref-flash"), 2000);
+    });
+  }
 
   function getCurrentPanel() {
     const hash = (window.location.hash || "").replace(/^#/, "");
@@ -52,8 +70,12 @@ const App = (() => {
       } else if (config.type === "dynamic") {
         await config.render(main);
       }
-      main.scrollTop = 0;
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (pendingAnchor) {
+        applyPendingAnchor();
+      } else {
+        main.scrollTop = 0;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     } catch (err) {
       main.innerHTML = `<div class="notice-error">Could not load panel: ${err.message}</div>`;
     }
@@ -89,7 +111,14 @@ const App = (() => {
       const card = e.target.closest("[data-go-panel]");
       if (card) {
         e.preventDefault();
-        window.location.hash = card.getAttribute("data-go-panel");
+        const key = card.getAttribute("data-go-panel");
+        pendingAnchor = card.getAttribute("data-anchor") || null;
+        const currentHash = (window.location.hash || "").replace(/^#/, "");
+        if (currentHash === key) {
+          applyPendingAnchor();          // already on panel; just scroll
+        } else {
+          window.location.hash = key;    // hashchange -> loadPanel -> anchor
+        }
       }
     });
   }

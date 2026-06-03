@@ -1,0 +1,515 @@
+<h2>Literature Search</h2>
+
+<p class="lead">
+  A vetted literature review for FORGE, spanning the methods the platform must
+  implement and the prior art it positions against. Every entry below was confirmed
+  against arXiv, the official proceedings (PMLR / NeurIPS / JMLR / OpenReview), or the
+  publisher of record (IEEE / MIT&nbsp;Press / AAAI / Springer / PLOS). The set is
+  organized into six themes &mdash;
+  <em>inference</em>, <em>Laplace</em>, <em>sampling</em>, <em>calibration</em>,
+  <em>visualization</em>, and <em>survey</em> &mdash; followed by the
+  experiment&nbsp;&amp;&nbsp;domain sources that anchor the three mk_1 reproductions.
+</p>
+
+<!-- ============================ SYNTHESIS ============================ -->
+<div class="lit-synthesis">
+  <p class="lit-synthesis-kicker">Synthesis</p>
+  <p>
+    The <strong>foundational spine</strong> is MacKay&nbsp;1992 (Laplace),
+    Neal&nbsp;2011 and Hoffman&nbsp;&amp;&nbsp;Gelman&nbsp;2014 (HMC/NUTS), and the
+    2015&ndash;2017 inference trio (Blundell, Gal, Lakshminarayanan) plus Guo and
+    Kendall&nbsp;&amp;&nbsp;Gal on calibration &mdash; these define the methods and
+    metrics any posterior tool must implement. The <strong>state-of-the-art</strong>
+    cluster is Kristiadi&nbsp;2020 and Daxberger&nbsp;2021 (making last-layer Laplace
+    both theoretically justified and real-time, i.e. FORGE&rsquo;s fast path),
+    Izmailov&nbsp;2021 and Wilson&nbsp;&amp;&nbsp;Izmailov&nbsp;2020 (what true
+    posteriors look like and why marginalization/geometry matters), and the
+    2023&ndash;2024 syntheses (Gawlikowski, Papamarkou). The <strong>open gap</strong>
+    is striking: the visualization literature (Hohman, Wexler, Hullman) probes point
+    predictions, fairness, and static uncertainty displays, while the BDL literature
+    produces posteriors no one can interactively explore &mdash; there is no tool that
+    couples a closed-form fast path (LLLA) to a live geometric/calibration interface
+    where a hyperparameter knob reshapes the epistemic profile in real time, validated
+    against HMC ground truth across calibration&rarr;benchmark&rarr;physics tiers.
+    That coupling &mdash; faithful (H1), correct/efficient (H2), and knob-reactive (H3)
+    over a multi-domain anchor like HiggsML &mdash; is precisely the unoccupied space
+    FORGE targets.
+  </p>
+</div>
+
+<p class="lit-verify-note">
+  <strong>Verification &amp; caveats.</strong> Nothing here is fabricated or from a
+  predatory venue. Where proceedings page numbers were not independently confirmed
+  (several NeurIPS entries), they are omitted rather than guessed and the entry is
+  cited by its proceedings / arXiv identifier. Neal&nbsp;2011 is a book chapter
+  (start page 113 confirmed via ADS bibcode; end page is the commonly-cited value).
+  Two title variants are flagged inline (Blundell &mdash; singular &ldquo;Network&rdquo;
+  in the proceedings; Papamarkou &mdash; arXiv vs. published title).
+  Papamarkou&nbsp;2024 is a peer-reviewed <em>position</em> paper, not an empirical
+  study; Gawlikowski circulated as a 2021 preprint before its 2023 journal version.
+</p>
+
+<!-- ============================ INFERENCE ============================ -->
+<div class="lit-band"><h3>Inference &mdash; variational &middot; MC-dropout &middot; ensembles</h3></div>
+
+<ol class="lit-list" start="1">
+  <li id="lit-blundell-2015" class="lit-entry">
+    <span class="lit-tag t-inference">inference</span>
+    <p class="lit-cite"><strong>Blundell, C., Cornebise, J., Kavukcuoglu, K. &amp; Wierstra, D.</strong> (2015).
+      Weight Uncertainty in Neural Network. <em>ICML 2015</em>, PMLR <strong>37</strong>:1613&ndash;1622.
+      <a href="https://proceedings.mlr.press/v37/blundell15.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/1505.05424" target="_blank" rel="noopener">arXiv:1505.05424</a>
+      <span class="lit-flag">proceedings title is singular &ldquo;Network&rdquo;; arXiv uses plural</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Bayes by Backprop &mdash; a backpropagation-compatible variational scheme learning a Gaussian over every weight via the reparameterization trick.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The canonical mean-field VI baseline a posterior explorer must support, anchoring the diagonal-Gaussian end of the fidelity spectrum.</p>
+  </li>
+
+  <li id="lit-gal-ghahramani-2016" class="lit-entry">
+    <span class="lit-tag t-inference">inference</span>
+    <p class="lit-cite"><strong>Gal, Y. &amp; Ghahramani, Z.</strong> (2016).
+      Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning.
+      <em>ICML 2016</em>, PMLR <strong>48</strong>:1050&ndash;1059.
+      <a href="https://proceedings.mlr.press/v48/gal16.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/1506.02142" target="_blank" rel="noopener">arXiv:1506.02142</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Shows test-time dropout approximates Bayesian inference in a deep Gaussian process, yielding uncertainty with essentially no training change.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> A near-free uncertainty source exposable as a knob (dropout rate, sample count) for real-time MC predictive bands.</p>
+  </li>
+
+  <li id="lit-lakshminarayanan-2017" class="lit-entry">
+    <span class="lit-tag t-inference">inference</span>
+    <p class="lit-cite"><strong>Lakshminarayanan, B., Pritzel, A. &amp; Blundell, C.</strong> (2017).
+      Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles.
+      <em>NeurIPS 2017</em> (Advances in Neural Information Processing Systems&nbsp;30).
+      <a href="https://papers.nips.cc/paper_files/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html" target="_blank" rel="noopener">NeurIPS</a> &middot;
+      <a href="https://arxiv.org/abs/1612.01474" target="_blank" rel="noopener">arXiv:1612.01474</a>
+      <span class="lit-flag">proceedings page numbers not independently confirmed</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> A non-Bayesian ensemble of independently trained nets that matches or beats approximate BNNs on calibration and out-of-distribution behavior.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The strong empirical baseline every uncertainty profile is judged against; later recast as approximate Bayesian marginalization (Wilson&nbsp;&amp;&nbsp;Izmailov&nbsp;2020).</p>
+  </li>
+</ol>
+
+<!-- ============================ LAPLACE ============================ -->
+<div class="lit-band"><h3>Laplace approximation &mdash; including last-layer (LLLA)</h3></div>
+
+<ol class="lit-list" start="4">
+  <li id="lit-mackay-1992" class="lit-entry">
+    <span class="lit-tag t-laplace">Laplace</span>
+    <p class="lit-cite"><strong>MacKay, D.J.C.</strong> (1992).
+      A Practical Bayesian Framework for Backpropagation Networks.
+      <em>Neural Computation</em> <strong>4</strong>(3):448&ndash;472.
+      <a href="https://doi.org/10.1162/neco.1992.4.3.448" target="_blank" rel="noopener">DOI:10.1162/neco.1992.4.3.448</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> The foundational Laplace/&ldquo;evidence&rdquo; framework for neural nets &mdash; Gaussian posterior around a mode, marginal-likelihood model comparison, effective number of parameters.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The theoretical root of the LLLA fast path; its marginal-likelihood machinery underpins any principled hyperparameter knob.</p>
+  </li>
+
+  <li id="lit-ritter-2018" class="lit-entry">
+    <span class="lit-tag t-laplace">Laplace</span>
+    <p class="lit-cite"><strong>Ritter, H., Botev, A. &amp; Barber, D.</strong> (2018).
+      A Scalable Laplace Approximation for Neural Networks.
+      <em>ICLR 2018</em>.
+      <a href="https://openreview.net/forum?id=Skdvd2xAZ" target="_blank" rel="noopener">OpenReview&nbsp;(Skdvd2xAZ)</a>
+      <span class="lit-flag">conference uses OpenReview, not page numbers</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> A Kronecker-factored (KFAC) Laplace posterior computed post-hoc on a trained net &mdash; a matrix-normal weight distribution with no retraining.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The structured-covariance tier between diagonal Laplace and full Hessian &mdash; a natural fidelity rung in the knob panel.</p>
+  </li>
+
+  <li id="lit-kristiadi-2020" class="lit-entry">
+    <span class="lit-tag t-laplace">Laplace</span>
+    <p class="lit-cite"><strong>Kristiadi, A., Hein, M. &amp; Hennig, P.</strong> (2020).
+      Being Bayesian, Even Just a Bit, Fixes Overconfidence in ReLU Networks.
+      <em>ICML 2020</em>, PMLR <strong>119</strong>:5436&ndash;5446.
+      <a href="https://proceedings.mlr.press/v119/kristiadi20a.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/2002.10118" target="_blank" rel="noopener">arXiv:2002.10118</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Proves a cheap last-layer Gaussian (Laplace) removes the asymptotic overconfidence of ReLU MAP networks &mdash; &ldquo;a bit Bayesian&rdquo; suffices for calibration.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The theoretical license for the last-layer-only fast path: it makes real-time LLLA more than a shortcut.</p>
+  </li>
+
+  <li id="lit-daxberger-2021" class="lit-entry">
+    <span class="lit-tag t-laplace">Laplace</span>
+    <p class="lit-cite"><strong>Daxberger, E., Kristiadi, A., Immer, A., Eschenhagen, R., Bauer, M. &amp; Hennig, P.</strong> (2021).
+      Laplace Redux &mdash; Effortless Bayesian Deep Learning.
+      <em>NeurIPS 2021</em> (vol. 34), 20089&ndash;20103.
+      <a href="https://proceedings.neurips.cc/paper/2021/hash/a7c9585703d275249f30a088cebba0ad-Abstract.html" target="_blank" rel="noopener">NeurIPS</a> &middot;
+      <a href="https://arxiv.org/abs/2106.14806" target="_blank" rel="noopener">arXiv:2106.14806</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Surveys LA variants (incl. last-layer, KFAC) and ships the <code>laplace</code> PyTorch library, showing LA is competitive with ensembles/VI at far lower cost.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The closest existing tooling to the FORGE backend; its closed-form last-layer predictive is exactly the real-time engine the knob panel needs.</p>
+  </li>
+</ol>
+
+<!-- ============================ SAMPLING ============================ -->
+<div class="lit-band"><h3>Sampling &amp; posterior geometry &mdash; HMC / NUTS</h3></div>
+
+<ol class="lit-list" start="8">
+  <li id="lit-neal-2011" class="lit-entry">
+    <span class="lit-tag t-sampling">sampling</span>
+    <p class="lit-cite"><strong>Neal, R.M.</strong> (2011).
+      MCMC using Hamiltonian Dynamics. Ch. 5 in <em>Handbook of Markov Chain Monte Carlo</em>
+      (Brooks, Gelman, Jones &amp; Meng, eds.), Chapman&nbsp;&amp;&nbsp;Hall/CRC, 113&ndash;162.
+      <a href="https://doi.org/10.1201/b10905" target="_blank" rel="noopener">DOI:10.1201/b10905</a> &middot;
+      <a href="https://arxiv.org/abs/1206.1901" target="_blank" rel="noopener">arXiv:1206.1901</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> The definitive exposition of HMC &mdash; momentum augmentation, leapfrog integration, volume preservation &mdash; making gradient-informed sampling of high-dimensional posteriors practical.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The reference method for the &ldquo;gold-standard&rdquo; posterior against which approximate-inference faithfulness (H2) is benchmarked.</p>
+  </li>
+
+  <li id="lit-hoffman-gelman-2014" class="lit-entry">
+    <span class="lit-tag t-sampling">sampling</span>
+    <p class="lit-cite"><strong>Hoffman, M.D. &amp; Gelman, A.</strong> (2014).
+      The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo.
+      <em>JMLR</em> <strong>15</strong>(47):1593&ndash;1623.
+      <a href="https://jmlr.org/papers/v15/hoffman14a.html" target="_blank" rel="noopener">JMLR</a> &middot;
+      <a href="https://arxiv.org/abs/1111.4246" target="_blank" rel="noopener">arXiv:1111.4246</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> NUTS &mdash; automates HMC&rsquo;s trajectory length and step size, enabling turnkey gradient sampling (the engine inside Stan / NumPyro / PyMC).</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The practical sampler the ground-truth posteriors are actually drawn with; self-tuning makes reproducible reference runs feasible.</p>
+  </li>
+
+  <li id="lit-izmailov-2021" class="lit-entry">
+    <span class="lit-tag t-sampling">sampling</span>
+    <p class="lit-cite"><strong>Izmailov, P., Vikram, S., Hoffman, M.D. &amp; Wilson, A.G.</strong> (2021).
+      What Are Bayesian Neural Network Posteriors Really Like?
+      <em>ICML 2021</em>, PMLR vol. 139.
+      <a href="https://proceedings.mlr.press/v139/izmailov21a.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/2104.14421" target="_blank" rel="noopener">arXiv:2104.14421</a>
+      <span class="lit-flag">proceedings page numbers not independently confirmed</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Uses full-batch HMC on modern architectures to characterize true BNN posteriors &mdash; finds cold-posterior effects are largely a data-augmentation artifact and BNNs generalize poorly under shift.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The empirical reference for what a <em>faithful</em> posterior visualization (H1) should reproduce, and a caution against over-trusting tempering knobs.</p>
+  </li>
+
+  <li id="lit-wilson-izmailov-2020" class="lit-entry">
+    <span class="lit-tag t-sampling">sampling &middot; geometry</span>
+    <p class="lit-cite"><strong>Wilson, A.G. &amp; Izmailov, P.</strong> (2020).
+      Bayesian Deep Learning and a Probabilistic Perspective of Generalization.
+      <em>NeurIPS 2020</em> (vol. 33).
+      <a href="https://proceedings.neurips.cc/paper/2020/hash/322f62469c5e3c7dc3e58f5a4d1ea399-Abstract.html" target="_blank" rel="noopener">NeurIPS</a> &middot;
+      <a href="https://arxiv.org/abs/2002.08791" target="_blank" rel="noopener">arXiv:2002.08791</a>
+      <span class="lit-flag">proceedings page numbers not independently confirmed</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Frames marginalization (not the prior) as the essence of Bayes, recasts deep ensembles as approximate BMA, and proposes MultiSWAG to marginalize within basins.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The conceptual bridge for the geometric-exploration framing &mdash; multimodality and basin structure are exactly what a posterior observatory should make visible.</p>
+  </li>
+</ol>
+
+<!-- ============================ CALIBRATION ============================ -->
+<div class="lit-band"><h3>Calibration &amp; predictive-uncertainty evaluation</h3></div>
+
+<ol class="lit-list" start="12">
+  <li id="lit-naeini-2015" class="lit-entry">
+    <span class="lit-tag t-calibration">calibration</span>
+    <p class="lit-cite"><strong>Pakdaman Naeini, M., Cooper, G.F. &amp; Hauskrecht, M.</strong> (2015).
+      Obtaining Well Calibrated Probabilities Using Bayesian Binning.
+      <em>AAAI 2015</em> (29th), 2901&ndash;2907.
+      <a href="https://doi.org/10.1609/aaai.v29i1.9602" target="_blank" rel="noopener">DOI:10.1609/aaai.v29i1.9602</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Introduces Bayesian Binning into Quantiles (BBQ) and the binned-calibration framing from which Expected Calibration Error (ECE) descends.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The origin of the binned-reliability machinery the calibration panel renders; the right citation when defining ECE rigorously.</p>
+  </li>
+
+  <li id="lit-guo-2017" class="lit-entry">
+    <span class="lit-tag t-calibration">calibration</span>
+    <p class="lit-cite"><strong>Guo, C., Pleiss, G., Sun, Y. &amp; Weinberger, K.Q.</strong> (2017).
+      On Calibration of Modern Neural Networks.
+      <em>ICML 2017</em>, PMLR <strong>70</strong>:1321&ndash;1330.
+      <a href="https://proceedings.mlr.press/v70/guo17a.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/1706.04599" target="_blank" rel="noopener">arXiv:1706.04599</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Documents systematic miscalibration of modern deep nets and shows single-parameter temperature scaling fixes most of it; popularized ECE and reliability diagrams.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> Defines the reliability-diagram + ECE views and the temperature knob that belong directly in the calibration tab.</p>
+  </li>
+
+  <li id="lit-kendall-gal-2017" class="lit-entry">
+    <span class="lit-tag t-calibration">calibration</span>
+    <p class="lit-cite"><strong>Kendall, A. &amp; Gal, Y.</strong> (2017).
+      What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?
+      <em>NeurIPS 2017</em> (vol. 30).
+      <a href="https://papers.nips.cc/paper/2017/hash/2650d6089a6d640c5e85b2b88265dc2b-Abstract.html" target="_blank" rel="noopener">NeurIPS</a> &middot;
+      <a href="https://arxiv.org/abs/1703.04977" target="_blank" rel="noopener">arXiv:1703.04977</a>
+      <span class="lit-flag">proceedings page numbers not independently confirmed</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Operationalizes the aleatoric/epistemic decomposition in deep nets, combining input-dependent observation noise with weight-posterior uncertainty under one loss.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The reference for the decomposition view &mdash; separating reducible (epistemic, knob-sensitive) from irreducible (aleatoric) uncertainty is central to reading the H3 panel.</p>
+  </li>
+
+  <li id="lit-ovadia-2019" class="lit-entry">
+    <span class="lit-tag t-calibration">calibration</span>
+    <p class="lit-cite"><strong>Ovadia, Y., Fertig, E., Ren, J., Nado, Z., Sculley, D., Nowozin, S., Dillon, J.V., Lakshminarayanan, B. &amp; Snoek, J.</strong> (2019).
+      Can You Trust Your Model&rsquo;s Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift.
+      <em>NeurIPS 2019</em> (vol. 32).
+      <a href="https://proceedings.neurips.cc/paper/2019/hash/8558cb408c1d76621371888657d2eb1d-Abstract.html" target="_blank" rel="noopener">NeurIPS</a> &middot;
+      <a href="https://arxiv.org/abs/1906.02530" target="_blank" rel="noopener">arXiv:1906.02530</a>
+      <span class="lit-flag">proceedings page numbers not independently confirmed</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> A large-scale benchmark showing post-hoc calibration degrades under distributional shift while ensembles/SVI hold up better &mdash; establishing shift as the meaningful test.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The template for the shift-stress view; argues evaluation should sweep corruption intensity, not just report i.i.d. ECE.</p>
+  </li>
+</ol>
+
+<!-- ============================ VISUALIZATION ============================ -->
+<div class="lit-band"><h3>Interactive &amp; explorable visualization</h3></div>
+
+<ol class="lit-list" start="16">
+  <li id="lit-hullman-2015" class="lit-entry">
+    <span class="lit-tag t-visualization">visualization</span>
+    <p class="lit-cite"><strong>Hullman, J., Resnick, P. &amp; Adar, E.</strong> (2015).
+      Hypothetical Outcome Plots Outperform Error Bars and Violin Plots for Inferences about Reliability of Variable Ordering.
+      <em>PLOS ONE</em> <strong>10</strong>(11):e0142444.
+      <a href="https://doi.org/10.1371/journal.pone.0142444" target="_blank" rel="noopener">DOI:10.1371/journal.pone.0142444</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Empirically shows animated draws (HOPs) let non-experts read distributions more accurately than static error bars or violins.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> Direct evidence for H1 &mdash; favours animating posterior draws over plotting credible-interval bands alone.</p>
+  </li>
+
+  <li id="lit-hohman-2019" class="lit-entry">
+    <span class="lit-tag t-visualization">visualization &middot; survey</span>
+    <p class="lit-cite"><strong>Hohman, F., Kahng, M., Pienta, R. &amp; Chau, D.H.</strong> (2019).
+      Visual Analytics in Deep Learning: An Interrogative Survey for the Next Frontiers.
+      <em>IEEE TVCG</em> <strong>25</strong>(8):2674&ndash;2693.
+      <a href="https://doi.org/10.1109/TVCG.2018.2843369" target="_blank" rel="noopener">DOI:10.1109/TVCG.2018.2843369</a> &middot;
+      <a href="https://arxiv.org/abs/1801.06889" target="_blank" rel="noopener">arXiv:1801.06889</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Organizes the DL-visualization landscape via a Why/Who/What/How/When/Where framework and maps open gaps.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The design-space survey to position FORGE within &mdash; and to cite for what existing tools do <em>not</em> cover, namely posterior geometry.</p>
+  </li>
+
+  <li id="lit-wexler-2020" class="lit-entry">
+    <span class="lit-tag t-visualization">visualization</span>
+    <p class="lit-cite"><strong>Wexler, J., Pushkarna, M., Bolukbasi, T., Wattenberg, M., Vi&eacute;gas, F. &amp; Wilson, J.</strong> (2020).
+      The What-If Tool: Interactive Probing of Machine Learning Models.
+      <em>IEEE TVCG</em> <strong>26</strong>(1):56&ndash;65.
+      <a href="https://doi.org/10.1109/TVCG.2019.2934619" target="_blank" rel="noopener">DOI:10.1109/TVCG.2019.2934619</a> &middot;
+      <a href="https://arxiv.org/abs/1907.04135" target="_blank" rel="noopener">arXiv:1907.04135</a></p>
+    <p class="lit-note"><span class="lk">Contributes</span> A widely deployed, low-code interface for counterfactual probing, feature analysis, and cross-model comparison.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The closest interaction-design precedent for the FORGE UX; it probes point predictions, not posterior structure &mdash; the gap FORGE fills.</p>
+  </li>
+</ol>
+
+<!-- ============================ SURVEY ============================ -->
+<div class="lit-band"><h3>Surveys &amp; state-of-the-art positioning</h3></div>
+
+<ol class="lit-list" start="19">
+  <li id="lit-gawlikowski-2023" class="lit-entry">
+    <span class="lit-tag t-survey">survey</span>
+    <p class="lit-cite"><strong>Gawlikowski, J., Njieutcheu Tassi, C.R., Ali, M., Lee, J., Humt, M., Feng, J., Kruspe, A., Triebel, R., Jung, P., Roscher, R., Shahzad, M., Yang, W., Bamler, R. &amp; Zhu, X.X.</strong> (2023).
+      A Survey of Uncertainty in Deep Neural Networks.
+      <em>Artificial Intelligence Review</em> <strong>56</strong>:1513&ndash;1589.
+      <a href="https://doi.org/10.1007/s10462-023-10562-9" target="_blank" rel="noopener">DOI:10.1007/s10462-023-10562-9</a> &middot;
+      <a href="https://arxiv.org/abs/2107.03342" target="_blank" rel="noopener">arXiv:2107.03342</a>
+      <span class="lit-flag">2021 preprint; journal version 2023</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> Comprehensive taxonomy of uncertainty sources (model vs. data) and quantification methods (Bayesian, ensemble, test-time, single-pass) plus calibration metrics.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The one-stop framework for organizing FORGE&rsquo;s method coverage and labeling each panel&rsquo;s uncertainty type.</p>
+  </li>
+
+  <li id="lit-papamarkou-2024" class="lit-entry">
+    <span class="lit-tag t-survey">survey &middot; position</span>
+    <p class="lit-cite"><strong>Papamarkou, T., Skoularidou, M., Palla, K., Aitchison, L., Arbel, J., Dunson, D., Filippone, M., Fortuin, V., Hennig, P., Hern&aacute;ndez-Lobato, J.M., Hubin, A., Immer, A., Karaletsos, T., Khan, M.E., Kristiadi, A., Li, Y., Mandt, S., Nemeth, C., Osborne, M.A., Rudner, T.G.J., R&uuml;gamer, D., Teh, Y.W., Welling, M., Wilson, A.G. &amp; Zhang, R.</strong> (2024).
+      Position: Bayesian Deep Learning is Needed in the Age of Large-Scale AI.
+      <em>ICML 2024</em>, PMLR <strong>235</strong>:39556&ndash;39586.
+      <a href="https://proceedings.mlr.press/v235/papamarkou24b.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/2402.00809" target="_blank" rel="noopener">arXiv:2402.00809</a>
+      <span class="lit-flag">peer-reviewed position paper; arXiv v1 title differs</span></p>
+    <p class="lit-note"><span class="lk">Contributes</span> A 25-author community statement arguing BDL&rsquo;s value for uncertainty, continual/active learning, and scientific data, mapping research avenues toward scale.</p>
+    <p class="lit-note"><span class="lk forge">For FORGE</span> The most current SOTA framing to motivate FORGE &mdash; its scientific-data and uncertainty arguments align with the HiggsML physics anchor.</p>
+  </li>
+</ol>
+
+<!-- ============================ DOMAIN SOURCES ============================ -->
+<div class="lit-band"><h3>Experiment &amp; domain sources</h3></div>
+
+<p class="lit-domain-intro">
+  Sources behind the three mk_1 reproductions (music genre recognition, phonon DOS
+  regression, ATLAS LLP detection). These were previously listed on the
+  <a href="#overview" data-go-panel="overview">Project Overview</a>; they now live here so
+  the project keeps a single bibliography. Citations elsewhere on the site link directly
+  to these entries.
+</p>
+
+<ul class="lit-list lit-domain">
+  <li id="lit-chen-2021" class="lit-entry">
+    <span class="lit-tag t-domain">phonon</span>
+    <p class="lit-cite"><strong>Chen, Z., Andrejevic, N., Smidt, T., Ding, Z., Xu, Q., Chi, Y.-T., Nguyen, Q.T., Alatas, A., Kong, J. &amp; Li, M.</strong> (2021).
+      Direct prediction of phonon density of states with Euclidean neural networks.
+      <em>Advanced Science</em> <strong>8</strong>, 2004214.
+      <a href="https://doi.org/10.1002/advs.202004214" target="_blank" rel="noopener">DOI:10.1002/advs.202004214</a> &middot;
+      <a href="https://arxiv.org/abs/2009.05163" target="_blank" rel="noopener">arXiv:2009.05163</a> &middot;
+      <a href="https://github.com/zhantaochen/phonondos_e3nn" target="_blank" rel="noopener">code</a></p>
+    <p class="lit-note"><span class="lk forge">Reproduction</span> E(3)-equivariant graph network for the phonon-DOS baseline (experiment 2); FORGE adds calibrated credible intervals the original lacks.</p>
+  </li>
+
+  <li id="lit-petretto-2018" class="lit-entry">
+    <span class="lit-tag t-domain">phonon</span>
+    <p class="lit-cite"><strong>Petretto, G., Dwaraknath, S., Miranda, H.P.C., Winston, D., Giantomassi, M., van Setten, M.J., Gonze, X., Persson, K.A., Hautier, G. &amp; Rignanese, G.-M.</strong> (2018).
+      High-throughput density-functional perturbation theory phonons for inorganic materials.
+      <em>Scientific Data</em> <strong>5</strong>, 180065.
+      <a href="https://doi.org/10.1038/sdata.2018.65" target="_blank" rel="noopener">DOI:10.1038/sdata.2018.65</a></p>
+    <p class="lit-note"><span class="lk forge">Reproduction</span> The DFPT phonon database (via Materials Project) supplying the ~1,500-crystal training set for experiment 2.</p>
+  </li>
+
+  <li id="lit-herling-attili-2025" class="lit-entry">
+    <span class="lit-tag t-domain">audio</span>
+    <p class="lit-cite"><strong>Herling, N. &amp; Attili, N.</strong> (2025).
+      BEARDOWN: A Bayesian Deep Neural Network (DBNN) for Music Genre Classification.
+      INFO 510 Final Project, University of Arizona.
+      <a href="https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj" target="_blank" rel="noopener">GitHub</a></p>
+    <p class="lit-note"><span class="lk forge">Reproduction</span> The multimodal CNN + Bayesian-head baseline and Robust Ranking Metric (RRM) behind experiment 1.</p>
+  </li>
+
+  <li id="lit-hernandez-lobato-2015" class="lit-entry">
+    <span class="lit-tag t-domain">BNN</span>
+    <p class="lit-cite"><strong>Hern&aacute;ndez-Lobato, J.M. &amp; Adams, R.P.</strong> (2015).
+      Probabilistic Backpropagation for Scalable Learning of Bayesian Neural Networks.
+      <em>ICML 2015</em>, PMLR <strong>37</strong>:1861&ndash;1869.
+      <a href="https://proceedings.mlr.press/v37/hernandez-lobatoc15.html" target="_blank" rel="noopener">PMLR</a> &middot;
+      <a href="https://arxiv.org/abs/1502.05336" target="_blank" rel="noopener">arXiv:1502.05336</a></p>
+    <p class="lit-note"><span class="lk forge">Reference</span> Probabilistic backpropagation and the UCI regression protocol widely reused as a BNN benchmark relevant to FORGE&rsquo;s benchmarked tier.</p>
+  </li>
+
+  <li id="lit-schott-thesis" class="lit-entry">
+    <span class="lit-tag t-domain">HEP</span>
+    <p class="lit-cite"><strong>Schott, M.</strong> (forthcoming).
+      Long-Lived Particle searches via displaced muon-spectrometer vertices. Doctoral thesis &mdash;
+      full bibliographic record to be finalized in a later revision.
+      <span class="lit-flag">citation pending</span></p>
+    <p class="lit-note"><span class="lk forge">Reproduction</span> Source for the ATLAS LLP / MSVtx baseline targets (experiment 3); metric table populated once the record is finalized.</p>
+  </li>
+
+  <li id="lit-sridhar-2024" class="lit-entry">
+    <span class="lit-tag t-domain">audio</span>
+    <p class="lit-cite"><strong>Sridhar, A.</strong> (2024).
+      Attention-Guided Spectrogram Sequence Modeling with CNNs for Music Genre Classification.
+      <a href="https://arxiv.org/abs/2411.14474" target="_blank" rel="noopener">arXiv:2411.14474</a>
+      <span class="lit-flag">preprint &mdash; not peer-reviewed</span></p>
+    <p class="lit-note"><span class="lk forge">Reference</span> Foundational CNN genre-recognition methodology anchoring experiment 1.</p>
+  </li>
+</ul>
+
+<style>
+  /* ---- Section bands (match research panel) ---- */
+  .lit-band {
+    margin: 34px 0 16px;
+    padding: 0 0 7px;
+    border-bottom: 3px solid var(--color-ember);
+  }
+  .lit-band h3 {
+    margin: 0;
+    color: var(--color-navy);
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: 0.01em;
+    border-bottom: none;       /* override global h3 underline */
+    padding-bottom: 0;
+  }
+
+  /* ---- Synthesis callout ---- */
+  .lit-synthesis {
+    margin: 1.4em 0 1.2em;
+    padding: 18px 22px;
+    background: linear-gradient(
+      135deg,
+      rgba(45, 212, 255, 0.06) 0%,
+      rgba(255, 45, 122, 0.06) 100%
+    );
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-ember);
+    border-radius: var(--radius-lg);
+  }
+  .lit-synthesis-kicker {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ember);
+  }
+  .lit-synthesis p { margin: 0; line-height: 1.62; color: var(--color-text); }
+  .lit-synthesis p + p { margin-top: 0; }
+
+  .lit-verify-note {
+    margin: 0 0 0.6em;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    border-left: 3px solid var(--color-navy-soft);
+    background: var(--color-bg-alt);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+  }
+  .lit-verify-note strong { color: var(--color-navy); }
+
+  /* ---- Entry list ---- */
+  ol.lit-list, ul.lit-list { padding-left: 1.5em; margin: 0.4em 0 0.6em; }
+  ul.lit-list.lit-domain { list-style: none; padding-left: 0; }
+  .lit-entry {
+    margin-bottom: 1.15em;
+    padding-bottom: 0.9em;
+    border-bottom: 1px solid var(--color-border-soft);
+    line-height: 1.55;
+  }
+  .lit-entry:last-child { border-bottom: none; }
+  .lit-cite { margin: 0 0 0.35em; color: var(--color-text); }
+  .lit-cite code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--color-bg-muted);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .lit-cite a { color: var(--color-navy-mid); }
+  .lit-note { margin: 0.18em 0 0; font-size: 0.9rem; color: var(--color-text); }
+  .lit-note .lk {
+    display: inline-block;
+    min-width: 84px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-right: 6px;
+  }
+  .lit-note .lk.forge { color: var(--color-ember); }
+
+  /* inline flags (version/page caveats) */
+  .lit-flag {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.74rem;
+    font-style: italic;
+    color: var(--color-warn);
+  }
+  .lit-flag::before { content: "\26A0\FE0E"; margin-right: 4px; opacity: 0.8; }
+
+  /* ---- Theme tag chips ---- */
+  .lit-tag {
+    float: right;
+    margin: 2px 0 4px 12px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .t-inference     { color: var(--color-cyan);      border-color: var(--color-cyan);      background: rgba(45,212,255,0.08); }
+  .t-laplace       { color: var(--color-flame);     border-color: var(--color-flame);     background: rgba(255,122,13,0.08); }
+  .t-sampling      { color: var(--color-magenta);   border-color: var(--color-magenta);   background: rgba(255,45,122,0.08); }
+  .t-calibration   { color: var(--color-warn);      border-color: var(--color-warn);      background: rgba(184,137,59,0.10); }
+  .t-visualization { color: var(--color-navy-mid);  border-color: var(--color-navy-mid);  background: rgba(42,77,122,0.08); }
+  .t-survey        { color: var(--color-success);   border-color: var(--color-success);   background: rgba(74,138,110,0.10); }
+  .t-domain        { color: var(--color-navy-soft); border-color: var(--color-navy-soft); background: rgba(90,123,168,0.08); }
+
+  .lit-domain-intro {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.8em;
+  }
+
+  /* ---- Deep-link flash (set by app.js on data-anchor navigation) ---- */
+  .lit-entry.ref-flash {
+    background-color: rgba(255, 200, 87, 0.20);
+    box-shadow: -10px 0 0 rgba(255, 200, 87, 0.20), 10px 0 0 rgba(255, 200, 87, 0.20);
+    border-radius: 4px;
+    transition: background-color 1.6s ease, box-shadow 1.6s ease;
+  }
+  .lit-entry:target {
+    background-color: rgba(255, 200, 87, 0.18);
+    border-radius: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .lit-tag { float: none; display: inline-block; margin: 0 0 6px; }
+    .lit-note .lk { min-width: 0; display: block; margin-bottom: 1px; }
+  }
+</style>

@@ -21,7 +21,100 @@
      SECTION BAND  —  copy this block to start a new research section.
      Change the kicker (left) and title (right) only.
      =================================================================== -->
-<div style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+<!-- ===================================================================
+     Floating section HUD (scrollspy) — tracks the active section.
+     =================================================================== -->
+<nav class="rs-toc" aria-label="Section navigation">
+  <span class="rs-toc-head">On this page</span>
+  <a class="rs-toc-item" data-target="rs-framing"><span class="rs-toc-label">Problem Framing</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="rs-market"><span class="rs-toc-label">Market Research</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="rs-ethics"><span class="rs-toc-label">Digital Ethics</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="rs-timeline"><span class="rs-toc-label">Timeline &amp; Gantt</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="research-log"><span class="rs-toc-label">Lecture Log</span><span class="rs-toc-dot"></span></a>
+</nav>
+
+<style>
+  .rs-toc {
+    position: fixed;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 14px 14px;
+    background: rgba(255, 255, 255, 0.86);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: 0 6px 22px rgba(15, 31, 61, 0.10);
+  }
+  .rs-toc-head {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin: 0 0 6px 2px;
+  }
+  .rs-toc::after {                 /* vertical progress track behind the dots */
+    content: "";
+    position: absolute;
+    right: 18px;
+    top: 38px;
+    bottom: 16px;
+    width: 2px;
+    background: var(--color-border-soft);
+    border-radius: 2px;
+    z-index: 0;
+  }
+  .rs-toc-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 4px 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .rs-toc-label {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    line-height: 1.1;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    transition: color 0.12s ease;
+  }
+  .rs-toc-dot {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--color-navy-soft);
+    background: var(--color-bg);
+    transition: background 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+  }
+  .rs-toc-item:hover .rs-toc-label { color: var(--color-navy-mid); }
+  .rs-toc-item:hover .rs-toc-dot   { border-color: var(--color-ember); }
+  .rs-toc-item.active .rs-toc-label { color: var(--color-navy); font-weight: 600; }
+  .rs-toc-item.active .rs-toc-dot {
+    background: var(--color-ember);
+    border-color: var(--color-ember);
+    box-shadow: 0 0 0 3px rgba(255, 77, 31, 0.18);
+  }
+  /* Only show the HUD when there is gutter to the right of the reading column. */
+  @media (max-width: 1280px) { .rs-toc { display: none; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .rs-toc-item { transition: transform 0.12s ease; }
+  }
+</style>
+
+<div id="rs-framing" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
   <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Problem Framing &ndash; User Problems</h3>
 </div>
 
@@ -135,7 +228,7 @@
 <!-- ===================================================================
      SECTION:  User & Market Research — Gauging Project Novelty  (Video 2)
      =================================================================== -->
-<div style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+<div id="rs-market" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
   <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Market Research &ndash; Gauging Project Novelty</h3>
 </div>
 
@@ -329,6 +422,193 @@
   contribution.
 </p>
 
+<!-- ===================================================================
+     SECTION BAND  —  Digital Ethics (Lecture 3)
+     =================================================================== -->
+<div id="rs-ethics" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Digital Ethics &ndash; Harm Evaluation</h3>
+  <span class="status-badge status-in_progress">Lecture 3 &middot; full table due with proposal</span>
+</div>
+
+<style>
+  .eth { display:inline-block; min-width:3.2em; text-align:center; padding:1px 8px; border-radius:999px;
+         font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.04em; border:1px solid; }
+  .eth-no    { color:var(--color-success); border-color:var(--color-success); background:rgba(74,138,110,0.10); }
+  .eth-maybe { color:var(--color-warn);    border-color:var(--color-warn);    background:rgba(184,137,59,0.12); }
+  .eth-yes   { color:var(--color-danger);  border-color:var(--color-danger);  background:rgba(168,69,59,0.10); }
+  table.eth-table td:nth-child(3), table.eth-table td:nth-child(4) { text-align:center; white-space:nowrap; }
+</style>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  This lecture inverts the usual question. Instead of asking what the project does well, it asks
+  <strong>what harm it could cause</strong> &mdash; the worst case if it shipped and people, or an
+  attacker, used it in ways never intended. The instrument is a checklist: each concern is answered
+  <strong>Yes&nbsp;/&nbsp;No&nbsp;/&nbsp;Maybe</strong> for ordinary use and again under a
+  <strong>data breach</strong>, and anything that is not a clean &ldquo;No&rdquo; gets a written
+  mitigation &mdash; whether or not the team would actually build it.
+</p>
+
+<p>
+  The prompts the lecture poses are the right ones to sit with: how could the product be misused to
+  harm others; how is the data stored, and what happens if it leaks or is hacked; how sensitive is
+  what is collected, and would participants object to its collection at all; and are there age or
+  vulnerability concerns &mdash; what happens when a child, or someone with diminished capacity, uses
+  it. The worked example is Craigslist, where ordinary-use answers are uncomfortably affirmative
+  (illegal-item sales, sex trafficking, academic cheating all <em>Yes</em>; a stalker locating someone
+  <em>Maybe</em>) and each is paired with a concrete mitigation &mdash; keyword flagging with an appeal
+  path, explicit policy warnings, and making location optional rather than mandatory.
+</p>
+
+<p>
+  FORGE is a far smaller attack surface. It is a hosted dashboard for exploring <em>preloaded</em>
+  Bayesian posteriors of already-trained models across three scientific domains. There is no
+  marketplace, no messaging, no user-to-user contact, no profiles, no location data, and no camera or
+  microphone access; the only per-user state is saved model configurations and posterior samples,
+  scoped to the owning account. Against the checklist, almost every row is a clean &ldquo;No&rdquo;.
+  The lecture also asks us to connect a real-world example to the project: the closest analog is the
+  spying / phone-tracking case (row&nbsp;5) &mdash; and FORGE sidesteps it by construction, since it
+  collects no data about third parties to track in the first place.
+</p>
+
+<h4 style="margin-top:1.4em;">FORGE harm checklist</h4>
+
+<div class="rt-wide">
+<table class="content-table eth-table">
+  <thead>
+    <tr>
+      <th style="width:2.5rem;">#</th>
+      <th>Concern</th>
+      <th style="width:6rem;">Normal use</th>
+      <th style="width:6rem;">Data breach</th>
+      <th>Mitigation / note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Could a user sell drugs or other illegal items on the platform?</td>
+      <td><span class="eth eth-no">No</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>FORGE is not a marketplace &mdash; nothing is listed, bought, or sold. No user-generated commerce exists to police.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Could a user engage in sex trafficking via the platform?</td>
+      <td><span class="eth eth-no">No</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>No listings, profiles, messaging, or contact channels between users; there is no surface through which people interact at all.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Could a user sell class notes or cheat on homework on the platform?</td>
+      <td><span class="eth eth-maybe">Maybe</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>Not a content-exchange platform, so nothing is sold. The only thin edge is academic integrity &mdash; a student presenting FORGE-generated analysis as their own. Mitigated by FORGE being a documented, attributable research tool, not an answer service; outputs are reproducible and traceable to the preloaded baseline.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Could a stalker use the project to find someone?</td>
+      <td><span class="eth eth-no">No</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>No personal data, no locations, and no user directory are collected or displayed; there is nothing locatable.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Could the app be used to spy on or track individuals?</td>
+      <td><span class="eth eth-no">No</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>No tracking of any kind. Per-user saved artifacts are account-scoped model configurations and posterior samples &mdash; data about <em>models</em>, never about third parties.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Could the software access the camera or microphone and record without users being aware?</td>
+      <td><span class="eth eth-no">No</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>A browser dashboard that requests no camera or microphone permissions; there is no capture path to abuse.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Could someone using the platform be re-traumatized or have their mental health impacted?</td>
+      <td><span class="eth eth-no">No</span></td>
+      <td><span class="eth eth-no">No</span></td>
+      <td>Content is purely technical &mdash; audio features, crystal structures, particle-physics classifiers. Nothing is distressing, personal, or targeted at vulnerable users.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4 style="margin-top:1.4em;">Data governance &ndash; the one open item</h4>
+
+<p>
+  The substantive consideration for FORGE is not in the harm rows but in data <em>provenance</em>.
+  Two of the three datasets are public &mdash; GTZAN audio features and the Materials&nbsp;Project /
+  DFPT phonon data. The third, <strong>ATLAS detector data</strong>, is governed by ATLAS&nbsp;/&nbsp;CERN
+  data-release policy, and whether the underlying detector data may be shown on a public site is still
+  to be determined. The mitigation is simple and already identified: the site does not need to display
+  the detector data at all. FORGE can serve the trained model, its posteriors, and derived plots while
+  keeping the raw detector data off the public site entirely &mdash; which also bounds breach exposure,
+  since the per-user store then holds only low-sensitivity model configurations and posterior samples.
+</p>
+
+<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
+  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;Full release of the detector data is yet to be
+  determined, but could be solved by simply not displaying the data on the website. The further
+  ethical concerns appear minimal &mdash; detector data is used to solve physics problems about the
+  constituents of matter.&rdquo;
+</p>
+
+<p style="font-size:0.85rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  <strong>Status:</strong> the complete ethical-considerations table lives in the
+  <a href="#proposal" data-go-panel="proposal">project proposal</a> and will be formally evaluated at
+  proposal submission &mdash; about 1.5&nbsp;weeks out (mid-June&nbsp;2026). The evaluation above is the
+  initial synopsis; the proposal table is the system of record.
+</p>
+
+<!-- ===================================================================
+     SECTION BAND  —  Timeline & Gantt Chart (Lecture 4)
+     =================================================================== -->
+<div id="rs-timeline" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Timeline &amp; Gantt Chart</h3>
+  <span class="status-badge status-done">Lecture 4 &middot; implemented in repo</span>
+</div>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  Two views of the same schedule. A <strong>timeline</strong> is built by working
+  <em>backward</em> from the finished deliverable, laying every step into the weeks it has to
+  land in. A <strong>Gantt chart</strong> reverse-engineers that timeline into a
+  project-management view &mdash; interconnected tasks in a waterfall, with done vs. outstanding
+  legible at a glance &mdash; and is refreshed at every weekly check-in.
+</p>
+
+<p>
+  The lecture&rsquo;s emphasis is accountability: the timeline is the document the project is
+  graded against &mdash; what was promised against what was delivered &mdash; and the act of
+  placing milestones is itself a scope reality-check, surfacing a plan that is too big, too small,
+  or quietly slipping on one person before it becomes a crisis. The Gantt adds the
+  interconnection the timeline lacks: a blocking dependency (you cannot start the next task until
+  this one finishes) reads differently from an independent slip that costs nothing downstream.
+  In the worked example, completed work is greyed out and behind-schedule work is flagged red, so
+  the chart doubles as a live checklist.
+</p>
+
+<p>
+  Both are already built into this repository, so this section is a pointer rather than new work.
+  The <a href="#timeline" data-go-panel="timeline">Project&nbsp;Timeline</a> panel carries the
+  13-week schedule, phase-color-coded and anchored to the Week&nbsp;0 start (18&nbsp;May&nbsp;2026);
+  the <a href="#gantt" data-go-panel="gantt">Gantt&nbsp;Chart</a> panel renders the same tasks
+  interactively with per-task status (done / in-progress / outstanding) and the dependency flow
+  across weeks. Beyond the lecture&rsquo;s ask, the Gantt was extended with a <strong>per-week
+  to-do layer</strong> &mdash; a hand-edited <code>weekly_todos</code> structure that expands each
+  week in the chart&rsquo;s detail panel into individual tasks marked <em>todo</em> or <em>done</em>,
+  giving the finer granularity the weekly check-ins run against.
+</p>
+
+<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
+  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;Timeline and Gantt are already handled in the
+  repo. I added a per-week to-do structure for more granularity &mdash; it surfaces in the Gantt
+  detail panel and is updated at each weekly check-in.&rdquo;
+</p>
+
 <div id="research-log" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
   <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Series Index &ndash; Lecture Log</h3>
 </div>
@@ -360,6 +640,18 @@
       <td>The comparable-tools and literature tables above, and the novelty statement</td>
     </tr>
     <tr>
+      <td>3</td>
+      <td>Digital ethics &amp; harm evaluation</td>
+      <td>Harm checklist (Yes&nbsp;/&nbsp;No&nbsp;/&nbsp;Maybe for normal use and under data breach) with a written mitigation for every non-&ldquo;No&rdquo;; worst-case &ldquo;what harm can this cause?&rdquo; framing</td>
+      <td>The harm-evaluation table and ethics synopsis above</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Timeline &amp; Gantt chart</td>
+      <td>Work-backward timeline (accountability + scope check) and an interconnected Gantt (done vs. outstanding, dependency waterfall), refreshed at weekly check-ins</td>
+      <td>The <a href="#timeline" data-go-panel="timeline">Project&nbsp;Timeline</a> and <a href="#gantt" data-go-panel="gantt">Gantt&nbsp;Chart</a> panels, plus the per-week to-do granularity (<code>weekly_todos</code>)</td>
+    </tr>
+    <tr>
       <td colspan="4" style="color:var(--color-text-faint); font-style:italic;">
         &hellip; more lectures to be added as the series is worked through.
       </td>
@@ -367,8 +659,60 @@
   </tbody>
 </table>
 
-<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
-  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;How might we&rdquo; statements help us design
-  solutions with a human-centered focus. What&rsquo;s a problem worth solving? &rarr; write a
-  problem statement: <em>User&nbsp;+&nbsp;Need&nbsp;+&nbsp;Because.</em>
-</p>
+
+<script>
+(function () {
+  // Idempotent: app.js reloads panels via innerHTML, so tear down any prior instance.
+  if (window.__rsTocCleanup) { try { window.__rsTocCleanup(); } catch (e) {} window.__rsTocCleanup = null; }
+
+  var toc = document.querySelector('.rs-toc');
+  if (!toc) return;
+  var items = Array.prototype.slice.call(toc.querySelectorAll('.rs-toc-item'));
+  var sections = items
+    .map(function (it) { return { item: it, el: document.getElementById(it.getAttribute('data-target')) }; })
+    .filter(function (s) { return s.el; });
+  if (!sections.length) return;
+
+  var OFFSET = 150; // a section becomes "current" once its band is within 150px of the top
+
+  function setActive(idx) {
+    items.forEach(function (it) { it.classList.remove('active'); });
+    if (sections[idx]) sections[idx].item.classList.add('active');
+  }
+
+  function update() {
+    if (!document.body.contains(toc)) { cleanup(); return; }
+    var active = 0;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].el.getBoundingClientRect().top - OFFSET <= 0) active = i; else break;
+    }
+    setActive(active);
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { update(); ticking = false; });
+  }
+
+  items.forEach(function (it) {
+    it.addEventListener('click', function (e) {
+      e.preventDefault();
+      var el = document.getElementById(it.getAttribute('data-target'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function cleanup() {
+    window.removeEventListener('scroll', onScroll, true);
+    window.removeEventListener('resize', onScroll);
+    window.__rsTocCleanup = null;
+  }
+  window.addEventListener('scroll', onScroll, true); // capture catches window + any scroll ancestor
+  window.addEventListener('resize', onScroll);
+  window.__rsTocCleanup = cleanup;
+
+  update(); // seed initial state
+})();
+</script>

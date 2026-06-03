@@ -22,8 +22,8 @@
 
 <p>
   From those baselines, users can introduce Bayesian components into the existing models
-  &mdash; for example, variational layers, Monte Carlo dropout
-  (<a href="#ref-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>),
+  &mdash; for example, variational layers (<a href="#literature" data-go-panel="literature" data-anchor="lit-blundell-2015">Blundell et&nbsp;al., 2015</a>), Monte Carlo dropout
+  (<a href="#literature" data-go-panel="literature" data-anchor="lit-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>),
   Flipout layers, or full Bayesian neural network replacements &mdash; and retrain,
   comparing the resulting posteriors against the original deterministic baselines. This is
   the proof of concept for mk_1. The longer-term goal is a platform where
@@ -190,8 +190,8 @@
 
 <p>
   The cost of moving from a point estimate to a posterior is computational. Sampling
-  from a posterior &mdash; whether via Markov Chain Monte Carlo (HMC, NUTS),
-  variational approximation, dropout-as-Bayesian, or last-layer Gaussian heads
+  from a posterior &mdash; whether via Markov Chain Monte Carlo (HMC, NUTS; <a href="#literature" data-go-panel="literature" data-anchor="lit-neal-2011">Neal, 2011</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-hoffman-gelman-2014">Hoffman &amp; Gelman, 2014</a>),
+  variational approximation, dropout-as-Bayesian, or last-layer Gaussian heads (<a href="#literature" data-go-panel="literature" data-anchor="lit-kristiadi-2020">Kristiadi et&nbsp;al., 2020</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-daxberger-2021">Daxberger et&nbsp;al., 2021</a>)
   &mdash; takes longer than a single forward pass. FORGE addresses this with a
   preloaded baseline architecture where most of the model is deterministic and only
   the final classification or regression layer is Bayesian. This last-layer
@@ -213,7 +213,7 @@
 
 <p>
   The genre-recognition experiment extends the BEARDOWN architecture
-  (<a href="#ref-herling-attili-2025">Herling &amp; Attili, 2025</a>): a multimodal CNN
+  (<a href="#literature" data-go-panel="literature" data-anchor="lit-herling-attili-2025">Herling &amp; Attili, 2025</a>): a multimodal CNN
   that classifies 30-second audio clips into one of ten genres using the GTZAN dataset
   (blues, classical, country, disco, hip-hop, jazz, metal, pop, reggae, rock). The model
   uses two parallel encoders &mdash; a convolutional encoder on spectrogram images and a
@@ -222,8 +222,8 @@
   through a Bayesian classification head. The original work introduced the Robust Ranking
   Metric (RRM), a composite score combining accuracy, fold stability, and posterior
   variance, validated against accuracy alone for model selection. Foundational work on
-  CNN-based genre recognition (<a href="#ref-sridhar-2024">Sridhar, 2024</a>) and Bayesian
-  approximation via dropout (<a href="#ref-gal-ghahramani-2016">Gal &amp; Ghahramani,
+  CNN-based genre recognition (<a href="#literature" data-go-panel="literature" data-anchor="lit-sridhar-2024">Sridhar, 2024</a>) and Bayesian
+  approximation via dropout (<a href="#literature" data-go-panel="literature" data-anchor="lit-gal-ghahramani-2016">Gal &amp; Ghahramani,
   2016</a>) anchors the methodology. FORGE preloads the trained baseline (target ~76%
   validation accuracy, the achieved BEARDOWN performance) and exposes the
   Bayesian-head hyperparameters as user-tunable knobs for posterior exploration.
@@ -233,11 +233,11 @@
 
 <p>
   The phonon experiment reproduces the Euclidean neural network architecture of
-  <a href="#ref-chen-2021">Chen et al. (2021)</a>: an E(3)-equivariant graph network that
+  <a href="#literature" data-go-panel="literature" data-anchor="lit-chen-2021">Chen et al. (2021)</a>: an E(3)-equivariant graph network that
   predicts phonon density-of-states (DOS) curves from crystal structures alone, using only
   atomic species and positions as input. The model is trained on ~1,500 crystalline solids
   curated from the DFPT phonon database of
-  <a href="#ref-petretto-2018">Petretto et al. (2018)</a> via the Materials Project. The
+  <a href="#literature" data-go-panel="literature" data-anchor="lit-petretto-2018">Petretto et al. (2018)</a> via the Materials Project. The
   published baseline reports that 70% of test materials fall within 10% relative error on
   the average phonon frequency. Crucially, the published model produces
   <em>point predictions only</em> &mdash; no uncertainty quantification, no calibration
@@ -279,7 +279,7 @@
 
 <p>
   Targets are drawn from the BEARDOWN final report
-  (<a href="#ref-herling-attili-2025">Herling &amp; Attili, 2025</a>),
+  (<a href="#literature" data-go-panel="literature" data-anchor="lit-herling-attili-2025">Herling &amp; Attili, 2025</a>),
   specifically Sweep 1 (broad randomized hyperparameter sweep, 20 configurations,
   3-fold cross-validation, GTZAN 30-second clips, k = 3 folds).
 </p>
@@ -353,9 +353,9 @@
 <h4>(2) Phonon DOS — Chen et al. baseline targets</h4>
 
 <p>
-  Targets are drawn from <a href="#ref-chen-2021">Chen et al. (2021)</a>, trained on
+  Targets are drawn from <a href="#literature" data-go-panel="literature" data-anchor="lit-chen-2021">Chen et al. (2021)</a>, trained on
   ~1,500 crystalline solids from the DFPT phonon database
-  (<a href="#ref-petretto-2018">Petretto et al., 2018</a>). The published baseline
+  (<a href="#literature" data-go-panel="literature" data-anchor="lit-petretto-2018">Petretto et al., 2018</a>). The published baseline
   produces point predictions only; FORGE's contribution is calibration coverage,
   flagged in the table.
 </p>
@@ -501,7 +501,7 @@
 
 <ul>
   <li><strong>Monte Carlo dropout</strong>
-    (<a href="#ref-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>) &mdash;
+    (<a href="#literature" data-go-panel="literature" data-anchor="lit-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>) &mdash;
     interpret dropout at test time as approximate variational inference; cheap and
     drop-in for most architectures.</li>
   <li><strong>Variational layers (Flipout)</strong> &mdash; replace a dense layer with
@@ -576,59 +576,22 @@
 
 <h3 id="references">References</h3>
 
-<ol class="bib-list">
-  <li id="ref-chen-2021">
-    <strong>Chen, Z., Andrejevic, N., Smidt, T., Ding, Z., Xu, Q., Chi, Y.-T., Nguyen,
-    Q.T., Alatas, A., Kong, J., Li, M.</strong> (2021).
-    Direct prediction of phonon density of states with Euclidean neural networks.
-    <em>Advanced Science</em> <strong>8</strong>, 2004214.
-    <a href="https://doi.org/10.1002/advs.202004214" target="_blank" rel="noopener">DOI:10.1002/advs.202004214</a>
-    &middot;
-    <a href="https://arxiv.org/abs/2009.05163" target="_blank" rel="noopener">arXiv:2009.05163</a>
-    &middot;
-    <a href="https://github.com/zhantaochen/phonondos_e3nn" target="_blank" rel="noopener">code</a>
-  </li>
-  <li id="ref-gal-ghahramani-2016">
-    <strong>Gal, Y. &amp; Ghahramani, Z.</strong> (2016).
-    Dropout as a Bayesian approximation: representing model uncertainty in deep learning.
-    <em>Proceedings of the 33rd International Conference on Machine Learning (ICML)</em>.
-    <a href="https://proceedings.mlr.press/v48/gal16.pdf" target="_blank" rel="noopener">PDF</a>
-  </li>
-  <li id="ref-herling-attili-2025">
-    <strong>Herling, N. &amp; Attili, N.</strong> (2025).
-    BEARDOWN: A Bayesian Deep Neural Network (DBNN) for Music Genre Classification.
-    INFO 510 Final Project, University of Arizona.
-    <a href="https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj" target="_blank" rel="noopener">GitHub</a>
-  </li> 
-  <li id="ref-hernandez-lobato-2015">
-    <strong>Hern&aacute;ndez-Lobato, J.M. &amp; Adams, R.P.</strong> (2015).
-    Probabilistic Backpropagation for Scalable Learning of Bayesian Neural Networks.
-    <em>Proceedings of the 32nd International Conference on Machine Learning (ICML)</em>,
-    PMLR <strong>37</strong>, 1861&ndash;1869.
-    <a href="https://proceedings.mlr.press/v37/hernandez-lobatoc15.html" target="_blank" rel="noopener">PDF</a>
-    &middot;
-    <a href="https://arxiv.org/abs/1502.05336" target="_blank" rel="noopener">arXiv:1502.05336</a>
-  </li>
-  <li id="ref-petretto-2018">
-    <strong>Petretto, G., Dwaraknath, S., Miranda, H.P.C., Winston, D., Giantomassi, M.,
-    van Setten, M.J., Gonze, X., Persson, K.A., Hautier, G., Rignanese, G.-M.</strong>
-    (2018).
-    High-throughput density-functional perturbation theory phonons for inorganic materials.
-    <em>Scientific Data</em> <strong>5</strong>, 180065.
-    <a href="https://www.nature.com/articles/sdata201865" target="_blank" rel="noopener">DOI:10.1038/sdata.2018.65</a>
-  </li>
-  <li id="ref-schott-thesis">
-    <strong>Schott, M.</strong> (forthcoming citation).
-    [Long-Lived Particle searches via displaced muon-spectrometer vertices.] Doctoral
-    thesis &mdash; full bibliographic record to be added in next revision.
-  </li>
-  <li id="ref-sridhar-2024">
-    <strong>Sridhar, A.</strong> (2024).
-    Attention-Guided Spectrogram Sequence Modeling with CNNs for Music Genre
-    Classification.
-    <a href="https://arxiv.org/abs/2411.14474" target="_blank" rel="noopener">arXiv:2411.14474</a>
-  </li>
-</ol>
+<p>
+  The full project bibliography now lives in one place &mdash; the
+  <a href="#literature" data-go-panel="literature">Literature Search</a> panel &mdash; which
+  carries the vetted review across all six themes (inference, Laplace, sampling, calibration,
+  visualization, survey) together with the experiment &amp; domain sources behind the three
+  reproductions. Every work cited in this overview resolves there:
+  variational inference (<a href="#literature" data-go-panel="literature" data-anchor="lit-blundell-2015">Blundell et&nbsp;al., 2015</a>),
+  MC-dropout (<a href="#literature" data-go-panel="literature" data-anchor="lit-gal-ghahramani-2016">Gal &amp; Ghahramani, 2016</a>),
+  deep ensembles (<a href="#literature" data-go-panel="literature" data-anchor="lit-lakshminarayanan-2017">Lakshminarayanan et&nbsp;al., 2017</a>),
+  HMC/NUTS (<a href="#literature" data-go-panel="literature" data-anchor="lit-neal-2011">Neal, 2011</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-hoffman-gelman-2014">Hoffman &amp; Gelman, 2014</a>),
+  last-layer Laplace (<a href="#literature" data-go-panel="literature" data-anchor="lit-kristiadi-2020">Kristiadi et&nbsp;al., 2020</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-daxberger-2021">Daxberger et&nbsp;al., 2021</a>),
+  posterior geometry (<a href="#literature" data-go-panel="literature" data-anchor="lit-izmailov-2021">Izmailov et&nbsp;al., 2021</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-wilson-izmailov-2020">Wilson &amp; Izmailov, 2020</a>),
+  calibration (<a href="#literature" data-go-panel="literature" data-anchor="lit-guo-2017">Guo et&nbsp;al., 2017</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-kendall-gal-2017">Kendall &amp; Gal, 2017</a>; <a href="#literature" data-go-panel="literature" data-anchor="lit-ovadia-2019">Ovadia et&nbsp;al., 2019</a>),
+  and the domain sources
+  (<a href="#literature" data-go-panel="literature" data-anchor="lit-chen-2021">Chen et&nbsp;al., 2021</a>, <a href="#literature" data-go-panel="literature" data-anchor="lit-petretto-2018">Petretto et&nbsp;al., 2018</a>, <a href="#literature" data-go-panel="literature" data-anchor="lit-herling-attili-2025">Herling &amp; Attili, 2025</a>, <a href="#literature" data-go-panel="literature" data-anchor="lit-sridhar-2024">Sridhar, 2024</a>, <a href="#literature" data-go-panel="literature" data-anchor="lit-schott-thesis">Schott, forthcoming</a>).
+</p>
 
 <style>
   .main-panel h3 {
@@ -744,21 +707,5 @@
   table.metric-table tbody tr.forge-contribution td:first-child {
     color: var(--color-navy);
     font-weight: 600;
-  }
-
-  ol.bib-list {
-    padding-left: 1.4em;
-    margin-top: 0.6em;
-  }
-  ol.bib-list li {
-    margin-bottom: 1em;
-    line-height: 1.55;
-    color: var(--color-text);
-  }
-  ol.bib-list li:target {
-    background-color: rgba(255, 200, 87, 0.18);
-    padding: 8px 10px;
-    border-radius: 4px;
-    transition: background-color 1.5s ease;
   }
 </style>
