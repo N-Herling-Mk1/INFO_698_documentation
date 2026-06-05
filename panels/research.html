@@ -15,6 +15,15 @@
   @media (min-width: 1200px) {
     .rt-wide { width: min(80vw, calc(100vw - var(--sidenav-w, 240px) - 96px)); }
   }
+
+  /* Auto-width table: sizes to its own content (no wrapper, no forced width),
+     capped at the reading column on small screens and at up to 80vw on wide
+     screens — where it breaks out past the panel cap toward the right, just
+     like .rt-wide. Used by the lecture-log index table at the foot of the page. */
+  .content-table.rt-auto { width: max-content; max-width: 100%; }
+  @media (min-width: 1200px) {
+    .content-table.rt-auto { max-width: min(80vw, calc(100vw - var(--sidenav-w, 240px) - 96px)); }
+  }
 </style>
 
 <!-- ===================================================================
@@ -30,6 +39,8 @@
   <a class="rs-toc-item" data-target="rs-market"><span class="rs-toc-label">Market Research</span><span class="rs-toc-dot"></span></a>
   <a class="rs-toc-item" data-target="rs-ethics"><span class="rs-toc-label">Digital Ethics</span><span class="rs-toc-dot"></span></a>
   <a class="rs-toc-item" data-target="rs-timeline"><span class="rs-toc-label">Timeline &amp; Gantt</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="rs-ideation"><span class="rs-toc-label">Ideation &amp; Hypothesis</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="rs-testing"><span class="rs-toc-label">Testing &amp; MVP</span><span class="rs-toc-dot"></span></a>
   <a class="rs-toc-item" data-target="research-log"><span class="rs-toc-label">Lecture Log</span><span class="rs-toc-dot"></span></a>
 </nav>
 
@@ -609,6 +620,172 @@
   detail panel and is updated at each weekly check-in.&rdquo;
 </p>
 
+<!-- ===================================================================
+     SECTION BAND  —  Ideation & Hypothesis (Lecture 5 / Video 5)
+     =================================================================== -->
+<div id="rs-ideation" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Ideation &amp; Hypothesis &ndash; From Idea to Testable Claim</h3>
+  <span class="status-badge status-done">Lecture 5 &middot; solution converged</span>
+</div>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  This lecture takes the <strong>How&nbsp;Might&nbsp;We</strong> from the framing section and asks a team to
+  <em>diverge</em> before it converges &mdash; generate many candidate solutions
+  (<strong>worst&nbsp;possible&nbsp;idea</strong>, silent sticky-note brainstorming with judgment deferred,
+  <strong>remix&nbsp;research</strong>, <strong>Crazy&nbsp;Eights</strong>, &ldquo;yes,&nbsp;and&rdquo;, a
+  solution sketch) &mdash; and then to <strong>talk like a scientist</strong>: turn the chosen solution into a
+  <em>measurable</em> hypothesis, because every design decision made before a prototype exists is still an
+  educated guess.
+</p>
+
+<p>
+  Two honest caveats on how this maps to FORGE. First, the group dynamics the lecture optimizes for &mdash; one
+  voice at a time, defer judgment, &ldquo;yes,&nbsp;and&rdquo; so dominant voices do not flatten quiet ones
+  &mdash; are a <em>team</em> protocol; FORGE is a single-builder capstone with an advisor, so those rules
+  collapse into one discipline: do <em>not</em> let the first obvious idea win by default. Second, by this point
+  the solution has already <strong>converged</strong> &mdash; the instrument is defined and its hypotheses are
+  formalized &mdash; so the divergence below is reconstructed rather than live. But the hypothesis half lands
+  exactly: FORGE&rsquo;s research framing <em>already is</em> the lecture&rsquo;s &ldquo;talk like a
+  scientist&rdquo; step, expressed as three pre-registered, measurable hypotheses.
+</p>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">Divergence &mdash; the worst idea, and the remix</h4>
+<p>
+  The <strong>worst-possible-idea</strong> warm-up is unusually productive here, because the worst idea is the
+  <em>status quo</em>: collapse a model&rsquo;s entire posterior into a single error bar, or email a static PDF
+  of trace plots forty minutes after a sampler run finishes. Naming that anti-solution does real work &mdash; it
+  is precisely the User&nbsp;2 pain from the framing section (&ldquo;the loop is slow and the outputs are scalars
+  you cannot steer&rdquo;), so the worst idea points straight at the binding constraint: <em>interactivity and
+  visible geometry are the entire point</em>, not a nicety.
+</p>
+<p>
+  The lecture&rsquo;s <strong>remix research</strong> is the honest account of where FORGE came from &mdash; it
+  was not invented from nothing. It recombines raw materials that already exist (catalogued in the
+  <a href="#rs-market">comparable-tools table</a> above): the <em>live-knob
+  interactivity</em> of TensorFlow&nbsp;Playground and the Gaussian-process demo, the <em>posterior
+  diagnostics</em> of ArviZ&nbsp;/&nbsp;bayesplot, the <em>closed-form last-layer engine</em> behind
+  laplace-torch, and a <em>deterministic&nbsp;&harr;&nbsp;Bayesian</em> toggle that none of them offer &mdash;
+  remixed into one hosted dashboard. The novelty claim in the market section is just the remix viewed from the
+  other side: the recombination is what does not already exist.
+</p>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">Convergence &mdash; the solution as a measurable hypothesis</h4>
+<p>
+  The lecture&rsquo;s test for a good hypothesis is blunt: it must be <em>measurable</em>. &ldquo;A redesign will
+  improve usability&rdquo; fails, because nothing in it can be checked. Its Madlib fixes that &mdash;
+  <strong>We&nbsp;believe&nbsp;[solution]&nbsp;for&nbsp;[user]&nbsp;will&nbsp;achieve&nbsp;[measurable&nbsp;outcome]</strong>.
+  FORGE&rsquo;s three hypotheses were written in this spirit from the start; restated in Madlib form, each carries
+  its own metric and reference, with the exact thresholds to be fixed at proposal submission.
+</p>
+
+<div class="splash-grid">
+
+  <!-- H1 -->
+  <div class="splash-card" style="border-left:4px solid var(--color-cyan);">
+    <p><span class="status-badge status-planned">H1 &middot; Faithful</span></p>
+    <h3 style="margin-top:6px;">Visualization fidelity</h3>
+    <p style="margin-top:10px; font-style:italic; color:var(--color-text);">
+      <strong style="font-style:normal; color:var(--color-cyan);">We believe</strong> that rendering the
+      posterior as credible-region and function-space geometry, <strong>for</strong> a researcher reading a
+      model&rsquo;s uncertainty, <strong>will</strong> faithfully reproduce the true posterior.
+    </p>
+    <p style="margin-top:10px; font-size:0.8rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:8px;">
+      <strong>Measured by</strong> agreement between the rendered geometry and reference summaries on the
+      calibration tier (C0&ndash;C3, analytic ground truth) &mdash; credible-interval coverage and a
+      divergence metric below a pre-set threshold.
+    </p>
+  </div>
+
+  <!-- H2 -->
+  <div class="splash-card" style="border-left:4px solid var(--color-flame);">
+    <p><span class="status-badge status-planned">H2 &middot; Correct / efficient</span></p>
+    <h3 style="margin-top:6px;">Sampler fidelity &amp; speed</h3>
+    <p style="margin-top:10px; font-style:italic; color:var(--color-text);">
+      <strong style="font-style:normal; color:var(--color-flame);">We believe</strong> that the LLLA closed-form
+      fast path (with HMC as the gold-standard reference), <strong>for</strong> a user who needs a posterior
+      without standing up a pipeline, <strong>will</strong> match that reference and still return fast enough to
+      interact with.
+    </p>
+    <p style="margin-top:10px; font-size:0.8rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:8px;">
+      <strong>Measured by</strong> distance to the HMC posterior (moment / distributional error) under tolerance,
+      <em>and</em> wall-clock latency inside the interactive budget.
+    </p>
+  </div>
+
+  <!-- H3 -->
+  <div class="splash-card" style="border-left:4px solid var(--color-ember);">
+    <p><span class="status-badge status-planned">H3 &middot; Knob-reactive &middot; keystone</span></p>
+    <h3 style="margin-top:6px;">Hyperparameter &rarr; posterior geometry</h3>
+    <p style="margin-top:10px; font-style:italic; color:var(--color-text);">
+      <strong style="font-style:normal; color:var(--color-ember);">We believe</strong> that a hyperparameter knob
+      panel, <strong>for</strong> a practitioner building intuition, <strong>will</strong> reshape the
+      epistemic-uncertainty profile in real time and in a predictable direction.
+    </p>
+    <p style="margin-top:10px; font-size:0.8rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:8px;">
+      <strong>Measured by</strong> the expected, directionally-correct change in an epistemic metric
+      (predictive-variance spread, calibration) as a knob is swept, delivered within the interactive latency
+      budget. This is the hypothesis the LLLA fast path exists to make testable.
+    </p>
+  </div>
+
+</div>
+
+<p style="margin-top:14px;">
+  The lecture is explicit that a hypothesis is only half the job &mdash; <em>how</em> to test each one is a
+  later lecture. What this section establishes is that the &ldquo;does it work?&rdquo; question already has a
+  defined answer for FORGE: each hypothesis names the metric, the reference it is checked against, and the tier
+  of data where the check is run. Setting the numeric thresholds is the remaining step, and it lands with the
+  <a href="#proposal" data-go-panel="proposal">project proposal</a>.
+</p>
+
+<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
+  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;The ideation phase is effectively closed &mdash; FORGE is a
+  solo capstone and the instrument converged early, so this entry reconstructs the divergence as a remix rather
+  than logging a live brainstorm. The part of the lecture that does real work for me is the hypothesis
+  discipline: H1/H2/H3 were written as measurable, pre-registered claims &mdash; each with a metric and a
+  reference &mdash; so &lsquo;does it work?&rsquo; has a defined answer instead of a vibe.&rdquo;
+</p>
+
+<!-- ===================================================================
+     SECTION BAND  —  Testing & MVP (Lecture 6)
+     =================================================================== -->
+<div id="rs-testing" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Testing &amp; MVP &ndash; Faking It Before Making It</h3>
+  <span class="status-badge status-in_progress">Lecture 6 &middot; plan in MVP panel</span>
+</div>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  The testing lecture&rsquo;s rule: <em>no product survives first contact with a user</em>, so test the
+  <strong>riskiest assumption cheapest and fastest</strong> before building the whole thing &mdash; via a low-fi
+  prototype, a demand probe (preorder&nbsp;/&nbsp;landing-page&nbsp;/&nbsp;A&ndash;B test), a demo video, or a
+  <strong>concierge MVP</strong> (do it by hand before automating).
+</p>
+
+<p>
+  Most of those devices test a <em>demand</em> risk &mdash; will anyone want this, will they pay &mdash; which is
+  not FORGE&rsquo;s risk: it is a research instrument for a fixed audience, not a product chasing a market. What
+  transfers is the discipline. FORGE&rsquo;s riskiest assumption is the keystone
+  <a href="#rs-ideation">H3</a> &mdash; that a hyperparameter knob can reshape the posterior&rsquo;s epistemic
+  profile <em>in real time</em> &mdash; and its cheapest, fastest test is built in: the <strong>LLLA closed-form
+  fast path</strong> stands in for minutes-long HMC (&ldquo;fake it before you make it&rdquo;), checked on the
+  <strong>calibration tier</strong> (C0&ndash;C3, analytic ground truth) where the answer is already known. If a
+  knob cannot move a posterior whose truth we hold, nothing downstream matters &mdash; so the keystone is
+  falsified or confirmed before any engineering goes into the full hosted, multi-domain tool.
+</p>
+
+<p>
+  The MVP scope itself &mdash; the smallest useful build &mdash; is not duplicated here; it lives in the
+  <a href="#mvp" data-go-panel="mvp">MVP&nbsp;Plan</a> panel, and the
+  <a href="#video" data-go-panel="video">project video</a> doubles as the lecture&rsquo;s demo-video device.
+</p>
+
+<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
+  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;FORGE is feasibility-risk, not demand-risk. The cheapest test
+  of the keystone (H3) is the LLLA fast path against the analytic calibration tier &mdash; if a knob can&rsquo;t
+  move a posterior whose answer I already know, the rest of the build is moot. Full MVP scope is in the MVP
+  panel.&rdquo;
+</p>
+
 <div id="research-log" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
   <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Series Index &ndash; Lecture Log</h3>
 </div>
@@ -617,7 +794,7 @@
   above. New videos slot in here as they are covered.
 </p>
 
-<table class="content-table">
+<table class="content-table rt-auto">
   <thead>
     <tr>
       <th style="width:3rem;">#</th>
@@ -650,6 +827,18 @@
       <td>Timeline &amp; Gantt chart</td>
       <td>Work-backward timeline (accountability + scope check) and an interconnected Gantt (done vs. outstanding, dependency waterfall), refreshed at weekly check-ins</td>
       <td>The <a href="#timeline" data-go-panel="timeline">Project&nbsp;Timeline</a> and <a href="#gantt" data-go-panel="gantt">Gantt&nbsp;Chart</a> panels, plus the per-week to-do granularity (<code>weekly_todos</code>)</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Ideation &amp; hypothesis</td>
+      <td>Divergence tools (worst&nbsp;possible&nbsp;idea, silent brainstorm with judgment deferred, remix research, Crazy&nbsp;Eights, &ldquo;yes,&nbsp;and&rdquo;, solution sketch) and the measurable-hypothesis Madlib (&ldquo;We&nbsp;believe&nbsp;[solution]&nbsp;for&nbsp;[user]&nbsp;will&nbsp;achieve&nbsp;[measurable&nbsp;outcome]&rdquo;)</td>
+      <td>The remix account of FORGE&rsquo;s origin and the three hypotheses (H1/H2/H3) restated in measurable Madlib form above</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Testing &amp; MVP</td>
+      <td>&ldquo;Fake it before you make it&rdquo; &mdash; test the riskiest assumption cheapest/fastest: low-fi prototype, preorder&nbsp;/&nbsp;landing-page&nbsp;/&nbsp;A&ndash;B demand probe, demo video, concierge MVP</td>
+      <td>The riskiest-assumption test for FORGE &mdash; LLLA fast path vs.&nbsp;the analytic calibration tier as the cheap proxy for the keystone (H3); MVP scope in the <a href="#mvp" data-go-panel="mvp">MVP&nbsp;Plan</a> panel</td>
     </tr>
     <tr>
       <td colspan="4" style="color:var(--color-text-faint); font-style:italic;">
