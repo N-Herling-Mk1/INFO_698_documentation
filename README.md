@@ -2,9 +2,43 @@
 
 Documentation hub for the **FORGE** capstone project (INFO 698, University of Arizona).
 
-This repository is published as a static website via GitHub Pages. It contains the project timeline, Gantt chart, proposal, supporting documents, and links to the sibling code repositories.
+This repository is published as a static website via GitHub Pages. It contains the project timeline, Gantt chart, proposal, supporting documents, and links to the sibling code repositories. It is also the **public-facing hub of a three-repository ecosystem** — see [The FORGE ecosystem](#the-forge-ecosystem) below.
 
 **Live site:** https://n-herling-mk1.github.io/INFO_698_documentation/
+
+---
+
+## The FORGE ecosystem
+
+FORGE is split across **three repositories** with three different lifecycles. They are kept separate on purpose — different dependencies, different compute weight, different run cadence (run-once vs always-on vs static publish).
+
+```
+┌──────────────────────┐    artifact contract     ┌──────────────────────┐
+│  INFO_698_experiments │ ─── run.json /  ───────▶ │  INFO_698_software    │
+│   (Tier R: research)  │     compute.json /       │   (Tier S: full-stack │
+│                       │     eda_stats.json /     │    backend + frontend)│
+│  heavy image (torch,  │     figures/*.png        │   light image         │
+│  librosa, CUDA)       │                          │   (Flask, no torch)   │
+└──────────────────────┘                          └───────────┬──────────┘
+                                                               │ export_site.py
+                                                               ▼ (static publish)
+                                                    ┌──────────────────────┐
+                                                    │ INFO_698_documentation │
+                                                    │  THIS REPO — GH Pages  │
+                                                    │  serves committed JSON │
+                                                    │  no Docker, static     │
+                                                    └──────────────────────┘
+```
+
+| Repo | Tier | Role | Docker |
+|------|------|------|--------|
+| **[INFO_698_experiments](https://github.com/N-Herling-Mk1/INFO_698_experiments)** | **R** | The three reproductions (genre → phonon → ATLAS), later wrapped by the Bayesian + visualization layer. Heavy compute, run-once. **Emits** the artifacts this site renders. | heavy image |
+| **[INFO_698_software](https://github.com/N-Herling-Mk1/INFO_698_software)** | **S** | One Flask backend + one frontend. Never trains — **reads** R's artifacts. Runs in `local` (MVP) or `prod` mode. | light image |
+| **INFO_698_documentation** | — | This repo. The public GitHub Pages hub. Serves committed `site_export` JSON. | none (static) |
+
+**The artifact contract** is the one coupling that ties the ecosystem together. Every experiment run in Tier R emits a uniform set of files — `run.json` (config, metrics, per-epoch logs), `compute.json` (wall-clock, VRAM, throughput, cost estimates), and `eda_stats.json` + `figures/*.png` (dataset genealogy and EDA). As long as R emits that shape, all three views — this static site, the local MVP, and the deployed app — render from the *same* artifacts. Each code repo documents its own Docker / dev-container setup in its own README; this repo needs none.
+
+**Open decisions** (tracked, not yet resolved): the BEARDOWN reproduction target, which transformer/attention paper to reproduce, and the train/test split policy (naive vs track/artist-aware). Details live in the experiments repo.
 
 ---
 
@@ -122,8 +156,10 @@ Place your video at `assets/video/forge_intro.mp4`. Already wired in `panels/vid
 
 ## Sibling repositories
 
-- **[INFO_698_experiments](https://github.com/N-Herling-Mk1/INFO_698_experiments)** — Research code, Hernández-Lobato PoC, FAIR Universe HiggsML, sweeps.
-- **[INFO_698_software](https://github.com/N-Herling-Mk1/INFO_698_software)** — Deployed application: frontend, backend, worker, calibration.
+This repo is the documentation hub; the code lives in two sibling repos (see [The FORGE ecosystem](#the-forge-ecosystem) for how they connect via the artifact contract).
+
+- **[INFO_698_experiments](https://github.com/N-Herling-Mk1/INFO_698_experiments)** — Tier R, research/compute. The three reproductions (genre → phonon → ATLAS), each sharing one transferable skeleton, later wrapped by the Bayesian + visualization layer. Emits the `run.json` / `compute.json` / `eda_stats.json` / figures that this site renders.
+- **[INFO_698_software](https://github.com/N-Herling-Mk1/INFO_698_software)** — Tier S, the deployed application. One Flask backend + one frontend that read R's artifacts. Same code runs the local MVP (`FORGE_ENV=local`) and the deployed app (`FORGE_ENV=prod`); it never trains.
 
 ## License
 
