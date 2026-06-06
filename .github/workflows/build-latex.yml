@@ -1,12 +1,11 @@
 name: Build LaTeX & Deploy
 
-# Compiles every *.tex in assets/docs to PDF, commits the PDFs back to the
-# repo, then deploys the site (so the freshly built PDFs go live immediately).
+# Compiles every *.tex in assets/docs to PDF and deploys the site. The freshly
+# built PDFs go live because they're included in the Pages artifact below
+# (path: .) — they are NOT committed back to the repo, so this workflow never
+# pushes to main and never races your own pushes.
 #
-# Why this also deploys: commits made by GITHUB_TOKEN do not trigger other
-# workflows, so the PDF commit alone would NOT wake up pages.yml. Deploying
-# here guarantees the new PDFs are published. pages.yml still handles pushes
-# that only touch site content (html/css/js) — see its paths-ignore.
+# pages.yml still handles pushes that only touch site content (html/css/js).
 
 on:
   push:
@@ -18,17 +17,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write      # commit the rebuilt PDFs
+  contents: read       # checkout only; nothing is committed back anymore
   pages: write         # deploy
-  id-token: write      # deploy
+  id-token: write       # deploy
 
 concurrency:
   group: "pages"       # shared with pages.yml so deploys never overlap
   cancel-in-progress: false
 
-# Fixed timestamp => deterministic PDF metadata => byte-stable output.
-# This is what keeps proposal_original.pdf from churning on every run:
-# unchanged source + fixed date = identical bytes = nothing to commit.
+# Fixed timestamp => deterministic, reproducible PDF metadata.
 env:
   SOURCE_DATE_EPOCH: "1717200000"
   FORCE_SOURCE_DATE: "1"
@@ -55,12 +52,6 @@ jobs:
         run: |
           cd assets/docs
           rm -f *.aux *.log *.out *.toc *.fls *.fdb_latexmk *.synctex.gz *.lof *.lot
-
-      - name: Commit rebuilt PDFs
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "ci: rebuild proposal PDF(s) from LaTeX [skip ci]"
-          file_pattern: "assets/docs/*.pdf"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
