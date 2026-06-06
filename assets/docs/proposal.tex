@@ -13,6 +13,26 @@
 \usepackage{forge-proposal}
 \renewcommand{\showguidance}{1}   % set to 0 to hide all remaining guidance
 
+% Centered table-header cells (border-aware): \hL for the first cell, \hC for the rest.
+\newcommand{\hL}[1]{\multicolumn{1}{|c|}{\textbf{#1}}}
+\newcommand{\hC}[1]{\multicolumn{1}{c|}{\textbf{#1}}}
+
+% Giant black #TODO tag for sections awaiting real content.
+\newcommand{\bigtodo}[1]{%
+  \par\medskip\noindent
+  \setlength{\fboxsep}{8pt}\setlength{\fboxrule}{2.5pt}%
+  \noindent\fcolorbox{black}{white}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+      {\fontsize{26}{30}\selectfont\bfseries\color{black}\#TODO}\\[5pt]%
+      {\normalsize\bfseries\color{black} #1}
+    \end{minipage}}%
+  \par\medskip}
+
+% Visible, web-style hyperlinks (blue + underline) that open in a new window/tab.
+\definecolor{urlblue}{HTML}{1A5FB4}
+\hypersetup{pdfnewwindow=true}
+\newcommand{\urllink}[2]{\href{#1}{\textcolor{urlblue}{\underline{#2}}}}
+
 \begin{document}
 
 % ---- Masthead -------------------------------------------------------
@@ -24,8 +44,11 @@
 \begin{center}
   {\Large Nathan Herling, Project Manager}\\[12pt]
   {\Large Team: Nathan Herling \textnormal{(solo capstone)}}\\[12pt]
-  {\Large Faculty Advisor: Prof.\ Kenneth Johns \textnormal{(UA ATLAS HEP Group)}}\\[12pt]
-  {\Large Date: June 1, 2026}
+  {\Large Faculty Advisor: Professor Ken Johns \textnormal{(UA ATLAS HEP Group)}}\\[12pt]
+  {\Large Date: June 5, 2026}\\[14pt]
+  {\normalsize Project documentation site:\\
+   \href{https://n-herling-mk1.github.io/INFO_698_documentation/}%
+        {n-herling-mk1.github.io/INFO\_698\_documentation}}
 \end{center}
 
 \vspace{18pt}
@@ -45,9 +68,9 @@
 \renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\linewidth}{|c|Y|c|}
 \hline
-\textbf{Version} & \textbf{Summary of Changes} & \textbf{Date} \\ \hline
+\hL{Version} & \hC{Summary of Changes} & \hC{Date} \\ \hline
 0.1 & Converted hybrid (Software + Research) template to LaTeX; title page and Executive Summary drafted & 06/01/26 \\ \hline
- & & \\ \hline
+0.2 & Executive Summary reworked to the three-experiment elevator pitch; Sections~2/2b (user/market + literature), 3/3b (features + research deliverables), and 4 (Summer 2026 milestones + embedded Gantt) filled & 06/05/26 \\ \hline
  & & \\ \hline
 \end{tabularx}
 
@@ -73,17 +96,21 @@ The table of contents above is generated automatically. Use a page break before 
 \propsec{1}{Executive Summary}
 \sectionauthor{Nathan Herling}
 
-FORGE (Functional-posterior Observatory for Refinement and Geometric Exploration) is a web-hosted dashboard that turns the posterior distribution of a Bayesian neural network (BNN) into an interactive, explorable object. Rather than reporting a single prediction, a BNN produces a distribution over possible models; FORGE ingests that sampled posterior and renders its geometry --- credible regions, per-weight uncertainty, and the spread of predictions in function space --- so a researcher can see, at a glance, both what the model has learned and where it remains unsure.
+FORGE (Functional-posterior Observatory for Refinement and Geometric Exploration) is a web-hosted observatory built around the question every trained model hides: \emph{is its confidence earned, or has it simply run out of data?} The \emph{eventual} product is a general platform where a researcher loads their own working model, flips it from a single point estimate to a full Bayesian posterior, and steers that uncertainty in real time --- a closed-form Last-Layer Laplace Approximation (LLLA) for instant feedback, Hamiltonian Monte Carlo (HMC) for ground truth --- serving two needs from one interface: exploring whether a model has reached its \emph{epistemic limit}, and visualizing and tuning that uncertainty with Bayesian tools, with no pipeline for the user to build.
 
-Bayesian methods are increasingly used in high-energy physics precisely because they quantify uncertainty, but their posteriors are high-dimensional and effectively opaque. Existing tooling tends to collapse that richness into a single error bar, without revealing whether the uncertainty is \emph{aleatoric} (irreducible noise in the data) or \emph{epistemic} (a gap the model could close with more or more diverse training data) --- a distinction that is central to deciding what to do next.\footnote{The aleatoric/epistemic framing follows A.\ Kendall and Y.\ Gal, ``What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?'', NeurIPS 2017. \gnote{Replace/expand with your preferred citations before submission.}} FORGE differentiates itself by making that distinction visible and navigable directly in the browser, lowering the barrier to interpreting model uncertainty for both specialists and reviewers.
+The \mbox{\texttt{mk\_1}} release reported here is the \emph{proof of concept} for that vision, not the general platform itself. Rather than accept arbitrary user-supplied models, \mbox{\texttt{mk\_1}} reproduces three known, published results identified in the project's literature search --- reproduced and preloaded by the author with documented performance --- and demonstrates the Bayesian-exploration layer on those fixed reproductions. The science and the interface are real and end-to-end; what \mbox{\texttt{mk\_1}} deliberately scopes out is open-ended model ingestion, which a later release would add.
 
-The work is carried out by Nathan Herling under Prof.\ Kenneth Johns in the University of Arizona ATLAS High-Energy-Physics group, across three repositories (documentation, experiments, and software) with a tiered dataset structure (C0--C3). The dashboard is validated against the ATLAS Run~3 search for long-lived hidden-sector scalars, where trustworthy uncertainty matters. By the end of the term, FORGE will deliver a deployed, web-hosted observatory that loads HMC-sampled posteriors and supports interactive geometric exploration. Table~\ref{tab:resp} lists the preliminary division of subsystem responsibilities.
+The motivation is a gap in everyday practice. A conventional network returns one number per input and reveals nothing about how much an equally valid version of the same model --- a different seed, bootstrap, or architecture --- would disagree. Bayesian inference replaces the single weight vector with a posterior $p(w \mid D)$, turning every prediction into a distribution whose width is the model's \emph{epistemic} uncertainty made visible (as distinct from \emph{aleatoric}, irreducible noise in the data).\footnote{The aleatoric/epistemic distinction follows A.\ Kendall and Y.\ Gal, ``What Uncertainties Do We Need in Bayesian Deep Learning for Computer Vision?'', NeurIPS 2017.} FORGE exposes that distinction directly in the browser and pairs it against the original deterministic baseline, lowering the barrier to interpreting model uncertainty for both specialists and reviewers. Because a posterior is computationally expensive, FORGE keeps most of the network deterministic and makes only the final layer Bayesian: the LLLA path is fast enough to resample within an interactive session, while HMC supplies the trusted reference.
+
+The three reproductions span deliberately heterogeneous domains, to show the FORGE pattern generalizes across model classes: (1)~music-genre recognition with a convolutional network and a Bayesian classification head (GTZAN); (2)~phonon density-of-states regression with an $E(3)$-equivariant graph network (Chen et~al., 2021); and (3)~the ATLAS Run~3 search for long-lived hidden-sector scalars via displaced muon-spectrometer vertices. Reproducing three rather than one is also a redundancy strategy: if one proves intractable on the term timeline, the proof of concept still stands on the remaining two.
+
+The work is carried out by Nathan Herling under Professor Ken Johns in the University of Arizona ATLAS High-Energy-Physics group, across three repositories (documentation, experiments, and software) and validated in continuous integration against a tiered set of calibration datasets, C0--C3.\footnote{\textbf{C0--C3} are the project's \emph{calibration tiers}: small analytic datasets of increasing difficulty whose ground-truth posteriors are known in closed form, so the platform's samplers and visualizations can be scored against them automatically on every push (continuous integration, CI). They are distinct from the benchmarked tier D4 (the FAIR Universe HiggsML dataset, NeurIPS 2024), which anchors the work to a public physics benchmark.} By the end of the term, FORGE will deliver a deployed, web-hosted observatory that loads the author's preloaded reproductions, serves their HMC-sampled posteriors, and supports interactive geometric exploration over them. Table~\ref{tab:resp} lists the preliminary division of subsystem responsibilities.
 
 \begin{table}[H]
 \centering\renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\linewidth}{|l|Y|}
 \hline
-\textbf{Team Member} & \textbf{Subsystem responsibility} \\ \hline
+\hL{Team Member} & \hC{Subsystem responsibility} \\ \hline
 Nathan Herling & Posterior sampling pipeline (HMC) and data tiers (C0--C3) \\ \hline
 Nathan Herling & Geometry \& visualization engine (credible regions, function-space spread) \\ \hline
 Nathan Herling & Web dashboard, hosting, and deployment \\ \hline
@@ -97,121 +124,228 @@ Nathan Herling & Validation against the ATLAS Run~3 long-lived-particle search \
 %  2. USER / MARKET RESEARCH
 % =====================================================================
 \propsec{2}{User/Market research}
-\begin{guidance}
-This section describes who your product is for and what they want. One of the worst things product developers can do is create a product that no one wants, needs, or will pay for. Look at the macro market to evaluate existing products and market opportunity, and the micro market by performing empathy interviews with potential users.
+\sectionauthor{Nathan Herling}
 
-Overall market: Do some basic research about the size and scope of the market your product will be in.
+\propsubsub{Overall market}
+FORGE sits in the uncertainty-quantification (UQ) tooling space for machine learning, which has grown alongside the adoption of Bayesian methods in the data-rich physical sciences (high-energy physics, condensed matter, materials). The existing landscape splits cleanly into five segments: deterministic ML ``playgrounds'' (no uncertainty), post-hoc posterior diagnostics shipped as libraries, probabilistic-programming frameworks, production UQ/monitoring dashboards, and interactive sampler explainers built on toy targets. None of these is a hosted, interactive instrument for asking whether a \emph{trained} model's confidence is earned. That gap --- between a code-heavy probabilistic framework and a static decision plot --- is FORGE's opening.
 
-Existing competitors: List your closest competitors and how your product will be differentiated from them.
+\propsubsub{Target users}
+FORGE answers two questions with one instrument, so it serves two user types. They are not redundant: the first asks a decision question with a cost attached; the second asks an open ``how'' question. The diagnostician is the motivating problem (what makes the work worth doing); the observatory is the capability problem (what the tool literally does, and what hypotheses H1--H3 test). Each is framed below as User\,+\,Need\,+\,Because, with the design-actionable insight in the ``Because'' clause.
 
-User insights: Use empathy interviews to identify needs and pain points, and detail how your product will address them.
-\end{guidance}
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|l|Y|}
+\hline
+\textbf{User 1 --- Diagnostician} & \textit{``Should I collect more data, or is this as good as it gets?''} \\ \hline
+\textbf{User} & Graduate researchers in data-rich physical sciences who train their own neural-net classifiers/regressors but are \emph{not} Bayesian-ML specialists. \\ \hline
+\textbf{Need} & To see whether a trained model's confidence is earned or borrowed --- whether its remaining error is epistemic (fixable with more/better data or a different architecture) or irreducible. \\ \hline
+\textbf{Because} & A single point estimate hides what the model does not know, and standing up a full Bayesian pipeline from scratch is enough engineering that researchers skip it and ship overconfident models. \emph{This is exactly why FORGE preloads working baselines.} \\ \hline
+\end{tabularx}
+\caption{User 1 point-of-view (the motivating, diagnostic use)}
+\end{table}
+
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|l|Y|}
+\hline
+\textbf{User 2 --- Observatory} & \textit{``What is driving this uncertainty, and what happens if I change it?''} \\ \hline
+\textbf{User} & Practitioners and students of Bayesian deep learning who want to understand how their modeling choices shape the posterior. \\ \hline
+\textbf{Need} & An interactive instrument to reshape the posterior in real time --- turn a prior, sampler setting, likelihood, or architecture knob --- and immediately see the geometry respond. \\ \hline
+\textbf{Because} & The normal Bayesian loop is slow (minutes per HMC run) and its outputs are scalars and trace plots, not geometry you can steer. \emph{This is exactly why the closed-form LLLA fast path is non-negotiable for real-time knob response (hypothesis~H3).} \\ \hline
+\end{tabularx}
+\caption{User 2 point-of-view (the general, exploratory capability)}
+\end{table}
+
+\propsubsub{Existing competitors}
+Each comparable below overlaps FORGE on at least one axis (interactive model exploration, posterior/uncertainty visualization, sampler diagnostics, or Bayesian experimentation), paired with the line that separates it from FORGE.
+
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|p{0.44\linewidth}|Y|}
+\hline
+\hL{Comparable} & \hC{How FORGE differs} \\ \hline
+MCMC Interactive Gallery; GP-regression demo (interactive sampler/Bayesian explainers)\newline{\footnotesize\ttfamily\urllink{https://chi-feng.github.io/mcmc-demo/}{chi-feng.github.io/mcmc-demo}\newline\urllink{https://www.tmpl.fi/gp/}{tmpl.fi/gp}} & Animate samplers on \emph{fixed} 2-D targets or 1-D GP regression; FORGE samples a \emph{trained model's} weight posterior across real benchmarks and adds a deterministic-vs-Bayesian comparison. \\ \hline
+TensorFlow Playground; ConvNetJS (deterministic NN sandboxes)\newline{\footnotesize\ttfamily\urllink{https://playground.tensorflow.org}{playground.tensorflow.org}\newline\urllink{https://cs.stanford.edu/people/karpathy/convnetjs/}{cs.stanford.edu/people/karpathy/convnetjs}} & Decision-boundary sandboxes with \emph{no} uncertainty; FORGE adds the epistemic layer they deliberately omit. \\ \hline
+ArviZ; bayesplot; ShinyStan (post-hoc posterior diagnostics)\newline{\footnotesize\ttfamily\urllink{https://python.arviz.org/}{python.arviz.org}\newline\urllink{https://mc-stan.org/bayesplot/}{mc-stan.org/bayesplot}\newline\urllink{https://mc-stan.org/shinystan/}{mc-stan.org/shinystan}} & Plot samples you \emph{already} have; FORGE is hosted and generates and reshapes posteriors in-session. \\ \hline
+PyMC; Pyro; JASP (probabilistic-programming / stats)\newline{\footnotesize\ttfamily\urllink{https://www.pymc.io/}{pymc.io}\newline\urllink{https://pyro.ai/}{pyro.ai}\newline\urllink{https://jasp-stats.org/}{jasp-stats.org}} & Code frameworks or a stats package; FORGE is the no-code ``turn a knob, watch the posterior move'' layer on top. \\ \hline
+Weights \& Biases; WhyLabs; Evidently~AI (production UQ/monitoring)\newline{\footnotesize\ttfamily\urllink{https://wandb.ai/}{wandb.ai}\newline\urllink{https://whylabs.ai/}{whylabs.ai}\newline\urllink{https://www.evidentlyai.com/}{evidentlyai.com}} & Track deployed-model metrics and drift; report confidence numbers, not posteriors or Bayesian reasoning. \\ \hline
+Netron (architecture viewer)\newline{\footnotesize\ttfamily\urllink{https://netron.app/}{netron.app}} & Shows structure only --- no uncertainty, posterior inference, or Bayesian reasoning. \\ \hline
+\end{tabularx}
+\caption{Comparable tools and how FORGE is differentiated}
+\end{table}
+
+\propsubsub{User insights and pain points}
+Two pain points recur across both user types and drive the architecture directly: (i)~the engineering cost of standing up a Bayesian pipeline (HMC/NUTS, calibration, last-layer Laplace) is high enough that researchers skip it --- addressed by preloading working baselines that users inherit rather than rebuild; and (ii)~the edit-code-and-wait loop is slow and its outputs are scalars and trace plots rather than steerable geometry --- addressed by the closed-form LLLA fast path that keeps the knob panel responsive, with heavy HMC reserved for ground truth. The problem framing and the technical design are the same claim seen from two sides.
 
 % ---- 2b ----
 \propsec{2b}{Literature Review/Market research}
-\begin{guidance}
-This section describes who your research project is for, what they want, and what other work has been done in your topic area. It illustrates that you understand the existing research and prior work.
+\sectionauthor{Nathan Herling}
 
-Overall research landscape: Do some basic research about existing research, cite papers, and clarify how your project will contribute new knowledge or use novel approaches on existing data sets.
+Because FORGE has both a software and a research element, novelty is gauged on two fronts: the comparable-tools scan above (so the build is clear of others' ground) and the ``research of research'' below --- peer-reviewed work that grounds FORGE's ingredients and sharpens where its contribution is genuinely new. A continually-updated, browsable version of this review is maintained as the \urllink{https://n-herling-mk1.github.io/INFO_698_documentation/index.html\#literature}{Literature Search} panel on the project documentation site.
 
-User insights: Listen to potential users of your research output; list the key insights and pain points discovered and detail how your project will address them.
-\end{guidance}
+\propsubsub{Methodological foundations}
+Each FORGE ingredient rests on established work. Bayesian deep-learning inference: variational Bayes-by-backprop (Blundell et~al., 2015) and Monte-Carlo dropout as approximate inference (Gal \& Ghahramani, 2016). The interactive fast path: the Last-Layer Laplace Approximation and its ``Bayesian last layer'' framing (Kristiadi et~al., 2020; Daxberger et~al., 2021, \emph{laplace-torch}). The ground-truth path: Hamiltonian Monte Carlo and the No-U-Turn Sampler (Neal, 2011; Hoffman \& Gelman, 2014). The aleatoric/epistemic decomposition that motivates the whole tool: Kendall \& Gal (2017). The reproduced experiments draw on domain baselines: an $E(3)$-equivariant graph network for phonon DOS (Chen et~al., 2021) over the DFPT phonon database (Petretto et~al., 2018), and CNN-based genre recognition (Sridhar, 2024; and the author's prior BEARDOWN work, Herling \& Attili, 2025).
+
+\propsubsub{Closest prior art and the novelty gap}
+The table below collects the work nearest to FORGE's \emph{purpose}---a posterior over models used to decide where knowledge is lacking---and its \emph{interactivity}.
+
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{|p{0.34\linewidth}|Y|}
+\hline
+\hL{Reference} & \hC{Relevance to FORGE} \\ \hline
+Dearden, Friedman \& Andre --- \textit{Model-Based Bayesian Exploration} (UAI 1999) & An early statement of the core FORGE logic --- a posterior over models beats a point estimate for deciding where knowledge is lacking --- but applied as an RL exploration algorithm, not a visualization tool. \\ \hline
+Frazier --- \textit{A Tutorial on Bayesian Optimization} (2018) & Shares the ``visualize posterior uncertainty, decide where you're unsure'' pattern, but aimed at optimizing a function rather than diagnosing a trained model. \\ \hline
+Wang, Jin, Schmitt \& Olhofer --- \textit{Recent Advances in Bayesian Optimization} (ACM CSUR 2023) & Confirms the BO field is optimization-centric; useful for positioning FORGE's model-\emph{diagnosis} purpose as distinct. \\ \hline
+Gabry, Simpson, Vehtari, Betancourt \& Gelman --- \textit{Visualization in Bayesian Workflow} (JRSS-A 2019) & The methodological backbone for FORGE's plots --- but static, R-package workflow guidance, not an interactive hosted dashboard. \\ \hline
+Nussbaumer, B\"ock \& Cito --- \textit{Online and Interactive Bayesian Inference Debugging} (ICSE 2026; \textit{InferLog Holmes}) & The closest prior art to FORGE's online, interactive ambition --- but an IDE debugger for PPL code aimed at \emph{fixing inference}, not a hosted multi-domain dashboard for exploring a trained model's epistemic uncertainty. \\ \hline
+\end{tabularx}
+\caption{Research landscape --- closest prior art}
+\end{table}
+
+\propsubsub{Where FORGE is novel}
+The landscape grounds each ingredient individually, but no existing system is a hosted dashboard that simultaneously (1)~preloads trained models across heterogeneous domains, (2)~toggles deterministic\,$\leftrightarrow$\,Bayesian and compares posteriors against the baseline, and (3)~reshapes posterior geometry in real time through a knob panel backed by closed-form LLLA plus heavy HMC. The combination, framed by the question \emph{``is this model's confidence earned or borrowed---has it reached its epistemic limit?''}, is the differentiated contribution.
 
 % =====================================================================
 %  3. PRODUCT FEATURES
 % =====================================================================
 \propsec{3}{Product Features}
-\begin{guidance}
-This section describes the scope and features of the product created by the project --- what the project will PRODUCE.
+\sectionauthor{Nathan Herling}
 
-The key objectives are to:
-\begin{itemize}[nosep,leftmargin=1.4em]
-  \item list all the key features of the product (``What does it do?'') and who will do them. Include enough work to fulfill the class requirements, but not so much as to create a recipe for failure. Include a minimum feature list and a stretch feature list prioritized by functionality.
-  \item summarize the parameters for each feature.
-  \item briefly elaborate on the relationship between the product and the business need it addresses. (``Why does the user want this feature? What benefit does it provide?'')
-\end{itemize}
+FORGE is built in three maturity rungs of \emph{one} product, not three different products: the same application (data locked, methodology exposed) is carried up a ladder --- first proven locally (\emph{MVP --- phase~1}), then deployed (\emph{MVP --- deployed}), then optionally opened to an LLM agent (\emph{Stretch --- MCP}). The science underneath all three is identical, so the project always has a complete deliverable no matter how high the ladder is climbed. Phase~1 (features F1--F5) is everything required to demonstrate the concept locally; the deployed rung (F6) ships the same stack to a cloud host; only the MCP rung (S1) is a true stretch, and it adds no new science. All features are owned by Nathan Herling (solo capstone).
 
-A feature is an item that would be listed on the sales pitch to get a customer interested --- a description of what the product accomplishes, not engineering specs. Limit the scope to only what you can accomplish; this also protects against feature creep. Use tables and bulleted lists to keep it concise.
-\end{guidance}
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|c|l|Y|}
+\hline
+\hL{\#} & \hC{Feature} & \hC{What it does / why the user wants it} \\ \hline
+\multicolumn{3}{|l|}{\textbf{MVP --- phase~1} \textnormal{(minimum feature set; local + logging)}} \\ \hline
+F1 & Preloaded multi-domain baselines & Three working, documented models (genre, phonon, ATLAS) load instantly; the user inherits a baseline instead of building a pipeline. \\ \hline
+F2 & Deterministic\,$\leftrightarrow$\,Bayesian toggle & Flip a trained model from a point estimate to a posterior and compare the two side by side --- the core ``is the confidence earned?'' view. \\ \hline
+F3 & Real-time knob panel & Turn prior, sampler, likelihood, and architecture knobs and watch the posterior geometry respond live, backed by the closed-form LLLA fast path. \\ \hline
+F4 & Posterior-geometry visualization & Credible regions, function-space spread, and the per-config posterior-$\sigma$ distribution, rendered in-browser. \\ \hline
+F5 & Resource-logging layer & Per-run telemetry (memory, time, cost) that turns Phase-2 infrastructure sizing into an empirical fit rather than a guess. \\ \hline
+\multicolumn{3}{|l|}{\textbf{MVP --- deployed} \textnormal{(same stack, cloud host)}} \\ \hline
+F6 & Cloud deployment & The same Docker images run on a cloud host; only one environment variable changes between local and deployed. \\ \hline
+\multicolumn{3}{|l|}{\textbf{Stretch --- MCP} \textnormal{(optional agent interface)}} \\ \hline
+S1 & MCP server & A thin manifest advertises the compute functions as tools an LLM client (e.g.\ Claude Desktop) can call --- no new infrastructure. \\ \hline
+\end{tabularx}
+\caption{FORGE feature list across the three MVP rungs, all owned by N.~Herling}
+\end{table}
 
-\propsub{}{Feature 1: Wireless Transmission of Data}
-\sectionauthor{the owner of the subsystem that implements this feature should write this section}
-\begin{guidance}
-Write a sentence to briefly describe the feature and introduce the table of parameters. Define the requirements --- usually min and max measurable values. Example: ``The system will transmit the water level readings from the remote unit located at the retention pond to the main unit located in the construction office. The requirements for transmission are summarized in Table~2.''
-\end{guidance}
+\propsub{}{Feature F3: Real-time knob panel --- the load-bearing interactive feature}
+The whole value of FORGE for User~2 depends on the knob panel feeling instant, which is why the architecture splits into two compute paths: a closed-form LLLA path on an always-on CPU for interactivity, and a heavy HMC/NUTS path on a serverless GPU for ground truth. The performance envelope is summarized in Table~\ref{tab:f3}.
 
 \begin{table}[H]
 \centering\renewcommand{\arraystretch}{1.25}
 \begin{tabularx}{\linewidth}{|Y|c|c|Y|}
 \hline
-\textit{Parameter} & \textit{Min} & \textit{Max} & \textit{Comments} \\ \hline
-\textit{Transmission Distance} & \textit{n/a} & \textit{500\,m} & \textit{Without obstructions, e.g.\ trees} \\ \hline
-\textit{Transmission Time} & \textit{n/a} & \textit{200\,ms} & \textit{1 full data packet} \\ \hline
-\textit{Wireless Transmitter Power Consumption} & \textit{1\,mW} & \textit{500\,mW} & \textit{Min during sleep mode, max during active transmission} \\ \hline
+\hL{Parameter} & \hC{Target} & \hC{Ceiling} & \hC{Comments} \\ \hline
+LLLA knob-to-update latency & $\le 1$\,s\textsuperscript{*} & $\le 3$\,s\textsuperscript{*} & Closed-form last-layer; must feel interactive \\ \hline
+HMC ``ground-truth'' resample & $\sim$1\,min\textsuperscript{*} & $\le$5\,min\textsuperscript{*} & Serverless GPU, scale-to-zero; per-job, not interactive \\ \hline
+Compute paths exposed & 2 & 2 & LLLA (CPU, always-on) and HMC/NUTS (GPU, on demand) \\ \hline
 \end{tabularx}
-\caption{Wireless Transmission Parameters}
+\smallskip
+{\footnotesize\itshape\noindent \textsuperscript{*}\,Early planning estimates, not yet profiled --- to be revisited once Phase~1 and its resource-logging layer (F5) are complete and the fitted time-vs-scale curves ($\mathrm{time}\approx f(n_{\mathrm{params}},\,n_{\mathrm{samples}},\,\ldots)$, including data size) are available. (Cold-start container spin-up and JAX/XLA compilation on the serverless GPU are not yet included in the HMC figures.)}
+\caption{Feature~F3 interactive-path parameters}
+\label{tab:f3}
 \end{table}
 
-\propsub{}{Feature 2: Temperature Sensing and Logging}
-\sectionauthor{the owner of the subsystem that implements this feature should write this section}
-\begin{guidance}
-Repeat the format from Feature~1 as needed. You should have a minimum of 3 key features and a maximum of 8. Most projects will have 4 or 5.
-\end{guidance}
+\propsub{}{Feature F6: Cloud deployment (MVP --- deployed) --- hosting envelope}
+Deployment must hold to a hobby-scale budget; the only component that must run continuously is one always-on CPU box, with the heavy GPU path serverless and effectively \$0 at idle. Planning estimates (as of May~2026) are in Table~\ref{tab:host}.
+
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|Y|c|Y|}
+\hline
+\hL{Layer} & \hC{Est.\ cost/mo} & \hC{Notes} \\ \hline
+Frontend (static, GitHub Pages) & $\sim$\$1 & Domain only; Pages\,+\,TLS free \\ \hline
+Backend API\,+\,LLLA (Fly.io/Render) & \$10--25 & Always-on CPU box, $\sim$2\,GB RAM \\ \hline
+HMC heavy jobs (Modal, serverless GPU) & $\sim$\$0 baseline & Scale-to-zero, per-second; credits cover dev \\ \hline
+Database & \$0 & Stateless / explicit job-ID design; deferred \\ \hline
+\multicolumn{1}{|r|}{\textbf{Target total}} & \textbf{$\sim$\$25} & \multicolumn{1}{l|}{Size of one always-on CPU box} \\ \hline
+\end{tabularx}
+\caption{Feature~F6 hosting-cost envelope}
+\label{tab:host}
+\end{table}
 
 % ---- 3b ----
 \propsec{3b}{Research Project Deliverables}
-\begin{guidance}
-This section describes the scope and features of the analysis created by the project --- what the project will PRODUCE. Write a draft, but this is what your mentor will especially help you with. This is often the breakdown of what will and will not be considered a passing project, so make this detailed.
+\sectionauthor{Nathan Herling}
 
-\textbf{Final Presentation Format.} How will your final project be submitted? Will it culminate in a paper with introduction, methods, and results sections and at least 5 peer-reviewed citations, under 10 pages, with at least two informative graphics? Will it culminate in an R Shiny application available on GitHub?
+\propsubsub{Final presentation format}
+The project culminates in (i)~a written report with introduction, methods, and results sections and at least five peer-reviewed citations, carrying at least two informative graphics (the deterministic-vs-Bayesian comparison and the fitted resource-cost curves); (ii)~an iShowcase poster and live demo; and (iii)~the deployed FORGE site plus three public GitHub repositories (documentation, experiments, software), tagged \texttt{v1.0} at freeze.
 
-\textbf{What Analysis Is Being Run?} Once the data is in, what analyses exactly should be run? E.g.\ what type of neural network, what type of correlation analysis, etc.
+\propsubsub{What analysis is being run}
+Three reproductions, each driven to a functional ground-truth result before the next begins, then extended with Bayesian inference:
+\begin{itemize}[nosep,leftmargin=1.4em]
+  \item \textbf{Genre recognition} --- a CNN with a Bayesian classification head over GTZAN (spectrogram + engineered-feature encoders).
+  \item \textbf{Phonon DOS} --- an $E(3)$-equivariant graph network with a Bayesian last-layer head over the 51-point DOS output; the published baseline gives point predictions only, so calibrated credible intervals are FORGE's added contribution.
+  \item \textbf{ATLAS LLP} --- a deterministic MLP discriminating signal (HSS\,$\rightarrow$\,LLP) from QCD background, extended with HMC over the output layer.
+\end{itemize}
+Across all three, the analysis is posterior inference via the closed-form LLLA fast path and ground-truth HMC/NUTS, evaluated for calibration coverage in addition to raw accuracy.
 
-\textbf{What Accuracy Is Expected?} If you're running a model, what do you expect --- 100\% accuracy? 65\% across multiple outputs? An $R^2$ of 0.6? What happens if the model isn't very accurate?
+\propsubsub{What accuracy is expected}
+Each reproduction commits up front to targets drawn from its source work --- FORGE's ``empirical contract'' for declaring a baseline reproduced. Calibration coverage is the additional contribution layered on top.
 
-\textbf{What if the Analysis doesn't work?} Is a null result acceptable, or do you need to do work to circumvent that?
+\begin{table}[H]
+\centering\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|l|Y|}
+\hline
+\hL{Experiment} & \hC{Reproduction target} \\ \hline
+Genre recognition & Best-config validation accuracy $\ge 0.75$ (cfg\_14: 0.766); sweep mean $\approx 0.72$; per-genre F1 in $0.46$--$0.89$ (BEARDOWN, Herling \& Attili 2025). \\ \hline
+Phonon DOS & $\ge 70\%$ of test materials within $10\%$ relative error on the average phonon frequency; per-element DOS MSE $10^{-3}$--$10^{-1}$ (Chen et~al.\ 2021). \\ \hline
+ATLAS LLP & \textcolor{guidered}{\textbf{\#TODO} --- reproduction target not yet decided; to be set within the next week (with advisor input).} \\ \hline
+\end{tabularx}
+\caption{Per-experiment reproduction targets}
+\end{table}
 
-\textbf{What if the Data Isn't Available?} For projects requiring data scraping --- what happens if your data is not scrapable? How will you salvage your project?
-\end{guidance}
+\propsubsub{What if the analysis doesn't work}
+A null result is acceptable and, in this project, often \emph{informative}: a model shown to sit at its epistemic limit is exactly the diagnostic FORGE exists to surface. Risk is further managed by redundancy --- three reproductions mean the platform still demonstrates the concept if one proves intractable. The descope order is fixed: drop the MCP stretch (S1) first, then trim the depth of the Bayesian/visualization refinements; the three baseline reproductions and the testing weeks are never cut, because they carry the write-up.
+
+\propsubsub{What if the data isn't available}
+There is no scraping dependency. All three datasets are public or already in hand: GTZAN (genre); the DFPT phonon database via the Materials Project (phonon, Petretto et~al.\ 2018); and the ATLAS reproduction inputs from the author's prior thesis work and Monte-Carlo samples. The C0--C3 calibration tiers are analytic, so their ground truth is always available for the CI scoring path regardless of external data.
 
 % =====================================================================
 %  4. PROJECT TIMELINE & GANTT CHART
 % =====================================================================
 \propsec{4}{Project Timeline \& Gantt Chart}
-\begin{guidance}
-List the major deliverables and decision points of the project. Track your work over time using the Gantt chart and continually update and submit it in weekly check-ins. Milestones from the course schedule are pre-populated; add the dates for the current semester and your project-specific objectives and deadlines.
+\sectionauthor{Nathan Herling}
 
-A very common mistake is to build the schedule to have a functional project by Demo day, leaving no time for testing and modification (allow 6--8 weeks for testing minimum) and no time to recover if early dates slip. At this stage you should have about 10--15 items in addition to the milestones from the master schedule.
-\end{guidance}
+The thirteen-week schedule (single contributor) is anchored at Week~0 = May~18, 2026. The substantive work --- standing up the three reproductions inside the Phase-1 architecture --- is front-loaded so that all three are integrated by Week~5 (the guaranteed ``floor'' deliverable); deployment, the Bayesian/visualization layer, and the MCP stretch follow, with a dedicated testing/buffer block before the paper and hand-in. Table~\ref{tab:milestones} lists the dated milestones; Figure~\ref{fig:gantt} is the corresponding Gantt.
 
-\begin{longtable}{|p{10cm}|c|}
+\begin{longtable}{|p{10.4cm}|c|}
 \hline
-\textbf{Milestone} & \textbf{Date} \\ \hline
+\hL{Milestone} & \hC{Date} \\ \hline
 \endfirsthead
 \hline
-\textbf{Milestone} & \textbf{Date} \\ \hline
+\hL{Milestone} & \hC{Date} \\ \hline
 \endhead
-Team Formation & 1/29/24 \\ \hline
- & \\ \hline
- & \\ \hline
-Signed proposal & 2/19/24 \\ \hline
- & \\ \hline
- & \\ \hline
- & \\ \hline
- & \\ \hline
- & \\ \hline
- & \\ \hline
-Poster Demo & 4/23/24 \\ \hline
- & \\ \hline
-iShowcase & 5/1/24 \\ \hline
-\caption{Milestone Schedule}
+Team formation; three repositories bootstrapped \textnormal{(course)} & 5/22/26 \\ \hline
+Signed proposal v1 \textnormal{(course)} & 5/29/26 \\ \hline
+Phase-1 architecture scaffolded & 5/29/26 \\ \hline
+Genre-recognition reproduction functional (ground truth) & 6/5/26 \\ \hline
+Phonon DOS reproduction functional (ground truth) & 6/12/26 \\ \hline
+ATLAS LLP reproduction functional (ground truth) & 6/19/26 \\ \hline
+\textbf{Three experiments integrated into Phase-1 stack (floor)} & 6/26/26 \\ \hline
+Stack deployed --- MVP (same images, cloud host) & 7/3/26 \\ \hline
+Bayesian + visualization layer across all three & 7/10/26 \\ \hline
+MCP server (stretch) tested via Claude Desktop & 7/24/26 \\ \hline
+Testing complete --- pipelines + platform end-to-end & 7/31/26 \\ \hline
+Final paper drafted; iShowcase poster + demo prep & 8/7/26 \\ \hline
+Final submission \& iShowcase; repo freeze + v1.0 tag \textnormal{(course)} & 8/12/26 \\ \hline
+\caption{Milestone Schedule (Summer 2026)}
+\label{tab:milestones}
 \end{longtable}
 
-\begin{guidance}
-Some items to consider as examples: determining sub-system partitioning and assignments; preliminary hardware selection; selecting a microcontroller / programming language / application framework; individual sub-system builds complete; individual sub-system testing complete; complete system build integrating the sub-systems; full-function testing complete; full feature demonstration.
+\noindent The Gantt chart in Figure~\ref{fig:gantt} mirrors this schedule. Its source of truth is two hand-edited files in the documentation repository: \texttt{data/gantt.json} drives the bars (per-task phase, start/end week, and status), while \texttt{data/weekly\_todos.json} holds the granular per-week task lists --- each a \texttt{\{name, status\}} entry keyed to weeks W0--W12 --- that populate the interactive Gantt's clickable week-detail panel on the project site. A live version (clickable per-week detail, downloadable PNG) is maintained at the documentation site linked below.
 
-A Gantt chart is a visual representation of the project timeline linked to a schedule with task ownership and dependencies. Refer to the Gantt Chart module on D2L for instructions and resources.
-\end{guidance}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{gantt_chart.png}
+\caption{FORGE project Gantt (snapshot). Bars span the weeks each task is active; fill density encodes status (planned / in progress / done); the vertical line marks ``today''. Live version: \href{https://n-herling-mk1.github.io/INFO_698_documentation/index.html\#gantt}{n-herling-mk1.github.io/INFO\_698\_documentation \#gantt}.}
+\label{fig:gantt}
+\end{figure}
 
 % =====================================================================
 %  5. ETHICS
@@ -221,13 +355,15 @@ A Gantt chart is a visual representation of the project timeline linked to a sch
 Data ethics is a key consideration in any product we create. Include a completed ethics chart (see examples on D2L). For each question, answer Y / N / M (Yes / No / Maybe) for general use and for the data-breach scenario.
 \end{guidance}
 
+\bigtodo{ATLAS data ethics. The generic chart below does not yet address the ATLAS/CERN-specific data-handling obligations: collaboration data-access and publication policy, restricted-data and embargo handling, and any required internal review/approval before quoting or releasing results. Add an ATLAS-specific data-ethics treatment here (with advisor input) before submission.}
+
 \renewcommand{\arraystretch}{1.2}
 \begin{longtable}{|c|p{9.5cm}|c|c|}
 \hline
-\textbf{\#} & \textbf{Question} & \textbf{Generally} & \textbf{Data Breach} \\ \hline
+\hL{\#} & \hC{Question} & \hC{Generally} & \hC{Data Breach} \\ \hline
 \endfirsthead
 \hline
-\textbf{\#} & \textbf{Question} & \textbf{Generally} & \textbf{Data Breach} \\ \hline
+\hL{\#} & \hC{Question} & \hC{Generally} & \hC{Data Breach} \\ \hline
 \endhead
 1 & Could a user sell drugs or other illegal items on your platform? & Y/N/M & Y/N/M \\ \hline
 2 & Could a user of your platform engage in sex trafficking? & Y/N/M & Y/N/M \\ \hline
@@ -279,7 +415,7 @@ Type the names in the ``Approver Name'' column; written signatures only in the `
 \renewcommand{\arraystretch}{1.6}
 \begin{tabularx}{\linewidth}{|Y|l|c|c|}
 \hline
-\textbf{Approver Name} & \textbf{Title} & \textbf{Signature} & \textbf{Date} \\ \hline
+\hL{Approver Name} & \hC{Title} & \hC{Signature} & \hC{Date} \\ \hline
 \placeholder{Type names here} & Team Project Manager & & \\ \hline
 \placeholder{All team members must sign} & Team Member & & \\ \hline
  & Team Member & & \\ \hline
@@ -297,11 +433,11 @@ Before you submit for grading, update the author table below. It need not be 100
 \renewcommand{\arraystretch}{1.4}
 \begin{tabularx}{\linewidth}{|Y|l|c|}
 \hline
-\textbf{Section} & \textbf{Author} & \textbf{Word Count} \\ \hline
-\textit{1. Executive Summary} & \textit{Jane Doe} & \textit{268} \\ \hline
- & & \\ \hline
- & & \\ \hline
- & & \\ \hline
+\hL{Section} & \hC{Author} & \hC{Word Count} \\ \hline
+1. Executive Summary & Nathan Herling & \placeholder{tbd} \\ \hline
+2 / 2b. User/Market \& Literature Review & Nathan Herling & \placeholder{tbd} \\ \hline
+3 / 3b. Product Features \& Research Deliverables & Nathan Herling & \placeholder{tbd} \\ \hline
+4. Timeline \& Gantt (incl.\ tables/figure) & Nathan Herling & n/a \\ \hline
 \end{tabularx}
 
 % =====================================================================

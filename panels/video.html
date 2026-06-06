@@ -1,22 +1,61 @@
 <h2>Project Video</h2>
 <p>
-  Project introduction and overview.
+  The FORGE project commercial. Switch between the local HD version and the
+  YouTube upload below.
 </p>
 
-<div class="embed-wrapper">
-  <video class="embed-video" controls preload="metadata" poster="">
-    <source src="assets/video/forge_intro.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-    <a href="assets/video/forge_intro.mp4">Download the video</a> instead.
-  </video>
+<div class="seg-toggle" role="tablist" aria-label="Video source">
+  <button class="seg-btn active" data-src="local"   role="tab" aria-selected="true">HD &middot; Local</button>
+  <button class="seg-btn"        data-src="youtube" role="tab" aria-selected="false">YouTube</button>
+</div>
+
+<p class="seg-note" id="vidnote">
+  Playing the local HD version &mdash; this renders noticeably clearer than the YouTube upload.
+</p>
+
+<div class="embed-wrapper embed-16x9">
+  <iframe id="vidframe"
+    src="assets/video/forge_commercial%20(6).html"
+    title="FORGE &mdash; Project Commercial"
+    loading="lazy"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen></iframe>
 </div>
 
 <div class="download-row">
-  <a class="btn btn-secondary" href="assets/video/forge_intro.mp4" download>Download Video</a>
+  <a id="vidlink" class="btn btn-secondary"
+     href="https://www.youtube.com/watch?v=B07DZg09ixg"
+     target="_blank" rel="noopener noreferrer">Watch on YouTube &#8599;</a>
 </div>
 
-<p style="margin-top: 20px; color: var(--color-text-muted); font-size: 0.88rem;">
-  <em>Place the video file at <code>assets/video/forge_intro.mp4</code>. If you'd prefer
-  to host on YouTube and embed instead, replace the <code>&lt;video&gt;</code> element
-  above with an <code>&lt;iframe&gt;</code> pointing at the YouTube embed URL.</em>
-</p>
+<script>
+(function () {
+  var SOURCES = {
+    local:   "assets/video/forge_commercial%20(6).html",
+    youtube: "https://www.youtube-nocookie.com/embed/B07DZg09ixg?rel=0&modestbranding=1"
+  };
+  var NOTES = {
+    local:   "Playing the local HD version \u2014 this renders noticeably clearer than the YouTube upload.",
+    youtube: "Playing the YouTube upload \u2014 the local HD version above renders clearer."
+  };
+  var frame = document.getElementById("vidframe");
+  var note  = document.getElementById("vidnote");
+  var btns  = document.querySelectorAll(".seg-toggle .seg-btn");
+  btns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-src");
+      if (frame.getAttribute("data-current") === key) return;
+      frame.setAttribute("data-current", key);
+      frame.src = SOURCES[key];
+      note.textContent = NOTES[key];
+      btns.forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    });
+  });
+  frame.setAttribute("data-current", "local");
+})();
+</script>

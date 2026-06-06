@@ -42,6 +42,7 @@
   <a class="rs-toc-item" data-target="rs-ideation"><span class="rs-toc-label">Ideation &amp; Hypothesis</span><span class="rs-toc-dot"></span></a>
   <a class="rs-toc-item" data-target="rs-testing"><span class="rs-toc-label">Testing &amp; MVP</span><span class="rs-toc-dot"></span></a>
   <a class="rs-toc-item" data-target="rs-business"><span class="rs-toc-label">Business Model</span><span class="rs-toc-dot"></span></a>
+  <a class="rs-toc-item" data-target="rs-pitch"><span class="rs-toc-label">Pitch</span><span class="rs-toc-dot"></span></a>
   <a class="rs-toc-item" data-target="research-log"><span class="rs-toc-label">Lecture Log</span><span class="rs-toc-dot"></span></a>
 </nav>
 
@@ -987,7 +988,7 @@
     <h5>Cost Structure</h5>
     <div class="bmc-body">
       <ul>
-        <li>Compute &mdash; HMC sampling (GPU / cluster time, <code>Recorded through logs</code> - phase I MVP).</li>
+        <li>Compute &mdash; HMC sampling (GPU / cluster time, <code>atlng01</code>).</li>
         <li>Hosting (static site + any inference backend); dataset handling (GTZAN, Materials&nbsp;Project, ATLAS).</li>
         <li>Development time (solo build).</li>
       </ul>
@@ -998,7 +999,7 @@
   <div class="bmc-cell bmc-revenue">
     <h5>Revenue Streams<span class="n">value model</span></h5>
     <div class="bmc-body">
-      <p class="bmc-note-flag">First iteration of Forge is for academic value. &mdash; FORGE is a proof of concept, not yet a product for a consumer market.</p>
+      <p class="bmc-note-flag">Academic value, not dollars &mdash; FORGE is a research instrument, not a product chasing a market.</p>
       <ul>
         <li>Capstone credit + a reproducible research contribution.</li>
         <li>Reusable open-source instrument &amp; teaching tool.</li>
@@ -1018,6 +1019,175 @@
   sections. The honest seam is Revenue: FORGE has none by design, so that box reads as academic value.
   Per the lecture, this stays an untested hypothesis &mdash; I&rsquo;ll revise it against facts as the build
   and proposal land.&rdquo;
+</p>
+
+
+<!-- ===================================================================
+     SECTION BAND  —  Pitching (Lecture 8)
+     =================================================================== -->
+<div id="rs-pitch" style="margin:30px 0 14px; padding:0 0 7px; border-bottom:3px solid var(--color-ember); display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;">
+  <h3 style="margin:0; color:var(--color-text); font-size:1.3rem; letter-spacing:0.01em;">Pitching &ndash; The AI Showcase Pitch</h3>
+  <span class="status-badge status-in_progress">Lecture 8 &middot; pitch structured</span>
+</div>
+
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  The final lecture is about <em>communicating</em> the solution, not the technology. At the AI Showcase
+  the room cares what was built and why it matters &mdash; not how it was built. The discipline: plan it,
+  practise it, stay authentic, and structure everything around the few things the audience can actually
+  retain.
+</p>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">Audience &mdash; who, and what should they leave knowing</h4>
+<p>
+  The Showcase has a split audience, so FORGE keeps two registers. The <strong>instructors</strong> grade the
+  method &mdash; HMC vs. last-layer Laplace, calibration tiers, the H1/H2/H3 metrics &mdash; so the technical
+  spine stays available. The <strong>community professionals</strong> in the room (potential collaborators,
+  employers, the curious) care about the <em>solution</em>: that you can finally see and steer a model&rsquo;s
+  uncertainty. The pitch leads with the solution and keeps the method one layer down, ready if asked.
+</p>
+<p>
+  The pitch itself is the same three-beat arc the rest of this page already establishes &mdash;
+  <strong>problem &rarr; solution &rarr; why it adds value</strong>: a trained model hides whether its
+  confidence is earned or borrowed (<a href="#rs-framing">framing</a>); FORGE turns the point estimate into a
+  posterior you can see and steer (<a href="#overview" data-go-panel="overview">overview</a>); and that lets a
+  researcher decide whether more data helps &mdash; with no pipeline to build.
+</p>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">SOCC &amp; BLOT &mdash; the one objective, stated up top</h4>
+<div class="splash-grid">
+  <div class="splash-card" style="border-left:4px solid var(--color-cyan);">
+    <p><span class="status-badge status-planned">SOCC</span></p>
+    <h3 style="margin-top:6px;">Single Overarching Communication Objective</h3>
+    <p style="margin-top:10px; font-style:italic; color:var(--color-text);">
+      If the room remembers one sentence: <strong style="font-style:normal; color:var(--color-cyan);">FORGE
+      lets you see whether a model&rsquo;s confidence is earned or borrowed &mdash; and steer it in real time
+      &mdash; without building a Bayesian pipeline.</strong>
+    </p>
+  </div>
+  <div class="splash-card" style="border-left:4px solid var(--color-ember);">
+    <p><span class="status-badge status-planned">BLOT</span></p>
+    <h3 style="margin-top:6px;">Bottom Line On Top</h3>
+    <p style="margin-top:10px; font-style:italic; color:var(--color-text);">
+      The lead, said first: <strong style="font-style:normal; color:var(--color-ember);">every trained model
+      ships one confidence number that can&rsquo;t tell you whether it has run out of data &mdash; FORGE turns
+      that number into a posterior you can see and steer.</strong>
+    </p>
+  </div>
+</div>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">Open on a story</h4>
+<p>
+  Facts and figures get tuned out; a story lands. The pitch opens on a moment every model-builder
+  recognises: you train a classifier, it scores well &mdash; say&nbsp;94% &mdash; and someone asks
+  <em>&ldquo;so should we collect more data, or are we done?&rdquo;</em> and you realise a single accuracy
+  number cannot answer it. That is the User&nbsp;1 pain from the <a href="#rs-framing">framing</a> section,
+  told as a 20-second anecdote &mdash; and it is exactly the gap FORGE fills, which makes the hook and the
+  product the same beat.
+</p>
+
+<h4 style="font-family:var(--font-serif); margin:22px 0 6px; color:var(--color-text);">The pitch chart &mdash; product, need, reach</h4>
+<p>
+  The lecture&rsquo;s pitch framework reduces to three questions. Filled out for FORGE:
+</p>
+
+<style>
+  /* "YOUR PITCH" chart — reproduces the lecture slide, FORGE tokens.
+     Header + three question rows, warm rule under the head, cool rules between. */
+  .pitch-chart {
+    position: relative; max-width: 780px; margin: 8px 0 4px;
+    background: #FFFFFF; border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+  .pitch-chart::before {                       /* navy left edge — echoes the slide chrome */
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+    background: linear-gradient(180deg, var(--color-navy) 0%, var(--color-navy-mid) 100%);
+  }
+  .pitch-chart-head {
+    font-family: var(--font-sans); font-weight: 800; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--color-navy); font-size: 1.1rem;
+    padding: 15px 24px 13px 32px; border-bottom: 1px solid var(--color-accent);
+  }
+  .pitch-row { padding: 15px 24px 16px 32px; }
+  .pitch-row + .pitch-row { border-top: 1px solid var(--color-border-soft); }
+  .pitch-row:nth-child(3) { border-top-color: rgba(45, 77, 122, 0.18); }  /* cool tint */
+  .pitch-row .q {
+    font-family: var(--font-serif); font-size: 1.4rem; color: var(--color-navy);
+    line-height: 1.2; margin: 0 0 6px;
+  }
+  .pitch-row .a { font-size: 0.92rem; color: var(--color-text); line-height: 1.55; margin: 0; }
+  .pitch-row .a .hi { color: var(--color-navy-mid); font-weight: 600; }
+  .pitch-row .a .flag { color: var(--color-accent); font-style: italic; }
+  @media (max-width: 640px) { .pitch-row .q { font-size: 1.18rem; } }
+</style>
+
+<div class="pitch-chart">
+  <div class="pitch-chart-head">Your Pitch</div>
+
+  <div class="pitch-row">
+    <p class="q">What is the product?</p>
+    <p class="a">A web-hosted <span class="hi">observatory</span> that turns a trained model&rsquo;s single
+    point estimate into a full Bayesian <span class="hi">posterior you can see and steer in real time</span>
+    &mdash; closed-form LLLA for instant feedback, HMC for ground truth &mdash; with no pipeline to build.</p>
+  </div>
+
+  <div class="pitch-row">
+    <p class="q">Why is it needed?</p>
+    <p class="a">A lone confidence number hides whether a model&rsquo;s error is <span class="hi">epistemic</span>
+    (fixable with more or better data) or irreducible &mdash; and standing up a Bayesian pipeline is enough
+    engineering that practitioners skip it and ship overconfident models. FORGE answers
+    <em>&ldquo;is this confidence earned or borrowed?&rdquo;</em> in one interface.</p>
+  </div>
+
+  <div class="pitch-row">
+    <p class="q">How many people will use it?</p>
+    <p class="a">Anyone who trains their own models and needs honest uncertainty: grad researchers in
+    data-rich sciences (<span class="hi">HEP, condensed matter, materials</span>) first, then
+    Bayesian-deep-learning students and educators. <span class="flag">A quantified reach estimate is the open
+    item &mdash; see the note below.</span></p>
+  </div>
+</div>
+
+<h4 style="font-family:var(--font-serif); margin:24px 0 6px; color:var(--color-text);">The four points they will remember</h4>
+<p>
+  An audience retains about four things, so the deck is built around exactly four &mdash; less text, more
+  visuals (the posterior-geometry plots and the live knob demo carry the load; the
+  <a href="#video" data-go-panel="video">project video</a> doubles as the demo-video device the lecture
+  recommends).
+</p>
+<div class="splash-grid">
+  <div class="splash-card" style="border-left:4px solid var(--color-cyan);">
+    <p><span class="status-badge status-planned">1 &middot; Problem</span></p>
+    <h3 style="margin-top:6px;">It is real and universal</h3>
+    <p style="margin-top:8px; font-size:0.85rem; color:var(--color-text-muted);">Every trained model hides
+    whether its confidence is earned or borrowed; the default is to ship a point estimate and hope.</p>
+  </div>
+  <div class="splash-card" style="border-left:4px solid var(--color-flame);">
+    <p><span class="status-badge status-planned">2 &middot; Solution</span></p>
+    <h3 style="margin-top:6px;">It is genuinely novel</h3>
+    <p style="margin-top:8px; font-size:0.85rem; color:var(--color-text-muted);">Hosted, deterministic&harr;Bayesian,
+    see-and-steer posterior &mdash; the <a href="#rs-market">remix</a> none of the comparable tools offer.</p>
+  </div>
+  <div class="splash-card" style="border-left:4px solid var(--color-ember);">
+    <p><span class="status-badge status-planned">3 &middot; It works</span></p>
+    <h3 style="margin-top:6px;">It is feasible</h3>
+    <p style="margin-top:8px; font-size:0.85rem; color:var(--color-text-muted);">LLLA fast path + HMC reference,
+    checked on the analytic calibration tier &mdash; the <a href="#rs-ideation">H1/H2/H3</a> metrics.</p>
+  </div>
+  <div class="splash-card" style="border-left:4px solid var(--color-gold);">
+    <p><span class="status-badge status-planned">4 &middot; Users</span></p>
+    <h3 style="margin-top:6px;">It has a clear audience</h3>
+    <p style="margin-top:8px; font-size:0.85rem; color:var(--color-text-muted);">Researchers who train models
+    but are not Bayesian-ML specialists (HEP / CMP / materials), plus Bayesian-DL students and educators.</p>
+  </div>
+</div>
+
+<p style="margin-top:18px; font-size:0.85rem; color:var(--color-text-muted); border-top:1px solid var(--color-border-soft); padding-top:12px;">
+  <strong>Note (N.&nbsp;Herling):</strong> &ldquo;The pitch is solution-first: lead with the SOCC/BLOT, open
+  on the &lsquo;should we get more data?&rsquo; story, then four points carried by the posterior visuals and
+  the live demo &mdash; method stays one layer down for the instructors. The honest open item is the
+  &lsquo;how many&rsquo; box: I&rsquo;ve named the users but not sized them. The lecture wants data behind the
+  hook (its 90%-of-students stat); I won&rsquo;t invent a number, so a defensible reach/market figure is the
+  one thing still to add before the Showcase.&rdquo;
 </p>
 
 
@@ -1080,6 +1250,12 @@
       <td>Business model</td>
       <td>The Lean Canvas / Business Model Canvas &mdash; nine boxes split product (left) vs market (right), held as an iterative untested hypothesis (Maurya / Osterwalder; Uber worked example)</td>
       <td>The FORGE Lean Canvas above &mdash; a one-page synthesis of the framing, market, and hypothesis sections, with Revenue read as academic value</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Pitching</td>
+      <td>Present the solution, not the technology: know your audience, problem&rarr;solution&rarr;value, SOCC (single overarching communication objective), BLOT (bottom line on top), open on a story, images&nbsp;&gt;&nbsp;words, and the four points an audience remembers (what / why / how-many)</td>
+      <td>The pitch section above &mdash; SOCC/BLOT cards, the story hook, the filled &ldquo;Your&nbsp;Pitch&rdquo; chart, and the four-point deck spine</td>
     </tr>
     <tr>
       <td colspan="4" style="color:var(--color-text-faint); font-style:italic;">

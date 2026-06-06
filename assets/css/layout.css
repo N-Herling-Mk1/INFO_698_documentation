@@ -17,6 +17,14 @@
   top: 0;
   z-index: 10;
   border-bottom: 1px solid #1A2A4D;
+  box-sizing: border-box;
+  /* Pin the banner to exactly --banner-h and clip anything taller.
+     The section dividers are right-borders on height:100% cells; if the
+     grid row ever grows past --banner-h (tight iframe sizing, font reflow),
+     those borders would bleed down into the body. Clipping forbids it. */
+  min-height: var(--banner-h);
+  max-height: var(--banner-h);
+  overflow: hidden;
 }
 
 /* Vertical bar separators between the three banner sections
@@ -185,7 +193,9 @@
   align-items: center;
   justify-content: center;
   height: 108px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  box-sizing: border-box;
+  border: 2px solid #AB0520;          /* Arizona red border */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25), 0 0 10px rgba(171, 5, 32, 0.30); /* + red halo */
   flex-shrink: 0;
 }
 

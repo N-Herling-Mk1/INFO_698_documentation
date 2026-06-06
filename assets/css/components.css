@@ -523,6 +523,52 @@
   background: #000;
 }
 
+/* Segmented toggle for switching video sources. */
+.seg-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg-alt);
+}
+.seg-toggle .seg-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 6px 16px;
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  background: transparent;
+  color: var(--color-text-muted);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.seg-toggle .seg-btn:hover { color: var(--color-text); }
+.seg-toggle .seg-btn.active {
+  background: var(--color-accent, #1ec8ff);
+  color: #000;
+}
+
+.seg-note {
+  margin: -6px 0 14px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* Responsive 16:9 container for embedded iframes (e.g. YouTube). */
+.embed-wrapper.embed-16x9 {
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+.embed-wrapper.embed-16x9 iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
 .download-row {
   display: flex;
   gap: 12px;
