@@ -16,7 +16,7 @@
 <div class="splash-grid">
   <div class="splash-card" data-go-panel="gantt">
     <h3>Phase 1 &mdash; local + logging</h3>
-    <p><span class="status-badge status-planned">Weeks 2&ndash;5</span></p>
+    <p><span class="status-badge status-planned">Weeks 4&ndash;6</span></p>
     <p>
       Fully functional full stack on localhost via <code>docker compose</code>: FastAPI backend,
       the LLLA + HMC worker, the knob panel, the calibration tier, and a resource-logging layer
@@ -25,7 +25,7 @@
   </div>
   <div class="splash-card" data-go-panel="gantt">
     <h3>MVP &mdash; deployed</h3>
-    <p><span class="status-badge status-planned">Weeks 6&ndash;7</span></p>
+    <p><span class="status-badge status-planned">Weeks 7&ndash;9</span></p>
     <p>
       Identical behaviour to Phase 1, fully deployed. The <em>same</em> Docker images run on the
       cloud host; the static frontend on GitHub Pages points at the deployed API. The only thing
@@ -34,7 +34,7 @@
   </div>
   <div class="splash-card" data-go-panel="gantt">
     <h3>Stretch &mdash; + MCP</h3>
-    <p><span class="status-badge status-planned">Weeks 8&ndash;9</span></p>
+    <p><span class="status-badge status-planned">Week 10</span></p>
     <p>
       The same backend, exposed a third way: an MCP server that advertises the compute functions
       as tools an LLM (e.g. Claude Desktop) can call. No new infrastructure &mdash; a thin manifest
@@ -42,6 +42,53 @@
     </p>
   </div>
 </div>
+
+<h3>Per-project interactive demos (the &ldquo;fidgets&rdquo;)</h3>
+<p>
+  Each reproduction ships with a hands-on demo built into its own <strong>standalone full
+  stack</strong> &mdash; a local Python <strong>Flask</strong> dev server during Phase&nbsp;1 &mdash;
+  so every project is independently runnable before Phase&nbsp;2 folds them into the deployed FORGE
+  site. All three share one spine: <em>drop or tune a domain object &rarr; scored output + an
+  uncertainty band + a themed visualization</em>, on the same <code>/api/predict</code> contract,
+  in the TRON&ndash;Ares aesthetic. The uncertainty band is the through-line: it is what keeps each
+  demo from being a generic classifier toy and ties all three to FORGE's Bayesian spine.
+</p>
+<div class="splash-grid">
+  <div class="splash-card">
+    <h3>Genre &mdash; &ldquo;drop a song&rdquo;</h3>
+    <p><span class="status-badge status-done">real model</span></p>
+    <p>
+      Drag-and-drop an audio file &rarr; per-genre scores (softmax bars) plus an audio-settings
+      dashboard. Backed by the real BEARDOWN classifier, so its predictions are trained output.
+    </p>
+  </div>
+  <div class="splash-card">
+    <h3>Phonon &mdash; &ldquo;build a crystal&rdquo;</h3>
+    <p><span class="status-badge status-planned">surrogate</span></p>
+    <p>
+      Drag elements into a unit-cell / formula slot &rarr; predicted phonon density-of-states curve
+      with a posterior ribbon, plus live-derived thermodynamics (specific heat <em>C<sub>v</sub></em>,
+      vibrational entropy) on a temperature sweep. Surrogate prediction until the real model lands.
+    </p>
+  </div>
+  <div class="splash-card">
+    <h3>ATLAS &mdash; &ldquo;tune NN1 vs NN2&rdquo;</h3>
+    <p><span class="status-badge status-planned">mock posteriors</span></p>
+    <p>
+      Feature sliders (ranges/defaults anchored to the real <code>eda_stats.json</code>, with
+      in-distribution vs extrapolation shading) drive a point across the <strong>ABCD plane</strong>,
+      with two credible bands &mdash; NN1 and NN2 &mdash; hanging off the axes rather than two scalars.
+      LLLA fast path for the live drag, precomputed HMC band as reference; barrel/endcap toggle. The
+      payoff view is the barrel region where the two bands lock together despite the measured
+      dCor&nbsp;1.79 correlation failure. Mock posteriors until wired to LLLA.
+    </p>
+  </div>
+</div>
+<p style="font-size:0.9rem; color:var(--color-text-muted); border-left:3px solid var(--color-navy-soft); padding:8px 14px; background:var(--color-bg-alt); border-radius:var(--radius);">
+  Honesty caveat: only the genre demo runs against a trained model. The phonon and ATLAS demos run
+  against a surrogate / mock posterior until their real models land, and are labelled
+  <em>demo prediction</em> in-UI so they are never mistaken for trained output.
+</p>
 
 <h3>Architecture: one backend, three front doors, two compute paths</h3>
 <p>
@@ -160,54 +207,63 @@
 
 <h3>Schedule</h3>
 <p>
-  The schedule follows the course phases &mdash; introduction, planning, design/implementation,
-  testing, paper, hand-in. The substantive work is standing up the three reproduction projects
-  &mdash; genre recognition, phonon DOS, and the ATLAS long-lived-particle search &mdash; inside the MVP phase-1
-  architecture in the software repo, each driven to functional ground-truth results before the next
-  begins. Once all three are integrated (Week 5), the remaining implementation weeks layer Bayesian
-  and visualization techniques across all three as needed. Day-resolved dates live in the
+  The schedule is organized around the MVP phases. Weeks&nbsp;0&ndash;3 are intro, planning, and
+  setup (proposal mk_1, full proposal, FORGE splash, locked timeline/Gantt). <strong>Phase&nbsp;1</strong>
+  (Weeks&nbsp;4&ndash;6) stands up the three reproduction projects one per week &mdash; genre
+  recognition, phonon DOS, and the ATLAS long-lived-particle search &mdash; each as a functional
+  standalone site driven to ground-truth, with the minimum Bayesian options (LLLA&nbsp;+&nbsp;HMC),
+  a local dashboard, and built-in compute-recording metrics. <strong>Phase&nbsp;2</strong>
+  (Weeks&nbsp;7&ndash;9) ties the three repos into one deployed FORGE website, moves off localhost to
+  external hosting, tests and debugs, and finalizes the Bayesian-tuning and dashboard decisions; the
+  write-up begins in Week&nbsp;9. <strong>Phase&nbsp;3 / stretch</strong> (Week&nbsp;10) locks the MVP
+  and the repos and attempts a stretch goal if time allows. A <strong>risk-management window</strong>
+  spans Weeks&nbsp;8&ndash;10. Day-resolved dates live in the
   <a href="#timeline" data-go-panel="timeline">Timeline</a> and
   <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
 </p>
 <div class="phase-legend">
-  <span><i style="background:rgba(107,162,146,0.55)"></i>MVP &mdash; phase 1</span>
-  <span><i style="background:rgba(90,123,168,0.55)"></i>MVP</span>
-  <span><i style="background:rgba(198,125,62,0.5)"></i>MVP &mdash; stretch</span>
-  <span><i style="background:rgba(150,120,196,0.55)"></i>Testing</span>
-  <span><i style="background:rgba(212,178,86,0.6)"></i>Paper / poster &middot; final repo</span>
+  <span><i style="background:rgba(120,132,156,0.45)"></i>Intro / Planning</span>
+  <span><i style="background:rgba(107,162,146,0.55)"></i>MVP &mdash; phase 1 (standalone)</span>
+  <span><i style="background:rgba(90,123,168,0.55)"></i>MVP &mdash; phase 2 (integrate + deploy)</span>
+  <span><i style="background:rgba(198,125,62,0.5)"></i>MVP &mdash; phase 3 / stretch</span>
+  <span><i style="background:rgba(212,178,86,0.6)"></i>Write-up / deliverables</span>
   <span><i style="background:rgba(95,165,110,0.6)"></i>Turn in</span>
+  <span><i style="background:rgba(198,125,62,0.18); border:1px dashed rgba(198,125,62,0.7)"></i>Risk-management window (W8&ndash;10)</span>
 </div>
 <table class="content-table schedule-table">
   <thead>
     <tr><th>Week</th><th>Dates</th><th>Phase</th><th>Focus</th></tr>
   </thead>
   <tbody>
-    <tr class="ph-neutral"><td>W0</td><td>May 18&ndash;22</td><td>Introduction</td><td>1st class meeting</td></tr>
-    <tr class="ph-neutral"><td>W1</td><td>May 25&ndash;29</td><td>Planning</td><td>Project planning; scaffold the software repo + phase-1 architecture</td></tr>
-    <tr class="ph-mvp1"><td>W2</td><td>Jun 1&ndash;5</td><td>MVP &mdash; phase 1</td><td>Genre-recognition repo up and running &mdash; functional experiment, ground-truth results</td></tr>
-    <tr class="ph-mvp1"><td>W3</td><td>Jun 8&ndash;12</td><td>MVP &mdash; phase 1</td><td>Phonon repo up and running &mdash; functional experiment, ground-truth results</td></tr>
-    <tr class="ph-mvp1"><td>W4</td><td>Jun 15&ndash;19</td><td>MVP &mdash; phase 1</td><td>ATLAS repo up and running &mdash; functional experiment, ground-truth results</td></tr>
-    <tr class="ph-mvp1"><td>W5</td><td>Jun 22&ndash;26</td><td>MVP &mdash; phase 1</td><td>Integrate all three into the phase-1 architecture</td></tr>
-    <tr class="ph-mvp"><td>W6</td><td>Jun 29&ndash;Jul 3</td><td>MVP</td><td>Deploy the stack &mdash; same Docker images on cloud; frontend points at the deployed API</td></tr>
-    <tr class="ph-mvp"><td>W7</td><td>Jul 6&ndash;10</td><td>MVP</td><td>Deployed end-to-end; Bayesian / visualization layer across the three as needed</td></tr>
-    <tr class="ph-stretch"><td>W8</td><td>Jul 13&ndash;17</td><td>MVP &mdash; stretch</td><td>MCP server &mdash; tools + descriptions forwarding to the backend</td></tr>
-    <tr class="ph-stretch"><td>W9</td><td>Jul 20&ndash;24</td><td>MVP &mdash; stretch</td><td>MCP tested via Claude Desktop</td></tr>
-    <tr class="ph-test"><td>W10</td><td>Jul 27&ndash;31</td><td>Testing</td><td>Test the three pipelines + platform end-to-end; fixes and hardening</td></tr>
-    <tr class="ph-paper"><td>W11</td><td>Aug 3&ndash;7</td><td>Paper / poster &middot; final repo</td><td>Paper + poster presentation work; final repo cleanup</td></tr>
-    <tr class="ph-turnin"><td>W12</td><td>Aug 10&ndash;12</td><td>Turn in</td><td>Final adjustments / hand-in (short week)</td></tr>
+    <tr class="ph-neutral"><td>W0</td><td>May 18&ndash;22</td><td>Intro</td><td>Brainstorming &amp; scope lock; doc-site design</td></tr>
+    <tr class="ph-neutral"><td>W1</td><td>May 25&ndash;29</td><td>Planning</td><td>Planning &amp; research; doc-site setup</td></tr>
+    <tr class="ph-neutral"><td>W2</td><td>Jun 1&ndash;5</td><td>Planning</td><td>Planning &amp; research; video lectures; project commercial; <strong>Proposal mk_1 due</strong></td></tr>
+    <tr class="ph-neutral"><td>W3</td><td>Jun 8&ndash;12</td><td>Planning</td><td>Initial project setup, begin MVP phase&nbsp;1; FORGE splash; <strong>full proposal due</strong>; lock timeline &amp; Gantt</td></tr>
+    <tr class="ph-mvp1"><td>W4</td><td>Jun 15&ndash;19</td><td>MVP &mdash; phase 1</td><td><strong>Music Genre</strong> standalone site &mdash; EDA, experimental design [a,b,c], sweeps / model-lock / drop-in analysis, LLLA&nbsp;+&nbsp;HMC, dashboard, compute metrics</td></tr>
+    <tr class="ph-mvp1"><td>W5</td><td>Jun 22&ndash;26</td><td>MVP &mdash; phase 1</td><td><strong>Phonon</strong> standalone site &mdash; same build template, driven to ground-truth</td></tr>
+    <tr class="ph-mvp1"><td>W6</td><td>Jun 29&ndash;Jul 3</td><td>MVP &mdash; phase 1</td><td><strong>ATLAS</strong> standalone site &mdash; same build template, driven to ground-truth</td></tr>
+    <tr class="ph-mvp"><td>W7</td><td>Jul 6&ndash;10</td><td>MVP &mdash; phase 2</td><td>Tie repos into the official FORGE website; move localhost&rarr;external hosting; test, debug; Bayesian-tune / look / dashboard decisions</td></tr>
+    <tr class="ph-mvp"><td>W8</td><td>Jul 13&ndash;17</td><td>MVP &mdash; phase 2</td><td>Integration + hosting cont.; test, debug; finalize Bayesian/dashboard decisions &middot; <em>risk-mgmt window opens</em></td></tr>
+    <tr class="ph-mvp"><td>W9</td><td>Jul 20&ndash;24</td><td>MVP &mdash; phase 2</td><td>Begin write-up; final software edits; testing &middot; <em>risk-mgmt window</em></td></tr>
+    <tr class="ph-stretch"><td>W10</td><td>Jul 27&ndash;31</td><td>MVP &mdash; phase 3 / stretch</td><td>Continue write-up; <strong>lock MVP + repos</strong>; stretch goal if time &middot; <em>risk-mgmt window</em></td></tr>
+    <tr class="ph-paper"><td>W11</td><td>Aug 3&ndash;7</td><td>Write-up / deliverables</td><td>Finish write-up; deliverables locked</td></tr>
+    <tr class="ph-turnin"><td>W12</td><td>Aug 10&ndash;12</td><td>Turn in</td><td>Turn in, present, iShowcase (short week)</td></tr>
   </tbody>
 </table>
 
 <h3>Risk &amp; descope</h3>
 <p>
   Because the three reproductions are the core deliverable, <strong>getting all three running to
-  ground-truth inside the phase-1 architecture (by Week 5) is the guaranteed floor</strong> &mdash; a
-  complete capstone even if later work is trimmed. The Bayesian and visualization layer is the
-  substantive middle; deployment and the MCP server remain stretch goals beyond it. If the testing
-  weeks tighten, the descope order is the MCP stretch first, then the depth of the
-  Bayesian/visualization refinements &mdash; never the three baseline reproductions or testing, which
-  carry the write-up. Week 12 is a short Monday&ndash;Wednesday week, so final assembly must be
-  substantially complete by the end of Week 11.
+  ground-truth as functional standalone sites (by Week&nbsp;6) is the guaranteed floor</strong> &mdash; a
+  complete capstone even if later work is trimmed. Phase&nbsp;2 (integration + deployment) is the
+  substantive middle; the MCP server stays the only true stretch goal beyond it. A
+  <strong>three-week risk-management window (Weeks&nbsp;8&ndash;10)</strong> absorbs slippage: if a
+  Phase&nbsp;1 build runs long, the integration and deploy work compresses into that window rather than
+  eating the write-up. The documented descope order is the MCP stretch (Week&nbsp;10) first, then the
+  depth of the Bayesian-tuning / dashboard refinements (Weeks&nbsp;7&ndash;9) &mdash; never the three
+  baseline standalone sites (Weeks&nbsp;4&ndash;6) or the write-up. Week&nbsp;12 is a short
+  Monday&ndash;Wednesday week, so final assembly must be substantially complete by the end of
+  Week&nbsp;11.
 </p>
 
 <h3 id="acronym-glossary">Acronym glossary</h3>

@@ -16,20 +16,30 @@ w0 = dt.date.fromisoformat(data["week0_start"])    # 2026-05-18
 
 # Phase colours (match the site legend)
 PHASE = {
-    "Intro":         "#5A6B86",
-    "Planning":      "#5A6B86",
-    "Design / Impl": "#3F8E7A",
-    "Testing":       "#9678C4",
-    "Write-up":      "#D4B256",
-    "Deliverables":  "#5FA56E",
+    "Intro":     "#5A6B86",
+    "Planning":  "#5A6B86",
+    "MVP P1":    "#5E9B86",
+    "MVP P2":    "#5A7BA8",
+    "Stretch":   "#C67D3E",
+    "Write-up":  "#C79A3E",
+    "Deliverables": "#5BA56B",
 }
 LABEL = {"Intro": "Intro / Planning", "Planning": "Intro / Planning",
-         "Design / Impl": "Design / Implementation", "Testing": "Testing",
-         "Write-up": "Write-up", "Deliverables": "Deliverables"}
+         "MVP P1": "MVP \u2014 Phase 1 (standalone)", "MVP P2": "MVP \u2014 Phase 2 (integrate + deploy)",
+         "Stretch": "MVP \u2014 Phase 3 / stretch",
+         "Write-up": "Write-up / Deliverables", "Deliverables": "Turn in"}
 FILL = {"planned": 0.40, "in_progress": 0.70, "done": 1.0}
 
 fig, ax = plt.subplots(figsize=(11.0, 6.2), dpi=200)
 n = len(tasks)
+
+# risk-management window(s): shaded vertical band behind the bars
+for w in data.get("windows", []):
+    ws, we = w.get("start", 0), w.get("end", w.get("start", 0))
+    ax.axvspan(ws, we + 1, color="#C67D3E", alpha=0.10, zorder=0)
+    ax.axvline(ws, color="#C67D3E", lw=0.9, ls=(0, (4, 3)), alpha=0.6, zorder=1)
+    ax.axvline(we + 1, color="#C67D3E", lw=0.9, ls=(0, (4, 3)), alpha=0.6, zorder=1)
+
 for i, t in enumerate(tasks):
     y = n - 1 - i
     s, e = t["start"], t["end"]
@@ -43,8 +53,8 @@ for i, t in enumerate(tasks):
                 edgecolor="#C67D3E", linewidth=1.4, linestyle=(0, (3, 2)), zorder=4)
     ax.text(-0.35, y, t["name"], ha="right", va="center", fontsize=8.3, color="#1A2238")
 
-# Today marker: 2026-06-05
-today = (dt.date(2026, 6, 5) - w0).days / 7.0
+# Today marker: 2026-06-12
+today = (dt.date(2026, 6, 12) - w0).days / 7.0
 ax.axvline(today, color="#C0392B", lw=1.6, zorder=5)
 ax.text(today, n - 0.2, "Today", color="#C0392B", fontsize=8, ha="center",
         va="bottom", fontweight="bold")
@@ -72,7 +82,7 @@ for s in ("top", "right", "left"):
 ax2.spines["top"].set_visible(False)
 
 seen, handles = set(), []
-for ph in ["Intro", "Design / Impl", "Testing", "Write-up", "Deliverables"]:
+for ph in ["Intro", "MVP P1", "MVP P2", "Stretch", "Write-up", "Deliverables"]:
     lab = LABEL[ph]
     if lab in seen:
         continue
@@ -82,10 +92,11 @@ handles += [
     Patch(facecolor="#5A6B86", alpha=0.40, label="Planned"),
     Patch(facecolor="#5A6B86", alpha=0.70, label="In progress"),
     Patch(facecolor="#5A6B86", alpha=1.0, label="Done"),
+    Patch(facecolor="#C67D3E", alpha=0.18, edgecolor="#C67D3E", label="Risk window"),
     Line2D([0], [0], color="#C0392B", lw=1.6, label="Today"),
 ]
 ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, -0.06),
-          ncol=5, frameon=False, fontsize=7.6, handlelength=1.4, columnspacing=1.4)
+          ncol=5, frameon=False, fontsize=7.2, handlelength=1.4, columnspacing=1.2)
 
 plt.subplots_adjust(left=0.30, right=0.985, top=0.90, bottom=0.13)
 out = ROOT / "assets" / "docs" / "gantt_chart.png"

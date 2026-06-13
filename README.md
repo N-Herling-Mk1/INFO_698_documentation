@@ -55,7 +55,7 @@ INFO_698_documentation/
 │   └── docs/                     # Project_Proposal_Hybrid.pdf/.docx, poster.pdf, etc.
 ├── data/
 │   ├── gantt.json                # SINGLE SOURCE OF TRUTH for the Gantt
-│   ├── weekly_todos.json         # per-week task lists for the Gantt detail panel
+│   ├── weekly_todos.json         # per-week progress reports (planned / refactored / accomplished) for the Gantt detail panel
 │   └── glossary.json             # entries for the Glossary panel
 ├── panels/                       # HTML fragments loaded into the main panel
 ├── scripts/
@@ -77,11 +77,12 @@ INFO_698_documentation/
 ## Weekly update workflow
 
 1. **Edit `data/gantt.json`.** Change `status` values, update `last_updated`, set `week0_start` when known.
-2. **(Optional) Regenerate the xlsx** for advisor/sponsor downloads:
+2. **Edit `data/weekly_todos.json`.** Fill that week's `planned` / `refactored` / `accomplished` lists — these render in the Gantt detail panel when a bar is clicked, and double as the weekly progress report.
+3. **(Optional) Regenerate the xlsx** for advisor/sponsor downloads:
    ```bash
    python scripts/build_xlsx.py
    ```
-3. **Commit and push** (see [Git & CI workflow](#git--ci-workflow) below). GitHub Actions deploys the site automatically.
+4. **Commit and push** (see [Git & CI workflow](#git--ci-workflow) below). GitHub Actions deploys the site automatically.
 
 The git log is the change history. No PDF snapshots needed.
 

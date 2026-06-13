@@ -5,9 +5,11 @@ build_xlsx.py — Generate FORGE_INFO698_Gantt.xlsx from data/gantt.json.
 Run from repo root:
     python scripts/build_xlsx.py
 
-The resulting .xlsx is written to the repo root and is intended to be
-committed alongside gantt.json so external viewers (advisor, sponsor)
-can download a familiar spreadsheet.
+Reads the same source of truth as the website Gantt (data/gantt.json):
+phase-grouped tasks with start/end week indices, milestones, and windows.
+The resulting .xlsx is written to the repo root and committed alongside
+gantt.json so external viewers (advisor, sponsor) get a familiar spreadsheet
+with the bars rendered as filled week-columns.
 """
 
 from __future__ import annotations
@@ -29,17 +31,27 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 JSON_PATH = REPO_ROOT / "data" / "gantt.json"
 OUT_PATH  = REPO_ROOT / "FORGE_INFO698_Gantt.xlsx"
 
+# Phase fills (hex, no #) — match the site legend.
 PHASE_FILLS = {
-    "Intro":         "A8C5BA",
-    "Planning":      "6BA292",
-    "Design / Impl": "5A7BA8",
-    "Testing":       "B58D7A",
-    "Write-up":      "8E6A8A",
-    "Deliverables":  "5C4B7A",
+    "Intro":        "8893A8",
+    "Planning":     "8893A8",
+    "MVP P1":       "5E9B86",
+    "MVP P2":       "5A7BA8",
+    "Stretch":      "C67D3E",
+    "Write-up":     "C79A3E",
+    "Deliverables": "5BA56B",
 }
+PHASE_LABEL = {
+    "Intro": "Intro / Planning", "Planning": "Intro / Planning",
+    "MVP P1": "MVP — Phase 1 (standalone)",
+    "MVP P2": "MVP — Phase 2 (integrate + deploy)",
+    "Stretch": "MVP — Phase 3 / stretch",
+    "Write-up": "Write-up / Deliverables", "Deliverables": "Turn in",
+}
+RISK_FILL = "F1DEC9"  # light tint for the risk-management window columns
 
 
-def parse_week0(s: str) -> datetime | None:
+def parse_week0(s: str):
     if not s:
         return None
     try:
@@ -53,9 +65,20 @@ def build():
         sys.exit(f"gantt.json not found at {JSON_PATH}")
 
     data = json.loads(JSON_PATH.read_text())
-    weeks = data["weeks"]
+    tasks = data.get("tasks", [])
+    milestones = data.get("milestones", [])
+    windows = data.get("windows", [])
     week0 = parse_week0(data.get("week0_start", ""))
-    num_weeks = len(weeks)
+    num_weeks = data.get("num_weeks") or (
+        max((t.get("end", t.get("start", 0)) for t in tasks), default=0) + 1
+    )
+
+    # weeks covered by any risk window (for column tinting)
+    risk_weeks = set()
+    for w in windows:
+        s = w.get("start", 0)
+        e = w.get("end", s)
+        risk_weeks.update(range(s, e + 1))
 
     wb = Workbook()
     ws = wb.active
@@ -67,18 +90,16 @@ def build():
     bold        = Font(bold=True, name="Calibri")
     italic_gray = Font(italic=True, color="666666", name="Calibri")
     light_gray  = PatternFill("solid", start_color="F4F6FA")
+    risk_tint   = PatternFill("solid", start_color=RISK_FILL)
     yellow_hl   = PatternFill("solid", start_color="FFF2CC")
     thin = Side(border_style="thin", color="D9DCE3")
     border = Border(left=thin, right=thin, top=thin, bottom=thin)
 
-    # Parameter block
-    ws["A1"] = "Week 0 start:"
-    ws["A1"].font = bold
-    ws["B1"] = data.get("week0_start", "")
-    ws["B1"].fill = yellow_hl
+    # ---- parameter block ------------------------------------------------
+    ws["A1"] = "Week 0 start:"; ws["A1"].font = bold
+    ws["B1"] = data.get("week0_start", ""); ws["B1"].fill = yellow_hl
     ws["B1"].number_format = "yyyy-mm-dd"
-    ws["C1"] = "(Edit data/gantt.json week0_start)"
-    ws["C1"].font = italic_gray
+    ws["C1"] = "(Edit data/gantt.json week0_start)"; ws["C1"].font = italic_gray
 
     ws["A2"] = "Project:"; ws["A2"].font = bold
     ws["B2"] = data.get("project", "FORGE"); ws["B2"].font = normal
@@ -89,9 +110,9 @@ def build():
     ws["A4"] = "Updated:"; ws["A4"].font = bold
     ws["B4"] = data.get("last_updated", ""); ws["B4"].font = normal
 
-    # Header
+    # ---- header ---------------------------------------------------------
     HEADER_ROW = 6
-    headers = ["Week", "Phase", "Activity", "Start", "End", "Status"]
+    headers = ["Phase", "Task", "Start", "End", "Status"]
     for w in range(num_weeks):
         headers.append(f"W{w}")
     for col_idx, h in enumerate(headers, start=1):
@@ -101,63 +122,98 @@ def build():
         c.alignment = Alignment(horizontal="center", vertical="center")
         c.border = border
 
-    # Body
+    WEEK_COL0 = 6  # first week column (1-indexed) => F
+
+    # ---- task rows ------------------------------------------------------
     start_row = HEADER_ROW + 1
-    for i, row in enumerate(weeks):
+    for i, t in enumerate(tasks):
         r = start_row + i
-        wk = row["week"]
-        phase = row["phase"]
+        phase = t.get("phase", "")
+        s = t.get("start", 0)
+        e = t.get("end", s)
         fill_hex = PHASE_FILLS.get(phase, "CCCCCC")
         phase_fill = PatternFill("solid", start_color=fill_hex)
 
-        ws.cell(row=r, column=1, value=f"Week {wk}").font = bold
-        ws.cell(row=r, column=2, value=phase).font = normal
-        ws.cell(row=r, column=3, value=row["activity"]).font = normal
+        ws.cell(row=r, column=1, value=PHASE_LABEL.get(phase, phase)).font = normal
+        ws.cell(row=r, column=2, value=t.get("name", "")).font = normal
 
         if week0:
-            s = week0 + timedelta(days=wk * 7)
-            e = s + timedelta(days=6)
-            ws.cell(row=r, column=4, value=s).number_format = "yyyy-mm-dd"
-            ws.cell(row=r, column=5, value=e).number_format = "yyyy-mm-dd"
-        else:
-            ws.cell(row=r, column=4, value="")
-            ws.cell(row=r, column=5, value="")
-
-        ws.cell(row=r, column=6, value=row.get("status", "planned"))
-        ws.cell(row=r, column=6).alignment = Alignment(horizontal="center")
+            sd = week0 + timedelta(days=s * 7)
+            ed = week0 + timedelta(days=e * 7 + 6)
+            ws.cell(row=r, column=3, value=sd).number_format = "yyyy-mm-dd"
+            ws.cell(row=r, column=4, value=ed).number_format = "yyyy-mm-dd"
+        ws.cell(row=r, column=5, value=t.get("status", "planned")).alignment = Alignment(horizontal="center")
 
         for w in range(num_weeks):
-            c = ws.cell(row=r, column=7 + w)
+            c = ws.cell(row=r, column=WEEK_COL0 + w)
             c.border = border
-            if w == wk:
+            if s <= w <= e:
                 c.fill = phase_fill
+            elif w in risk_weeks:
+                c.fill = risk_tint
             else:
                 c.fill = light_gray
 
-        for col in range(1, 7):
+        for col in range(1, 6):
             ws.cell(row=r, column=col).border = border
 
-    # Widths
-    ws.column_dimensions["A"].width = 10
-    ws.column_dimensions["B"].width = 16
-    ws.column_dimensions["C"].width = 52
-    ws.column_dimensions["D"].width = 13
-    ws.column_dimensions["E"].width = 13
-    ws.column_dimensions["F"].width = 12
+    last_task_row = start_row + len(tasks) - 1
+
+    # ---- milestones row -------------------------------------------------
+    ms_row = last_task_row + 1
+    ws.cell(row=ms_row, column=2, value="Milestones (◈)").font = bold
+    ws.cell(row=ms_row, column=1, value="").border = border
+    ws.cell(row=ms_row, column=2).border = border
+    for col in (3, 4, 5):
+        ws.cell(row=ms_row, column=col).border = border
+    ms_by_week = {}
+    for j, m in enumerate(milestones, start=1):
+        ms_by_week.setdefault(m["week"], []).append(str(j))
     for w in range(num_weeks):
-        ws.column_dimensions[get_column_letter(7 + w)].width = 5
+        c = ws.cell(row=ms_row, column=WEEK_COL0 + w)
+        c.border = border
+        if w in ms_by_week:
+            c.value = "◈" + "/".join(ms_by_week[w])
+            c.font = Font(bold=True, color="0F1F3D", name="Calibri")
+            c.alignment = Alignment(horizontal="center")
+        elif w in risk_weeks:
+            c.fill = risk_tint
 
-    ws.freeze_panes = "G7"
+    # ---- widths / freeze ------------------------------------------------
+    ws.column_dimensions["A"].width = 30
+    ws.column_dimensions["B"].width = 42
+    ws.column_dimensions["C"].width = 12
+    ws.column_dimensions["D"].width = 12
+    ws.column_dimensions["E"].width = 12
+    for w in range(num_weeks):
+        ws.column_dimensions[get_column_letter(WEEK_COL0 + w)].width = 5
+    ws.freeze_panes = ws.cell(row=HEADER_ROW + 1, column=WEEK_COL0)
 
-    # Legend
-    legend_start = start_row + num_weeks + 2
-    ws.cell(row=legend_start, column=1, value="Legend").font = bold
-    for i, (phase, hex_) in enumerate(PHASE_FILLS.items()):
-        r = legend_start + 1 + i
-        swatch = ws.cell(row=r, column=1, value="")
-        swatch.fill = PatternFill("solid", start_color=hex_)
-        swatch.border = border
-        ws.cell(row=r, column=2, value=phase).font = normal
+    # ---- phase legend ---------------------------------------------------
+    legend_start = ms_row + 2
+    ws.cell(row=legend_start, column=1, value="Phase legend").font = bold
+    seen = set()
+    li = 0
+    for phase, hex_ in PHASE_FILLS.items():
+        lab = PHASE_LABEL.get(phase, phase)
+        if lab in seen:
+            continue
+        seen.add(lab)
+        r = legend_start + 1 + li
+        sw = ws.cell(row=r, column=1, value=""); sw.fill = PatternFill("solid", start_color=hex_); sw.border = border
+        ws.cell(row=r, column=2, value=lab).font = normal
+        li += 1
+    # risk-window swatch
+    r = legend_start + 1 + li
+    sw = ws.cell(row=r, column=1, value=""); sw.fill = risk_tint; sw.border = border
+    ws.cell(row=r, column=2, value="Risk-management window").font = normal
+
+    # ---- milestone key --------------------------------------------------
+    mk_start = legend_start + li + 3
+    ws.cell(row=mk_start, column=1, value="Milestones").font = bold
+    for j, m in enumerate(milestones, start=1):
+        ws.cell(row=mk_start + j, column=1, value=f"◈{j}").font = bold
+        ws.cell(row=mk_start + j, column=2, value=f"W{m['week']} — {m['label']}").font = normal
 
     wb.save(OUT_PATH)
     print(f"Wrote {OUT_PATH}")

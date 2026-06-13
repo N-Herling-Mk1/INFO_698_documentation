@@ -1,17 +1,21 @@
 <h2>Project Timeline</h2>
 <p>
-  This page presents the 13-week project schedule, color-coded by phase:
-  <em>Intro</em>, <em>Planning</em>, <em>Design / Implementation</em>, <em>Testing</em>,
-  <em>Write-up</em>, and <em>Deliverables</em>. Calendar dates are anchored to the Week&nbsp;0
-  start (May&nbsp;18) and mirrored in the <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
+  This page presents the 13-week project schedule, organized around the MVP phases:
+  <em>Intro&nbsp;/&nbsp;Planning</em>, <em>MVP&nbsp;Phase&nbsp;1 (standalone)</em>,
+  <em>MVP&nbsp;Phase&nbsp;2 (integrate&nbsp;+&nbsp;deploy)</em>, <em>MVP&nbsp;Phase&nbsp;3&nbsp;/&nbsp;stretch</em>,
+  <em>Write-up</em>, and <em>Deliverables</em>. A <em>risk-management window</em> spans
+  Weeks&nbsp;8&ndash;10. Calendar dates are anchored to the Week&nbsp;0 start (May&nbsp;18) and mirrored
+  in the <a href="#gantt" data-go-panel="gantt">Gantt chart</a>.
 </p>
 
 <div class="phase-legend">
   <span><i style="background:rgba(120,132,156,0.45)"></i>Intro / Planning</span>
-  <span><i style="background:rgba(107,162,146,0.55)"></i>Design / Implementation</span>
-  <span><i style="background:rgba(150,120,196,0.55)"></i>Testing</span>
+  <span><i style="background:rgba(107,162,146,0.55)"></i>MVP &mdash; Phase 1 (standalone)</span>
+  <span><i style="background:rgba(90,123,168,0.55)"></i>MVP &mdash; Phase 2 (integrate + deploy)</span>
+  <span><i style="background:rgba(198,125,62,0.5)"></i>MVP &mdash; Phase 3 / stretch</span>
   <span><i style="background:rgba(212,178,86,0.6)"></i>Write-up</span>
   <span><i style="background:rgba(95,165,110,0.6)"></i>Deliverables</span>
+  <span><i style="background:rgba(198,125,62,0.18); border:1px dashed rgba(198,125,62,0.7)"></i>Risk-management window (W8&ndash;10)</span>
 </div>
 
 <h3>Phase Overview</h3>
@@ -20,12 +24,13 @@
     <tr><th>Phase</th><th>Weeks</th><th>Dates</th><th>Purpose</th></tr>
   </thead>
   <tbody>
-    <tr class="ph-neutral"><td>Intro</td><td>0</td><td>May 18&ndash;22</td><td>Course orientation; bootstrap the three project repositories; mentor sync</td></tr>
-    <tr class="ph-neutral"><td>Planning</td><td>1</td><td>May 25&ndash;29</td><td>Scope lock, proposal v1, milestone schedule; scaffold the software repo + phase-1 architecture</td></tr>
-    <tr class="ph-design"><td>Design / Implementation</td><td>2&ndash;8</td><td>Jun 1&ndash;Jul 17</td><td>Stand up the three reproduction projects in the phase-1 architecture and integrate them, then add the Bayesian / visualization layer and the deploy and MCP rungs</td></tr>
-    <tr class="ph-test"><td>Testing</td><td>9&ndash;10</td><td>Jul 20&ndash;31</td><td>Unit, integration, and ground-truth checks; user-facing UX pass</td></tr>
-    <tr class="ph-writeup"><td>Write-up</td><td>11</td><td>Aug 3&ndash;7</td><td>Final paper, iShowcase materials, demo prep</td></tr>
-    <tr class="ph-deliver"><td>Deliverables</td><td>12</td><td>Aug 10&ndash;12</td><td>Final submission, iShowcase, repository freeze</td></tr>
+    <tr class="ph-neutral"><td>Intro</td><td>0</td><td>May 18&ndash;22</td><td>Brainstorming &amp; scope lock; doc-site design; mentor sync</td></tr>
+    <tr class="ph-neutral"><td>Planning</td><td>1&ndash;3</td><td>May 25&ndash;Jun 12</td><td>Research; proposal mk_1 (W2) then full proposal (W3); doc-site setup; video lectures; project commercial; initial project setup; FORGE splash; lock timeline &amp; Gantt</td></tr>
+    <tr class="ph-mvp1"><td>MVP &mdash; Phase 1 (standalone)</td><td>4&ndash;6</td><td>Jun 15&ndash;Jul 3</td><td>Three reproduction projects (Music Genre, Phonon, ATLAS), one per week: EDA, experimental design [a,b,c], sweeps / model-lock / drop-in analysis, LLLA&nbsp;+&nbsp;HMC, local dashboard, compute-recording metrics</td></tr>
+    <tr class="ph-mvp2"><td>MVP &mdash; Phase 2 (integrate + deploy)</td><td>7&ndash;9</td><td>Jul 6&ndash;24</td><td>Tie the three repos into one FORGE website; move localhost&rarr;external hosting; test/debug; finalize Bayesian-tune and dashboard decisions; write-up begins (W9)</td></tr>
+    <tr class="ph-stretch"><td>MVP &mdash; Phase 3 / stretch</td><td>10</td><td>Jul 27&ndash;31</td><td>Lock the MVP and freeze the repos; attempt the stretch goal (MCP) if time allows</td></tr>
+    <tr class="ph-writeup"><td>Write-up</td><td>11</td><td>Aug 3&ndash;7</td><td>Finish the paper; iShowcase materials; deliverables locked</td></tr>
+    <tr class="ph-deliver"><td>Deliverables</td><td>12</td><td>Aug 10&ndash;12</td><td>Final submission; iShowcase; repository freeze (short week)</td></tr>
   </tbody>
 </table>
 
@@ -35,31 +40,32 @@
     <tr><th>Week</th><th>Dates</th><th>Phase</th><th>Focus</th></tr>
   </thead>
   <tbody>
-    <tr class="ph-neutral"><td>W0</td><td>May 18&ndash;22</td><td>Intro</td><td>Course orientation; bootstrap the three project repositories (genre recognition, phonon DOS, ATLAS); mentor sync to confirm scope</td></tr>
-    <tr class="ph-neutral"><td>W1</td><td>May 25&ndash;29</td><td>Planning</td><td>Lock scope; submit proposal v1 with milestone schedule + Gantt; scaffold the phase-1 architecture; identify integration risks</td></tr>
-    <tr class="ph-design"><td>W2</td><td>Jun 1&ndash;5</td><td>Design / Implementation</td><td>Genre-recognition repo up and running &mdash; functional experiment, ground-truth results</td></tr>
-    <tr class="ph-design"><td>W3</td><td>Jun 8&ndash;12</td><td>Design / Implementation</td><td>Phonon repo up and running &mdash; functional experiment, ground-truth results</td></tr>
-    <tr class="ph-design"><td>W4</td><td>Jun 15&ndash;19</td><td>Design / Implementation</td><td>ATLAS repo up and running &mdash; functional experiment, ground-truth results</td></tr>
-    <tr class="ph-design"><td>W5</td><td>Jun 22&ndash;26</td><td>Design / Implementation</td><td>Integrate all three into the MVP phase-1 architecture (full local stack)</td></tr>
-    <tr class="ph-design"><td>W6</td><td>Jun 29&ndash;Jul 3</td><td>Design / Implementation</td><td>Deploy the stack (MVP); begin the Bayesian / visualization layer</td></tr>
-    <tr class="ph-design"><td>W7</td><td>Jul 6&ndash;10</td><td>Design / Implementation</td><td>Bayesian + visualization techniques across all three projects</td></tr>
-    <tr class="ph-design"><td>W8</td><td>Jul 13&ndash;17</td><td>Design / Implementation</td><td>MCP server (stretch); full integration pass, end-to-end smoke test passing</td></tr>
-    <tr class="ph-test"><td>W9</td><td>Jul 20&ndash;24</td><td>Testing</td><td>Unit and integration tests; ground-truth sanity checks across the three pipelines</td></tr>
-    <tr class="ph-test"><td>W10</td><td>Jul 27&ndash;31</td><td>Testing</td><td>User-facing testing, bug triage, UX polish; slack week if an earlier deliverable slips</td></tr>
-    <tr class="ph-writeup"><td>W11</td><td>Aug 3&ndash;7</td><td>Write-up</td><td>Final paper drafted and revised; iShowcase poster + demo materials; live-demo practice run</td></tr>
-    <tr class="ph-deliver"><td>W12</td><td>Aug 10&ndash;12</td><td>Deliverables</td><td>Final submission; iShowcase presentation; repo freeze and tag <code>v1.0</code> across all three repos</td></tr>
+    <tr class="ph-neutral"><td>W0</td><td>May 18&ndash;22</td><td>Intro</td><td>Brainstorming &amp; scope lock; doc-site design; mentor sync to confirm scope</td></tr>
+    <tr class="ph-neutral"><td>W1</td><td>May 25&ndash;29</td><td>Planning</td><td>Planning &amp; research; doc-site setup (panel router, content scaffold)</td></tr>
+    <tr class="ph-neutral"><td>W2</td><td>Jun 1&ndash;5</td><td>Planning</td><td>Planning &amp; research; video lectures; project commercial; submit <strong>Proposal mk_1</strong></td></tr>
+    <tr class="ph-neutral"><td>W3</td><td>Jun 8&ndash;12</td><td>Planning</td><td>Initial project setup, begin MVP phase&nbsp;1; design FORGE splash; <strong>full proposal due</strong>; reconsider and lock timeline &amp; Gantt</td></tr>
+    <tr class="ph-mvp1"><td>W4</td><td>Jun 15&ndash;19</td><td>MVP &mdash; Phase 1</td><td><strong>Music Genre</strong> standalone site &mdash; EDA, experimental design [a,b,c], sweeps / model-lock / drop-in analysis, LLLA&nbsp;+&nbsp;HMC, dashboard, compute metrics</td></tr>
+    <tr class="ph-mvp1"><td>W5</td><td>Jun 22&ndash;26</td><td>MVP &mdash; Phase 1</td><td><strong>Phonon</strong> standalone site &mdash; same build template, driven to ground-truth</td></tr>
+    <tr class="ph-mvp1"><td>W6</td><td>Jun 29&ndash;Jul 3</td><td>MVP &mdash; Phase 1</td><td><strong>ATLAS</strong> standalone site &mdash; same build template, driven to ground-truth</td></tr>
+    <tr class="ph-mvp2"><td>W7</td><td>Jul 6&ndash;10</td><td>MVP &mdash; Phase 2</td><td>Tie repos into the official FORGE website; move localhost&rarr;external hosting; test, debug; Bayesian-tune / look / dashboard decisions</td></tr>
+    <tr class="ph-mvp2"><td>W8</td><td>Jul 13&ndash;17</td><td>MVP &mdash; Phase 2</td><td>Integration + hosting cont.; test, debug; finalize Bayesian/dashboard decisions &middot; <em>risk-mgmt window opens</em></td></tr>
+    <tr class="ph-mvp2"><td>W9</td><td>Jul 20&ndash;24</td><td>MVP &mdash; Phase 2</td><td>Begin write-up; final software edits; testing &middot; <em>risk-mgmt window</em></td></tr>
+    <tr class="ph-stretch"><td>W10</td><td>Jul 27&ndash;31</td><td>MVP &mdash; Phase 3 / stretch</td><td>Continue write-up; <strong>lock MVP + freeze repos</strong>; stretch goal (MCP) if time &middot; <em>risk-mgmt window</em></td></tr>
+    <tr class="ph-writeup"><td>W11</td><td>Aug 3&ndash;7</td><td>Write-up</td><td>Finish the write-up; iShowcase poster + demo materials; deliverables locked</td></tr>
+    <tr class="ph-deliver"><td>W12</td><td>Aug 10&ndash;12</td><td>Deliverables</td><td>Turn in; iShowcase presentation; repo freeze and tag <code>v1.0</code> across all three repos</td></tr>
   </tbody>
 </table>
 
 <h3>Risk Management</h3>
 <p>
-  The schedule reserves Week&nbsp;10 explicitly as a recovery buffer. Because the three reproductions
-  are the load-bearing piece of the write-up, the guaranteed floor is all three running to ground-truth
-  inside the phase-1 architecture by Week&nbsp;5. If a Design / Implementation milestone slips by one
-  week, the integration smoke test (W8) shifts into W9 and the testing window compresses to W10 only.
-  A larger slip triggers a scope-cut conversation with the advisor; the documented descope order is the
-  MCP server (W8) first, then the depth of the Bayesian / visualization layer (W6&ndash;W7) &mdash;
-  never the three baseline reproductions (W2&ndash;W5) or testing.
+  The schedule reserves a <strong>three-week risk-management window (Weeks&nbsp;8&ndash;10)</strong> as a
+  recovery buffer. Because the three reproductions are the load-bearing piece of the write-up, the
+  guaranteed floor is all three running to ground-truth as functional standalone sites by Week&nbsp;6.
+  If a Phase&nbsp;1 build slips, the integration and deployment work (Weeks&nbsp;7&ndash;9) absorbs into
+  the window rather than displacing the write-up. A larger slip triggers a scope-cut conversation with
+  the advisor; the documented descope order is the MCP stretch (Week&nbsp;10) first, then the depth of
+  the Bayesian-tuning / dashboard refinements (Weeks&nbsp;7&ndash;9) &mdash; never the three baseline
+  standalone sites (Weeks&nbsp;4&ndash;6) or the write-up.
 </p>
 
 <h3>Tracking</h3>
@@ -74,6 +80,9 @@
   table.tl-wk td:nth-child(2) { white-space: nowrap; width: 1%; }
   table.tl-sched tr.ph-neutral td { background: rgba(120,132,156,0.10); }
   table.tl-sched tr.ph-design  td { background: rgba(107,162,146,0.16); }
+  table.tl-sched tr.ph-mvp1    td { background: rgba(107,162,146,0.16); }
+  table.tl-sched tr.ph-mvp2    td { background: rgba(90,123,168,0.16); }
+  table.tl-sched tr.ph-stretch td { background: rgba(198,125,62,0.15); }
   table.tl-sched tr.ph-test    td { background: rgba(150,120,196,0.16); }
   table.tl-sched tr.ph-writeup td { background: rgba(212,178,86,0.18); }
   table.tl-sched tr.ph-deliver td { background: rgba(95,165,110,0.18); }

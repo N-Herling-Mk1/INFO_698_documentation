@@ -1,14 +1,165 @@
 {
-  "_comment": "Per-week task lists for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W0..W12. Each task: { name, status } where status is 'todo' or 'done'.",
-  "last_updated": "2026-05-29",
+  "_comment": "Per-week progress reports for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W0..W12. Each week has three sections: planned (set at the start of the week), refactored (mid-week scope changes / re-plans), accomplished (what actually got done). Items are plain strings, or { name, status } where status is 'todo' | 'done'.",
+  "last_updated": "2026-06-12",
+  "sections": ["planned", "refactored", "accomplished"],
   "weeks": {
-    "1": {
-      "label": "Planning",
-      "tasks": [
-        { "name": "Get front-end doc site up", "status": "todo" },
-        { "name": "Create hybrid project proposal", "status": "todo" },
-        { "name": "Get Project Video section done", "status": "todo" }
+    "0": {
+      "label": "Intro \u2014 brainstorming",
+      "planned": [
+        "Brainstorming & scope lock",
+        "Website documentation design"
+      ],
+      "refactored": [],
+      "accomplished": [
+        "Brainstorming & scope locked",
+        "Doc-site (TRON Ares) design started"
       ]
+    },
+    "1": {
+      "label": "Planning & research",
+      "planned": [
+        "Planning, research",
+        "Website documentation setup"
+      ],
+      "refactored": [],
+      "accomplished": [
+        "Research & planning underway",
+        "Doc-site scaffold + panel router stood up"
+      ]
+    },
+    "2": {
+      "label": "Planning \u2014 proposal mk_1",
+      "planned": [
+        "Planning, research",
+        "Website documentation setup",
+        "Video lectures",
+        "Project commercial",
+        "Project Proposal mk_1 due"
+      ],
+      "refactored": [],
+      "accomplished": [
+        "Doc-site content built out",
+        "Video lectures recorded",
+        "Project commercial produced",
+        "Proposal mk_1 submitted"
+      ]
+    },
+    "3": {
+      "label": "Planning \u2014 lock-in",
+      "planned": [
+        "Initial project setup, begin MVP phase 1",
+        "Design FORGE splash",
+        "Full document for Project Proposal due",
+        "Reconsider timeline & Gantt chart \u2014 lock in final versions"
+      ],
+      "refactored": [
+        "Timeline & Gantt restructured to MVP-phase cadence (P1 = three standalone sites, W4\u20136; P2 = integrate + deploy, W7\u20139; P3/stretch, W10). Risk window now W8\u201310."
+      ],
+      "accomplished": []
+    },
+    "4": {
+      "label": "MVP Phase 1 \u2014 Music Genre",
+      "planned": [
+        "EDA + standalone site design \u2014 Music Genre",
+        "Music Genre experimental design [a, b, c]",
+        "Standalone site: run sweeps, model lock, drop-in analysis",
+        "Min. Bayesian options (LLLA + HMC)",
+        "Local dashboard design",
+        "Build in computational recording metrics"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "5": {
+      "label": "MVP Phase 1 \u2014 Phonon",
+      "planned": [
+        "EDA + standalone site design \u2014 Phonon",
+        "Phonon experimental design [a, b, c]",
+        "Standalone site: run sweeps, model lock, drop-in analysis",
+        "Min. Bayesian options (LLLA + HMC)",
+        "Local dashboard design",
+        "Build in computational recording metrics"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "6": {
+      "label": "MVP Phase 1 \u2014 ATLAS",
+      "planned": [
+        "EDA + standalone site design \u2014 ATLAS",
+        "ATLAS experimental design [a, b, c]",
+        "Standalone site: run sweeps, model lock, drop-in analysis",
+        "Min. Bayesian options (LLLA + HMC)",
+        "Local dashboard design",
+        "Build in computational recording metrics"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "7": {
+      "label": "MVP Phase 2 \u2014 integrate + deploy",
+      "planned": [
+        "Tie together repos into official FORGE website",
+        "Move from localhost to external hosting",
+        "Test, debug",
+        "Final decisions on Bayesian tune options, look, dashboards"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "8": {
+      "label": "MVP Phase 2 \u2014 integrate + deploy (risk window opens)",
+      "planned": [
+        "Tie together repos into official FORGE website",
+        "Move from localhost to external hosting",
+        "Test, debug",
+        "Final decisions on Bayesian tune options, look, dashboards",
+        "Risk-management window"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "9": {
+      "label": "MVP Phase 2 \u2014 write-up begins (risk window)",
+      "planned": [
+        "Begin write-up",
+        "Final software edits",
+        "Testing",
+        "Risk-management window"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "10": {
+      "label": "MVP Phase 3 / stretch (risk window)",
+      "planned": [
+        "Continue write-up",
+        "Lock in MVP",
+        "Lock in REPOS",
+        "If time, attempt stretch goal",
+        "Risk-management window"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "11": {
+      "label": "Write-up & deliverables",
+      "planned": [
+        "Finish write-up",
+        "Deliverables locked"
+      ],
+      "refactored": [],
+      "accomplished": []
+    },
+    "12": {
+      "label": "Turn in, present, party",
+      "planned": [
+        "Turn in",
+        "Present / iShowcase",
+        "Repo freeze"
+      ],
+      "refactored": [],
+      "accomplished": []
     }
   }
 }

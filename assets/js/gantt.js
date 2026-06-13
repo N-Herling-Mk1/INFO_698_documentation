@@ -10,20 +10,22 @@ const Gantt = (() => {
   const UPLOAD_URL = "https://uarizona.co1.qualtrics.com/jfe/form/SV_6FLtz2X1GPXvVuC?Q_CHL=qr";
 
   const PHASE = {
-    "Intro":         { cls: "fg-intro",   group: "Intro / Planning" },
-    "Planning":      { cls: "fg-intro",   group: "Intro / Planning" },
-    "Design / Impl": { cls: "fg-design",  group: "Design / Implementation" },
-    "Testing":       { cls: "fg-testing", group: "Testing" },
-    "Write-up":      { cls: "fg-writeup", group: "Write-up" },
-    "Deliverables":  { cls: "fg-deliver", group: "Deliverables" },
+    "Intro":        { cls: "fg-intro",   group: "Intro / Planning" },
+    "Planning":     { cls: "fg-intro",   group: "Intro / Planning" },
+    "MVP P1":       { cls: "fg-mvp1",    group: "MVP \u2014 Phase 1 (standalone)" },
+    "MVP P2":       { cls: "fg-mvp2",    group: "MVP \u2014 Phase 2 (integrate + deploy)" },
+    "Stretch":      { cls: "fg-stretch", group: "MVP \u2014 Phase 3 / stretch" },
+    "Write-up":     { cls: "fg-writeup", group: "Write-up / Deliverables" },
+    "Deliverables": { cls: "fg-deliver", group: "Write-up / Deliverables" },
   };
 
   const LEGEND = [
     ["fg-intro",   "Intro / Planning"],
-    ["fg-design",  "Design / Implementation"],
-    ["fg-testing", "Testing"],
-    ["fg-writeup", "Write-up"],
-    ["fg-deliver", "Deliverables"],
+    ["fg-mvp1",    "MVP \u2014 Phase 1 (standalone)"],
+    ["fg-mvp2",    "MVP \u2014 Phase 2 (integrate + deploy)"],
+    ["fg-stretch", "MVP \u2014 Phase 3 / stretch"],
+    ["fg-writeup", "Write-up / Deliverables"],
+    ["fg-deliver", "Turn in"],
   ];
 
   const STATUS_KEY = [
@@ -55,10 +57,15 @@ const Gantt = (() => {
 .forge-gantt .fg-bar.is-planned { opacity:0.5; }
 .forge-gantt .fg-bar.is-progress { outline:2px dashed var(--color-accent,#C67D3E); outline-offset:1px; }
 .forge-gantt .fg-intro   { background:#8893a8; }
-.forge-gantt .fg-design  { background:#5e9b86; }
-.forge-gantt .fg-testing { background:#8f73c4; }
+.forge-gantt .fg-mvp1    { background:#5e9b86; }
+.forge-gantt .fg-mvp2    { background:#5a7ba8; }
+.forge-gantt .fg-stretch { background:#c67d3e; }
 .forge-gantt .fg-writeup { background:#c79a3e; }
 .forge-gantt .fg-deliver { background:#5ba56b; }
+/* risk-management window: shaded vertical band behind the bars */
+.forge-gantt .fg-window { position:absolute; top:0; bottom:0; z-index:0; pointer-events:none; background:rgba(198,125,62,0.10); border-left:1px dashed rgba(198,125,62,0.55); border-right:1px dashed rgba(198,125,62,0.55); }
+.forge-gantt .fg-window-lab { position:absolute; top:2px; left:50%; transform:translateX(-50%); font-size:0.62rem; font-weight:600; letter-spacing:0.04em; color:var(--color-accent,#C67D3E); white-space:nowrap; pointer-events:none; }
+.forge-gantt .fg-bar, .forge-gantt .fg-ms { position:relative; z-index:2; }
 .forge-gantt .fg-ms { align-self:center; justify-self:center; width:14px; height:14px; background:var(--color-navy,#0F1F3D); transform:rotate(45deg); display:flex; align-items:center; justify-content:center; }
 .forge-gantt .fg-ms b { transform:rotate(-45deg); color:#fff; font-size:0.6rem; font-weight:700; line-height:1; }
 .forge-gantt .fg-today { position:absolute; top:0; bottom:0; width:11px; margin-left:-5px; z-index:5; cursor:help; background:linear-gradient(to right, transparent 5px, var(--color-accent,#C67D3E) 5px, var(--color-accent,#C67D3E) 7px, transparent 7px); }
@@ -96,6 +103,22 @@ const Gantt = (() => {
 .forge-gantt .fg-pill.todo { background:var(--color-bg-muted,#EDF0F5); color:var(--color-text-muted,#5C657A); }
 .forge-gantt .fg-pill.done { background:rgba(74,138,110,0.16); color:var(--color-success,#4A8A6E); }
 .forge-gantt table.fg-todo tr.is-done td.fg-task-col { color:var(--color-text-muted,#5C657A); text-decoration:line-through; }
+/* weekly progress-report sections (planned / refactored / accomplished) */
+.forge-gantt .fg-report { margin:0; }
+.forge-gantt .fg-rsec { margin:0 0 12px; }
+.forge-gantt .fg-rsec:last-child { margin-bottom:0; }
+.forge-gantt .fg-rsec-h { display:flex; align-items:center; gap:7px; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; margin:0 0 6px; }
+.forge-gantt .fg-rsec-h .fg-dot { width:9px; height:9px; border-radius:2px; flex:none; }
+.forge-gantt .fg-rsec-h .fg-count { margin-left:auto; font-size:0.66rem; font-weight:600; color:var(--color-text-faint,#8C94A6); letter-spacing:0.04em; }
+.forge-gantt .fg-rsec.is-planned     .fg-rsec-h { color:#5a7ba8; }   .forge-gantt .fg-rsec.is-planned     .fg-dot { background:#5a7ba8; }
+.forge-gantt .fg-rsec.is-refactored  .fg-rsec-h { color:#c67d3e; }   .forge-gantt .fg-rsec.is-refactored  .fg-dot { background:#c67d3e; }
+.forge-gantt .fg-rsec.is-accomplished .fg-rsec-h { color:#4a8a6e; }  .forge-gantt .fg-rsec.is-accomplished .fg-dot { background:#4a8a6e; }
+.forge-gantt .fg-rsec ul { list-style:none; margin:0; padding:0; }
+.forge-gantt .fg-rsec li { position:relative; padding:4px 0 4px 16px; font-size:0.84rem; line-height:1.35; color:var(--color-text,#1A2238); border-bottom:1px solid var(--color-border-soft,#E8EAF0); }
+.forge-gantt .fg-rsec li:last-child { border-bottom:none; }
+.forge-gantt .fg-rsec li::before { content:""; position:absolute; left:3px; top:11px; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:0.45; }
+.forge-gantt .fg-rsec li.is-done { color:var(--color-text-muted,#5C657A); text-decoration:line-through; }
+.forge-gantt .fg-rsec .fg-empty { font-size:0.8rem; color:var(--color-text-faint,#8C94A6); font-style:italic; padding:2px 0; }
 @media (max-width: 900px) {
   .forge-gantt .fg-body { flex-direction:column; }
   .forge-gantt .fg-detail { flex-basis:auto; width:100%; position:static; }
@@ -225,6 +248,25 @@ const Gantt = (() => {
       chart.appendChild(mr);
     }
 
+    // shaded windows (e.g. risk-management window) — drawn behind the bars
+    const windows = data.windows || [];
+    windows.forEach(w => {
+      const s = w.start || 0;
+      const e = (w.end != null ? w.end : s);
+      const band = document.createElement("div");
+      band.className = "fg-window " + (w.cls || "");
+      band.style.left = "calc(var(--fg-label) + (100% - var(--fg-label)) * " + (s / numWeeks) + ")";
+      band.style.width = "calc((100% - var(--fg-label)) * " + ((e - s + 1) / numWeeks) + ")";
+      band.title = (w.label || "Window") + " (W" + s + "\u2013W" + e + ")";
+      if (w.label) {
+        const lab = document.createElement("span");
+        lab.className = "fg-window-lab";
+        lab.textContent = w.label.replace(/-management window$/i, "").replace(/ window$/i, "") + " \u25c8";
+        band.appendChild(lab);
+      }
+      chart.appendChild(band);
+    });
+
     // today marker (computed live from the real date, anchored to week0)
     const frac = todayFraction(data.week0_start, numWeeks);
     if (frac != null) {
@@ -270,6 +312,16 @@ const Gantt = (() => {
     const tt = document.createElement("span"); tt.textContent = "Today";
     tli.appendChild(tk); tli.appendChild(tt);
     wrap.appendChild(tli);
+    // risk-management window band
+    const wli = document.createElement("span");
+    wli.className = "li";
+    const wk2 = document.createElement("span");
+    wk2.style.width = "20px"; wk2.style.height = "13px"; wk2.style.display = "inline-block";
+    wk2.style.background = "rgba(198,125,62,0.18)";
+    wk2.style.border = "1px dashed rgba(198,125,62,0.7)"; wk2.style.borderRadius = "2px";
+    const wt = document.createElement("span"); wt.textContent = "Risk-management window";
+    wli.appendChild(wk2); wli.appendChild(wt);
+    wrap.appendChild(wli);
     return wrap;
   }
 
@@ -377,37 +429,53 @@ const Gantt = (() => {
     const d = document.createElement("aside");
     d.className = "fg-detail";
     d.innerHTML = "<h3>Week details</h3>"
-      + "<p class=\"fg-detail-sub\">Tasks &amp; status</p>"
-      + "<p class=\"fg-hint\">Click any colored bar in the chart to see that week's task list here.</p>";
+      + "<p class=\"fg-detail-sub\">Weekly progress report</p>"
+      + "<p class=\"fg-hint\">Click any colored bar in the chart to see that week's progress report &mdash; <em>planned</em>, <em>refactored</em>, and <em>accomplished</em> &mdash; here.</p>";
     return d;
   }
 
-  // Render one week's task list (from weekly_todos.json) into the detail panel.
+  // Render one week's progress report (from weekly_todos.json) into the detail
+  // panel: three sections — planned, refactored, accomplished.
   function renderWeekDetail(panel, week, todos) {
     const wk = todos && todos.weeks ? todos.weeks[String(week)] : null;
     const head = "<h3>Week " + week + "</h3>"
-      + "<p class=\"fg-detail-sub\">" + ((wk && wk.label) ? esc(wk.label) : "Tasks &amp; status") + "</p>";
+      + "<p class=\"fg-detail-sub\">" + ((wk && wk.label) ? esc(wk.label) : "Weekly progress report") + "</p>";
 
-    if (!wk || !Array.isArray(wk.tasks) || !wk.tasks.length) {
+    if (!wk) {
       panel.innerHTML = head
-        + "<p class=\"fg-hint\">No tasks recorded for this week yet. "
-        + "Add them to <code>data/weekly_todos.json</code> under week \"" + week + "\".</p>";
+        + "<p class=\"fg-hint\">No report recorded for this week yet. "
+        + "Add it to <code>data/weekly_todos.json</code> under week \"" + week + "\" "
+        + "with <code>planned</code>, <code>refactored</code>, and <code>accomplished</code> lists.</p>";
       return;
     }
 
-    let rows = "";
-    wk.tasks.forEach(t => {
-      const done = (t.status || "").toLowerCase() === "done";
-      rows += "<tr class=\"" + (done ? "is-done" : "") + "\">"
-        + "<td class=\"fg-task-col\">" + esc(t.name || "") + "</td>"
-        + "<td class=\"fg-st-col\"><span class=\"fg-pill " + (done ? "done" : "todo") + "\">"
-        + (done ? "done" : "todo") + "</span></td>"
-        + "</tr>";
+    const SECTIONS = [
+      ["planned",      "Planned",      "is-planned"],
+      ["refactored",   "Refactored",   "is-refactored"],
+      ["accomplished", "Accomplished", "is-accomplished"],
+    ];
+
+    let html = head + "<div class=\"fg-report\">";
+    SECTIONS.forEach(([key, label, cls]) => {
+      const items = Array.isArray(wk[key]) ? wk[key] : [];
+      html += "<section class=\"fg-rsec " + cls + "\">"
+        + "<div class=\"fg-rsec-h\"><span class=\"fg-dot\"></span>" + label
+        + "<span class=\"fg-count\">" + items.length + "</span></div>";
+      if (!items.length) {
+        html += "<p class=\"fg-empty\">\u2014</p>";
+      } else {
+        html += "<ul>";
+        items.forEach(it => {
+          const name = (typeof it === "string") ? it : (it && it.name) || "";
+          const done = it && typeof it === "object" && (it.status || "").toLowerCase() === "done";
+          html += "<li class=\"" + (done ? "is-done" : "") + "\">" + esc(name) + "</li>";
+        });
+        html += "</ul>";
+      }
+      html += "</section>";
     });
-    panel.innerHTML = head
-      + "<table class=\"fg-todo\"><thead><tr>"
-      + "<th class=\"fg-task-col\">Task</th><th class=\"fg-st-col\">Status</th>"
-      + "</tr></thead><tbody>" + rows + "</tbody></table>";
+    html += "</div>";
+    panel.innerHTML = html;
   }
 
   function esc(s) {
