@@ -13,6 +13,8 @@
           style="cursor:pointer;">Working draft</button>
   <button type="button" class="btn btn-secondary pv-btn" data-doc="original" aria-pressed="false"
           style="cursor:pointer;">Original template</button>
+  <button type="button" class="btn btn-secondary pv-btn" data-doc="signed" aria-pressed="false"
+          style="cursor:pointer;">Signed</button>
 </div>
 
 <p id="pv-caption" style="margin:0 0 14px; color:var(--color-text-muted); font-size:0.88rem;">
@@ -48,6 +50,11 @@
         pdf: "assets/docs/proposal_original.pdf",
         tex: "assets/docs/proposal_original.tex",
         caption: "Original template — the pristine reference with all guidance, frozen and unchanging."
+      },
+      signed: {
+        pdf: "assets/docs/proposal_signed.pdf",
+        tex: null,
+        caption: "Signed — the Adobe Acrobat Sign certified copy, with the faculty e-signature and Final Audit Report appended."
       }
     };
 
@@ -66,7 +73,16 @@
         '<embed src="' + d.pdf + '" type="application/pdf" class="embed-pdf" ' +
         'aria-label="FORGE project proposal PDF">';
       if (dlPdf)   dlPdf.setAttribute("href", d.pdf);
-      if (dlTex)   dlTex.setAttribute("href", d.tex);
+      if (dlTex) {
+        if (d.tex) {
+          dlTex.setAttribute("href", d.tex);
+          dlTex.style.display = "";
+        } else {
+          // Signed PDF is Adobe-certified output with no LaTeX source to ship.
+          dlTex.removeAttribute("href");
+          dlTex.style.display = "none";
+        }
+      }
       if (caption) caption.textContent = d.caption;
       buttons.forEach(function (b) {
         var on = b.getAttribute("data-doc") === key;
