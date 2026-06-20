@@ -1,0 +1,120 @@
+{
+  "_comment": "Build Log — living per-project documentation. Edit as each project is built; the panel (panels/build_log.html) re-renders from this file. Schema per project: id, name, week, status(done|in_progress|planned|slipped), headline, metrics[{label,value}], entries[{date,title,status,detail,refs[{label,kind(commit|file|run|link),href}]}], decisions[{title,detail}]. Newest entries first.",
+  "updated": "2026-06-19",
+  "projects": [
+    {
+      "id": "genre",
+      "name": "Music Genre — BEARDOWN",
+      "week": "W4",
+      "status": "in_progress",
+      "headline": "Model 1 reproduced and frozen at CV 0.714 (clean log-mel, batch-matched). FORGE Bayesian layer (LLLA + HMC) is the next build.",
+      "metrics": [
+        { "label": "CV mean (3-fold)", "value": "0.714  \u00b1 0.020" },
+        { "label": "val / test", "value": "0.673 / 0.640" },
+        { "label": "params", "value": "573,450" },
+        { "label": "representation", "value": "clean log-mel @128  \u22c8  57 tab" },
+        { "label": "paper target (cfg_14)", "value": "0.766" }
+      ],
+      "entries": [
+        {
+          "date": "2026-06-19",
+          "title": "ML usage / cost estimator built",
+          "status": "done",
+          "detail": "_shared/usage.py turns every compute.json into energy / carbon / $ with measured-vs-modeled tags, an actual-power hook (RAPL / nvidia-smi), a suite roll-up, and a pre-run projection. Assumptions live in an override YAML for real rates IRL.",
+          "refs": [{ "label": "usage.py", "kind": "file", "href": "_shared/usage.py" }]
+        },
+        {
+          "date": "2026-06-19",
+          "title": "Song drop-in inference verified (wav + mp3)",
+          "status": "done",
+          "detail": "End-to-end: drop audio \u2192 30-s windows \u2192 clean mel + 57 features \u2192 per-genre scores with MC-dropout \u03c3. load_audio hardened (soundfile \u2192 librosa fallback \u2192 clear error, no silent skip). Works because train + inference now share one mel recipe (validate r=1.0).",
+          "refs": [{ "label": "predict.py", "kind": "file", "href": "projects/genre/src/predict.py" }]
+        },
+        {
+          "date": "2026-06-19",
+          "title": "Backbone frozen: clean-128 / batch-8, CV 0.714",
+          "status": "done",
+          "detail": "Batch 32\u21928 lifted CV 0.629\u21920.714 (+0.086). The frozen deterministic backbone the Bayesian head attaches to. 6\u00d7 cheaper to train than the original 224 dirty pipeline and the only variant that does real-audio drop-in correctly.",
+          "refs": [{ "label": "beardown.yaml", "kind": "file", "href": "projects/genre/configs/beardown.yaml" }]
+        },
+        {
+          "date": "2026-06-19",
+          "title": "Gap diagnosis complete \u2014 every cheap hypothesis ruled out",
+          "status": "done",
+          "detail": "Early stopping, epochs, representation, split, and resolution all tested and eliminated as the cause of the 0.07 gap to 0.766. Lever was batch size; residual is framework (Keras vs PyTorch) + run variance. Faithful, documented reproduction.",
+          "refs": []
+        },
+        {
+          "date": "2026-06-18",
+          "title": "Clean log-mel regeneration (silent-failure fix)",
+          "status": "done",
+          "detail": "Kaggle grey PNGs are colormapped matplotlib figures \u2014 luminance non-monotonic in mel energy, so a dropped song scored noise. Regenerated all spectrograms from audio with one recipe \u2192 train + inference share extract_mel \u2192 validate passes by construction.",
+          "refs": [{ "label": "build_spectrograms.py", "kind": "file", "href": "projects/genre/eda/build_spectrograms.py" }]
+        },
+        {
+          "date": "2026-06-17",
+          "title": "Architecture vetted against the public INFO_510 repo",
+          "status": "done",
+          "detail": "Confirmed cfg_14: 57 features (length dropped), gated fusion, deterministic head, dense 512/192, lr 7.37e-5, adam, 75 epochs. The winning head was already det \u2014 so the FORGE det-backbone + LLLA reproduction is bit-faithful with zero mechanism mismatch.",
+          "refs": [{ "label": "INFO_510 repo", "kind": "link", "href": "https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj" }]
+        },
+        {
+          "date": "2026-06-20",
+          "title": "Bayesian layer \u2014 LLLA + HMC on the frozen head",
+          "status": "planned",
+          "detail": "Last-layer Laplace (closed form from cached GGN) for the live \u03c4-knob path, HMC as gold-standard check, then the observatory panel with live knobs and an LLLA-vs-HMC overlay. The frozen 0.714 point estimate becomes a decomposable posterior \u2014 the FORGE core.",
+          "refs": []
+        }
+      ],
+      "decisions": [
+        { "title": "Batch size was the lever (+0.086 CV)", "detail": "32\u21928 lifted CV 0.629\u21920.714. Smaller batch = gradient-noise regularization on small data. Batch 8 is also the BatchNorm floor for this net and matches cfg_14." },
+        { "title": "224 resolution ruled out", "detail": "Dirty-224 scored CV 0.629 \u2014 erased the batch-8 gain at 6\u00d7 the compute and 3\u00d7 the memory. Resolution is not the lever." },
+        { "title": "Clean log-mel over dirty Kaggle grey", "detail": "Clean mels score \u2265 dirty AND are the only representation reproducible at inference from a dropped wav. A deliberate, documented improvement over the original pipeline." },
+        { "title": "Split is not the gap", "detail": "BEARDOWN's seed-42 stratified split scored \u2248 our track split (0.673 vs 0.70) \u2014 ruling out an unlucky-draw explanation for the gap." },
+        { "title": "Freeze, don't chase 0.766", "detail": "The wall at ~0.71 is precisely FORGE's motivating example: accuracy-only selection stalls and says nothing about trust. The Bayesian layer is the answer, not more tuning." }
+      ]
+    },
+    {
+      "id": "phonon",
+      "name": "Phonon DOS",
+      "week": "W5",
+      "status": "planned",
+      "headline": "Same build template as genre, applied to phonon density-of-states regression and driven to ground-truth.",
+      "metrics": [
+        { "label": "target", "value": "ground-truth reproduction" },
+        { "label": "scheduled", "value": "Week 5 (Jun 22\u201326)" }
+      ],
+      "entries": [
+        {
+          "date": "2026-06-22",
+          "title": "Apply the standalone build template",
+          "status": "planned",
+          "detail": "EDA \u2192 experimental design \u2192 model-lock \u2192 LLLA + HMC \u2192 local dashboard \u2192 compute metrics, mirroring the genre build.",
+          "refs": []
+        }
+      ],
+      "decisions": []
+    },
+    {
+      "id": "atlas",
+      "name": "ATLAS LLP / MSVtx",
+      "week": "W6",
+      "status": "planned",
+      "headline": "Same build template applied to the ATLAS Run-3 long-lived-particle search and driven to ground-truth.",
+      "metrics": [
+        { "label": "target", "value": "ground-truth reproduction" },
+        { "label": "scheduled", "value": "Week 6 (Jun 29\u2013Jul 3)" }
+      ],
+      "entries": [
+        {
+          "date": "2026-06-29",
+          "title": "Apply the standalone build template",
+          "status": "planned",
+          "detail": "EDA \u2192 experimental design \u2192 model-lock \u2192 LLLA + HMC \u2192 local dashboard \u2192 compute metrics, mirroring the genre build.",
+          "refs": []
+        }
+      ],
+      "decisions": []
+    }
+  ]
+}
