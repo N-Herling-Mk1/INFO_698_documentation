@@ -12,6 +12,7 @@ const App = (() => {
     gantt:    { type: "dynamic", render: (el) => Gantt.render(el) },
     proposal: { type: "html", src: "panels/proposal.html" },
     mvp:      { type: "html", src: "panels/mvp.html" },
+    build_log: { type: "html", src: "panels/build_log.html" },
     research: { type: "html", src: "panels/research.html" },
     literature: { type: "html", src: "panels/literature.html" },
     contacts: { type: "html", src: "panels/contacts.html" },
