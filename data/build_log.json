@@ -1,13 +1,13 @@
 {
   "_comment": "Build Log — living per-project documentation. Edit as each project is built; the panel (panels/build_log.html) re-renders from this file. Schema per project: id, name, week, status(done|in_progress|planned|slipped), headline, metrics[{label,value}], entries[{date,title,status,detail,refs[{label,kind(commit|file|run|link),href}]}], decisions[{title,detail}]. Newest entries first.",
-  "updated": "2026-06-22",
+  "updated": "2026-06-23",
   "projects": [
     {
       "id": "genre",
       "name": "Music Genre — BEARDOWN",
       "week": "W5",
       "status": "in_progress",
-      "headline": "Genre family mk1→mk2→mk2.5 locked. mk2 (RRM-swept, cfg 17) deploys at VAL 0.793 / TEST 0.760 — beats mk1 by +6 test. mk2.5 falsified the reliability metric honestly: RRM does not predict held-out rank on a frozen-det head (ρ=−0.00 vs accuracy ρ=0.69). mk3 (3-sec, ×10 data) is next.",
+      "headline": "Genre family mk1→mk2→mk2.5→mk3 complete. mk3 (3-sec clips, ×10 rows) lands voted-to-track 0.807 — +4.7 over mk2 (apples-to-apples). The mk2.5 finding REPRODUCED at scale: every reliability axis is flat as a test-rank predictor (U −0.10, RRM_w +0.10), accuracy (+0.43) the only signal. Effective-N ≈1.4× (ICC 0.68) predicted the dead U before the run; batch_refit confirmed it. FORGE multi-model integration next.",
       "metrics": [
         {
           "label": "mk1 val / test",
@@ -15,26 +15,148 @@
         },
         {
           "label": "mk2 (cfg 17) val / test",
-          "value": "0.793 / 0.760"
+          "value": "0.793 / 0.760  (per-track)"
         },
         {
-          "label": "mk2 test macro-F1",
-          "value": "0.760  (mk1: 0.686)"
+          "label": "mk3 voted-to-track",
+          "value": "0.807 acc / 0.807 macro-F1  (+4.7 vs mk2)"
         },
         {
-          "label": "selection",
-          "value": "variance-weighted RRM_w (CV-only)"
+          "label": "mk3 per-segment",
+          "value": "0.789 acc / 0.788 macro-F1  (vote gain +0.018)"
         },
         {
-          "label": "metric ↔ test (Spearman)",
-          "value": "accuracy +0.69 · RRM_w −0.00"
+          "label": "mk3 data",
+          "value": "3-sec fused3 · 9,990 seg → 6,992/1,498/1,500 · same tracks as mk1/mk2"
         },
         {
-          "label": "paper target (cfg_14)",
-          "value": "0.766"
+          "label": "metric ↔ test (Spearman, ×10 data)",
+          "value": "accuracy +0.43 · RRM +0.14 · −s +0.13 · RRM_w +0.10 · −U −0.10"
+        },
+        {
+          "label": "effective-N",
+          "value": "≈1.4× (ICC 0.681, design-effect 7.12) — U could not move"
         }
       ],
       "entries": [
+        {
+          "date": "2026-06-23",
+          "title": "mk3 metric validation (×10 data) — RRM & U still flat: mk2.5 reproduced",
+          "status": "done",
+          "detail": "Firewalled study on the 3-sec sweep: refit all 20 configs on full-train, recorded TEST (selection stayed CV-only). Spearman rank-agreement with TEST accuracy — CV accuracy +0.429 (the only predictor, though weaker than mk2.5's +0.685 as more correlated rows noise-up every CV estimate), RRM +0.139, fold-stability −s +0.130, RRM_w +0.099, epistemic −U −0.095. Ten times the rows did NOT revive the epistemic axis. Mechanism, predicted BEFORE the run: within-track segment correlation (ICC 0.681) gives a design-effect 7.12, so 6,992 segments are worth ≈982 independent-equivalent — the last-layer σ tightens by only √(982/700)≈18%, inside the noise. The central negative result now holds on a SECOND dataset at an order of magnitude more rows. Three configs tie for best TEST 0.789 (incl. cfg 17, the accuracy-best RRM buried at 16/20).",
+          "refs": [
+            {
+              "label": "batch_refit.py",
+              "kind": "file",
+              "href": "projects/genre/src/batch_refit.py"
+            },
+            {
+              "label": "batch_test.json",
+              "kind": "run",
+              "href": "projects/genre/runs/beardown_3sec/20260623-015344/batch_test.json"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "title": "mk3 voted-to-track 0.807 — +4.7 over mk2 (apples-to-apples)",
+          "status": "done",
+          "detail": "The sweep reports PER-SEGMENT accuracy (one row per 3-sec clip); mk1/mk2 reported PER-TRACK. Not comparable. vote_eval collapses a track's ~10 segment predictions by prob-sum majority → one prediction per song. Deployed cfg 19: per-segment 0.789 / macro-F1 0.788 → voted-to-track 0.807 / macro-F1 0.807, vote gain +0.018 (the denoising of ambiguous clips). Per-track 0.807 vs mk2's 0.760 = +4.7. macro-F1 ≈ accuracy → no genre sacrificed; classical 1.00, pop/country/rock 0.667 = the stable GTZAN confusion cluster (same genres that capped mk2). The +4.7 is real but bounded — exactly the ≈1.4× effective-N story, not the ×10 the row count suggests.",
+          "refs": [
+            {
+              "label": "vote_eval.py",
+              "kind": "file",
+              "href": "projects/genre/src/vote_eval.py"
+            },
+            {
+              "label": "vote_eval.json",
+              "kind": "run",
+              "href": "projects/genre/models/beardown_3sec/vote_eval.json"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "title": "mk3 RRM sweep — 20-config reliability sweep on 3-sec fused3 (GPU)",
+          "status": "done",
+          "detail": "Same engine, search space, and selection as the mk2 sweep — only the DATA changed (controlled experiment: data density is the single variable). 20 configs, 3-fold GroupKFold-by-track. RRM winner = cfg 19 (A 0.778); accuracy-best = cfg 17 (A 0.800 — the mk2 deployed architecture, img768/tab256/concat). r(A,RRM) = −0.067: RRM again uncorrelated with accuracy, driven −0.88 by the fold-instability penalty s, and it buried the accuracy-best cfg 17 at rank 16/20. Deployed cfg 19 refit → VAL 0.776 / TEST 0.789 (per-segment), acceptance PASS (val≥0.75), φ-dim 384.",
+          "refs": [
+            {
+              "label": "beardown_3sec.yaml",
+              "kind": "file",
+              "href": "projects/genre/configs/beardown_3sec.yaml"
+            },
+            {
+              "label": "sweep.json",
+              "kind": "run",
+              "href": "projects/genre/runs/beardown_3sec/20260623-015344/sweep.json"
+            },
+            {
+              "label": "beardown_3sec bundle",
+              "kind": "file",
+              "href": "projects/genre/models/beardown_3sec/"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "title": "GPU switch — CPU→CUDA, one-line torch reinstall (simple + worthwhile)",
+          "status": "done",
+          "detail": "The 3-sec sweep (6,992 train segments × 3 folds × 20 configs) was crawling on CPU — minutes per config. The RTX 4070 SUPER (12 GB) was present, but the installed torch was a CPU-only build (torch.cuda.is_available() → False). One-line fix: pip install torch --index-url https://download.pytorch.org/whl/cu124 → torch 2.6.0+cu124, CUDA visible (the driver's CUDA 13.2 is the max it supports, not what you install — a cu124 wheel runs forward-compatibly). No code change: train.py / sweep.py / batch_refit.py were already --device-flagged. Result: full-train refit 36 s (from a multi-minute CPU crawl); full 20-config sweep ≈26 min; batch_refit ≈10 min. The cheapest high-leverage move of the week — the canonical 'do this first on any torch box' note.",
+          "refs": [
+            {
+              "label": "PyTorch CUDA install",
+              "kind": "link",
+              "href": "https://pytorch.org/get-started/locally/"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "title": "mk3 data path — leakage-safe 3-sec fused3, verified torch-free",
+          "status": "done",
+          "detail": "New _load_fused3: each 3-sec tabular segment is joined MANY-TO-ONE to its parent track's single mel spectrogram (no spectrogram cutting — the image is track-level). Split is on TRACK ids via stratified seed 42, the SAME partition as mk1/mk2, so segments inherit their parent's split and data density is the only variable. 9,990 segments → 6,992/1,498/1,500. The existing 30-sec _load_fused is byte-untouched (mk1/mk2 numbers can't move); fused3 is dual-input like fused, so LLLA/HMC/bundle attach unchanged. verify_mk3 (7 checks) + sanity_check confirm: dual-input contract, many-to-one join (9.99 seg/track share one image), 0 tracks straddle (a naive segment split would leak 97.1% of tracks — Sturm 2013), scaler fit on train segments only, 57 named axes intact. All pure-numpy — ran and passed BEFORE any GPU time.",
+          "refs": [
+            {
+              "label": "dataio.py",
+              "kind": "file",
+              "href": "projects/genre/src/dataio.py"
+            },
+            {
+              "label": "verify_mk3.py",
+              "kind": "file",
+              "href": "projects/genre/src/verify_mk3.py"
+            },
+            {
+              "label": "beardown_3sec.yaml",
+              "kind": "file",
+              "href": "projects/genre/configs/beardown_3sec.yaml"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-23",
+          "title": "Input-feature attribution wired — bundle self-describes (rung 2)",
+          "status": "done",
+          "detail": "attribution.py: the LLLA epistemic scale v(φ;τ) pushed back onto NAMED inputs. Closed form dv/dφ = 2(H+τI)⁻¹φ (verified vs finite-difference to 1.6e-9), chained with ONE backbone vector-Jacobian product → per-feature epistemic sensitivity dv/dx; τ factors out, so a cached M lets FORGE recompute live for any τ (identity verified exact across τ). write_bundle now emits inputs.json (the 57 named axes) + bundle.json (a capabilities list that gates the FORGE attribution tab). 6/6 torch-free tests pass. This names what INFO 510 Table A3 could only rank anonymously. The torch precompute (dφ/dx) runs once on the GPU box; FORGE then serves static numpy — the ggn_eig.npz pattern.",
+          "refs": [
+            {
+              "label": "attribution.py",
+              "kind": "file",
+              "href": "projects/genre/src/attribution.py"
+            },
+            {
+              "label": "test_attribution.py",
+              "kind": "file",
+              "href": "projects/genre/src/test_attribution.py"
+            },
+            {
+              "label": "FORGE attribution spec",
+              "kind": "file",
+              "href": "FORGE_input_feature_attribution_SPEC.txt"
+            }
+          ]
+        },
         {
           "date": "2026-06-22",
           "title": "mk2.5 metric validation — RRM falsified, honestly (the finding)",
@@ -252,6 +374,22 @@
         {
           "title": "Freeze, don't chase 0.766",
           "detail": "The wall at ~0.71 is precisely FORGE's motivating example: accuracy-only selection stalls and says nothing about trust. The Bayesian layer is the answer, not more tuning."
+        },
+        {
+          "title": "mk3 = 3-sec tab ⨝ 30-sec image (many-to-one), not a re-render",
+          "detail": "A true per-segment 3-sec image would need re-rendering from the wavs. The effective-N analysis showed it isn't worth it for the U-question: the last-layer posterior conditions on φ, which already diversifies ≈10× through the tabular half under many-to-one, while within-track image correlation caps the marginal gain of distinct 3-sec images at ≈2–3×. Many-to-one runs today with zero re-render and is the cfg-17 architecture on 10× rows — the controlled data-density test."
+        },
+        {
+          "title": "GPU was the iteration lever (simple + worthwhile)",
+          "detail": "One-line cu124 torch reinstall took the sweep from a CPU crawl to 36 s/refit. No code change — the pipeline was already device-flagged. Recorded as the canonical first move on any torch box; the driver's max-CUDA number is not the wheel you install."
+        },
+        {
+          "title": "Deployed cfg 19 (RRM winner); cfg 17 is the accuracy-best contender",
+          "detail": "The sweep auto-deployed its RRM winner, cfg 19 (voted-to-track 0.807). But cfg 17 is accuracy-best (A 0.800) and TIES for best held-out TEST (0.789) — and it is the config RRM buried at 16/20. Recommendation on the record: promote cfg 17 as the mk3 headline and keep cfg 19 as the labeled RRM-winner contrast, mirroring mk2's cfg17-vs-cfg12 pairing so the selection pathology is visible in FORGE. (cfg 17 promote pending.)"
+        },
+        {
+          "title": "U did not revive at ×10 data — predicted, then measured",
+          "detail": "Effective-N ≈1.4× (ICC 0.681) predicted the last-layer σ would tighten only ~18%, too little to move the epistemic axis; batch_refit confirmed −U Spearman −0.095. The mk2.5 boundary condition holds at scale: reliability axes need a TRAINED Bayesian head (INFO 510), not post-hoc LLLA on a frozen DET head. This refines, does not refute, the source paper — now on two datasets."
         }
       ]
     },
