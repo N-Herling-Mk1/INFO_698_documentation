@@ -3,7 +3,7 @@
   "num_weeks": 13,
   "project": "FORGE",
   "owner": "Nathan Herling",
-  "last_updated": "2026-06-12",
+  "last_updated": "2026-06-22",
   "windows": [
     { "label": "Risk-management window", "start": 8, "end": 10, "cls": "fg-risk" }
   ],
@@ -13,14 +13,14 @@
     { "name": "Research & planning",                        "phase": "Planning",    "start": 1,  "end": 2,  "status": "done" },
     { "name": "Video lectures + project commercial",        "phase": "Planning",    "start": 2,  "end": 2,  "status": "done" },
     { "name": "Project Proposal mk_1",                      "phase": "Planning",    "start": 2,  "end": 2,  "status": "done" },
-    { "name": "Initial project setup + FORGE splash",       "phase": "Planning",    "start": 3,  "end": 3,  "status": "in_progress" },
-    { "name": "Full proposal + lock timeline/Gantt",        "phase": "Planning",    "start": 3,  "end": 3,  "status": "in_progress" },
+    { "name": "Initial project setup + FORGE splash",       "phase": "Planning",    "start": 3,  "end": 3,  "status": "done" },
+    { "name": "Full proposal + lock timeline/Gantt",        "phase": "Planning",    "start": 3,  "end": 3,  "status": "done" },
 
-    { "name": "Music Genre \u2014 EDA + standalone site",    "phase": "MVP P1",      "start": 4,  "end": 4,  "status": "planned" },
-    { "name": "Phonon \u2014 EDA + standalone site",         "phase": "MVP P1",      "start": 5,  "end": 5,  "status": "planned" },
+    { "name": "Music Genre \u2014 EDA + standalone site",    "phase": "MVP P1",      "start": 4,  "end": 4,  "status": "done" },
+    { "name": "Phonon \u2014 EDA + standalone site",         "phase": "MVP P1",      "start": 5,  "end": 5,  "status": "in_progress" },
     { "name": "ATLAS \u2014 EDA + standalone site",          "phase": "MVP P1",      "start": 6,  "end": 6,  "status": "planned" },
-    { "name": "Bayesian options (LLLA + HMC)",              "phase": "MVP P1",      "start": 4,  "end": 6,  "status": "planned" },
-    { "name": "Local dashboards + compute metrics",         "phase": "MVP P1",      "start": 4,  "end": 6,  "status": "planned" },
+    { "name": "Bayesian options (LLLA + HMC)",              "phase": "MVP P1",      "start": 4,  "end": 6,  "status": "in_progress" },
+    { "name": "Local dashboards + compute metrics",         "phase": "MVP P1",      "start": 4,  "end": 6,  "status": "in_progress" },
 
     { "name": "Integrate repos \u2192 FORGE website",        "phase": "MVP P2",      "start": 7,  "end": 8,  "status": "planned" },
     { "name": "Deploy: localhost \u2192 external hosting",   "phase": "MVP P2",      "start": 7,  "end": 8,  "status": "planned" },

@@ -1,45 +1,190 @@
 {
   "_comment": "Build Log — living per-project documentation. Edit as each project is built; the panel (panels/build_log.html) re-renders from this file. Schema per project: id, name, week, status(done|in_progress|planned|slipped), headline, metrics[{label,value}], entries[{date,title,status,detail,refs[{label,kind(commit|file|run|link),href}]}], decisions[{title,detail}]. Newest entries first.",
-  "updated": "2026-06-19",
+  "updated": "2026-06-22",
   "projects": [
     {
       "id": "genre",
       "name": "Music Genre — BEARDOWN",
-      "week": "W4",
+      "week": "W5",
       "status": "in_progress",
-      "headline": "Model 1 reproduced and frozen at CV 0.714 (clean log-mel, batch-matched). FORGE Bayesian layer (LLLA + HMC) is the next build.",
+      "headline": "Genre family mk1→mk2→mk2.5 locked. mk2 (RRM-swept, cfg 17) deploys at VAL 0.793 / TEST 0.760 — beats mk1 by +6 test. mk2.5 falsified the reliability metric honestly: RRM does not predict held-out rank on a frozen-det head (ρ=−0.00 vs accuracy ρ=0.69). mk3 (3-sec, ×10 data) is next.",
       "metrics": [
-        { "label": "CV mean (3-fold)", "value": "0.714  \u00b1 0.020" },
-        { "label": "val / test", "value": "0.673 / 0.640" },
-        { "label": "params", "value": "573,450" },
-        { "label": "representation", "value": "clean log-mel @128  \u22c8  57 tab" },
-        { "label": "paper target (cfg_14)", "value": "0.766" }
+        {
+          "label": "mk1 val / test",
+          "value": "0.747 / 0.700"
+        },
+        {
+          "label": "mk2 (cfg 17) val / test",
+          "value": "0.793 / 0.760"
+        },
+        {
+          "label": "mk2 test macro-F1",
+          "value": "0.760  (mk1: 0.686)"
+        },
+        {
+          "label": "selection",
+          "value": "variance-weighted RRM_w (CV-only)"
+        },
+        {
+          "label": "metric ↔ test (Spearman)",
+          "value": "accuracy +0.69 · RRM_w −0.00"
+        },
+        {
+          "label": "paper target (cfg_14)",
+          "value": "0.766"
+        }
       ],
       "entries": [
+        {
+          "date": "2026-06-22",
+          "title": "mk2.5 metric validation — RRM falsified, honestly (the finding)",
+          "status": "done",
+          "detail": "Firewalled study: refit all 20 configs on full-train, recorded test (selection stayed CV-only). Spearman rank-agreement with TEST accuracy — CV accuracy +0.685, but RRM_w −0.002, equal-weight RRM −0.022, fold-stability −0.008, epistemic U −0.028: every reliability axis is noise as a test-rank predictor. Mechanism: post-hoc LLLA on a frozen DET head gives a near-constant U (0.0258–0.0343), and s is test-uncorrelated. A precise negative result — refines, not refutes, INFO 510 (their RRM used TRAINED Bayesian heads where U varied). Boundary condition: RRM earns its keep only when the reliability axes are both variable AND test-predictive.",
+          "refs": [
+            {
+              "label": "batch_refit.py",
+              "kind": "file",
+              "href": "projects/genre/src/batch_refit.py"
+            },
+            {
+              "label": "batch_test.json",
+              "kind": "run",
+              "href": "projects/genre/runs/beardown_rrm/20260622-185237/batch_test.json"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-22",
+          "title": "mk2.5 — Dirichlet / variance re-selection lens (no new model)",
+          "status": "done",
+          "detail": "Generalized RRM to a simplex weighting: RRM_w = 1−√(Σ wᵢ vᵢ²), w∈Δ²; the locked equal-weight metric is the centroid. Variance-derived w=(0.008,0.926,0.067) zeroes the uninformative U axis on principle → selects cfg 17. Dirichlet sweep (200k uniform-simplex draws): cfg 17 49.5%, cfg 12 48.2%, rest <2% — two robust contenders, choice is weighting-dependent (the only region favoring cfg 12 weights the flat U axis). A selection LENS over sweep.json — no model, no bundle, no FORGE/attribution impact.",
+          "refs": [
+            {
+              "label": "reselect.py",
+              "kind": "file",
+              "href": "projects/genre/src/reselect.py"
+            },
+            {
+              "label": "rrm.py",
+              "kind": "file",
+              "href": "projects/genre/src/rrm.py"
+            },
+            {
+              "label": "reselect.json",
+              "kind": "run",
+              "href": "projects/genre/runs/beardown_rrm/20260622-185237/reselect.json"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-22",
+          "title": "mk2 locked = cfg 17 — first acceptance PASS, beats mk1 +6 test",
+          "status": "done",
+          "detail": "Deployed the variance-weighted RRM_w winner: cfg 17 (img768 / tab256 / concat / adam / lr 2.4e-4 / do 0.21,0.17 / ep75, φ-dim 768). Refit on full-train → VAL 0.793 / TEST 0.760 / test macro-F1 0.760, first acceptance PASS (val≥0.75) and clears the paper's 0.766 val band. The macro-F1 jump (0.686→0.760) is on the WEAK genres — a better-balanced classifier, not a luckier one. Equal-weight RRM's nominal winner was cfg 12 (kept as documented contrast); cfg 12 wins ONLY on the flat U axis, so it loses once U is correctly down-weighted. Round-trip OK, max|Δ|=0 — FORGE wraps it unchanged.",
+          "refs": [
+            {
+              "label": "promote_cfg.py",
+              "kind": "file",
+              "href": "projects/genre/src/promote_cfg.py"
+            },
+            {
+              "label": "beardown_rrm (cfg 17)",
+              "kind": "file",
+              "href": "projects/genre/models/beardown_rrm/"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-22",
+          "title": "mk2 sweep — 20-config RRM-selected reliability sweep",
+          "status": "done",
+          "detail": "Built sweep.py (reuses train.py + llla.py): 20 configs × 3-fold GroupKFold-by-track, each scored on a 4-axis catalogue (accuracy A, fold-σ s, LLLA epistemic U at shared-α τ, off-diagonal rate) + RAM / Pareto / Pearson / dCor. The Bayesian layer is post-hoc LLLA over the frozen det head — the SAME object FORGE serves (selection-U == display-U). Ran clean on CPU (~54 min); catalogue persisted to sweep.json.",
+          "refs": [
+            {
+              "label": "sweep.py",
+              "kind": "file",
+              "href": "projects/genre/src/sweep.py"
+            },
+            {
+              "label": "beardown_rrm.yaml",
+              "kind": "file",
+              "href": "projects/genre/configs/beardown_rrm.yaml"
+            },
+            {
+              "label": "sweep.json",
+              "kind": "run",
+              "href": "projects/genre/runs/beardown_rrm/20260622-185237/sweep.json"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-21",
+          "title": "Input-feature attribution — specced + verified-amenable",
+          "status": "planned",
+          "detail": "Locked the design (FORGE_input_feature_attribution_SPEC.txt): push LLLA σ back through the frozen backbone, ∂σ/∂x = (∂σ/∂φ)·(∂φ/∂x), to NAME which input feature drives a prediction's epistemic uncertainty — the latent features INFO 510 Table A3 could only rank anonymously. Verified against the live bundle: scaler.json carries all 57 named axes + mean/std, arch.json+weights.pt rebuild the frozen backbone — so attribution runs on mk1, cfg 17 and future mk3 with ZERO re-bundling. Ships via precompute-and-cache (mirrors ggn_eig), tabular branch first.",
+          "refs": [
+            {
+              "label": "attribution SPEC",
+              "kind": "file",
+              "href": "projects/genre/FORGE_input_feature_attribution_SPEC.txt"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-20",
+          "title": "Bayesian layer live — LLLA over the frozen head",
+          "status": "done",
+          "detail": "Last-layer Laplace (closed form from the cached GGN eigenbasis) over the frozen det head: the 0.714 point estimate becomes a decomposable posterior with a live τ-knob. This is the object mk2's RRM selects on AND the object FORGE displays — one llla.py call, two consumers.",
+          "refs": [
+            {
+              "label": "llla.py",
+              "kind": "file",
+              "href": "projects/genre/src/bayes/llla.py"
+            }
+          ]
+        },
         {
           "date": "2026-06-19",
           "title": "ML usage / cost estimator built",
           "status": "done",
           "detail": "_shared/usage.py turns every compute.json into energy / carbon / $ with measured-vs-modeled tags, an actual-power hook (RAPL / nvidia-smi), a suite roll-up, and a pre-run projection. Assumptions live in an override YAML for real rates IRL.",
-          "refs": [{ "label": "usage.py", "kind": "file", "href": "_shared/usage.py" }]
+          "refs": [
+            {
+              "label": "usage.py",
+              "kind": "file",
+              "href": "_shared/usage.py"
+            }
+          ]
         },
         {
           "date": "2026-06-19",
           "title": "Song drop-in inference verified (wav + mp3)",
           "status": "done",
-          "detail": "End-to-end: drop audio \u2192 30-s windows \u2192 clean mel + 57 features \u2192 per-genre scores with MC-dropout \u03c3. load_audio hardened (soundfile \u2192 librosa fallback \u2192 clear error, no silent skip). Works because train + inference now share one mel recipe (validate r=1.0).",
-          "refs": [{ "label": "predict.py", "kind": "file", "href": "projects/genre/src/predict.py" }]
+          "detail": "End-to-end: drop audio → 30-s windows → clean mel + 57 features → per-genre scores with MC-dropout σ. load_audio hardened (soundfile → librosa fallback → clear error, no silent skip). Works because train + inference now share one mel recipe (validate r=1.0).",
+          "refs": [
+            {
+              "label": "predict.py",
+              "kind": "file",
+              "href": "projects/genre/src/predict.py"
+            }
+          ]
         },
         {
           "date": "2026-06-19",
           "title": "Backbone frozen: clean-128 / batch-8, CV 0.714",
           "status": "done",
-          "detail": "Batch 32\u21928 lifted CV 0.629\u21920.714 (+0.086). The frozen deterministic backbone the Bayesian head attaches to. 6\u00d7 cheaper to train than the original 224 dirty pipeline and the only variant that does real-audio drop-in correctly.",
-          "refs": [{ "label": "beardown.yaml", "kind": "file", "href": "projects/genre/configs/beardown.yaml" }]
+          "detail": "Batch 32→8 lifted CV 0.629→0.714 (+0.086). The frozen deterministic backbone the Bayesian head attaches to. 6× cheaper to train than the original 224 dirty pipeline and the only variant that does real-audio drop-in correctly.",
+          "refs": [
+            {
+              "label": "beardown.yaml",
+              "kind": "file",
+              "href": "projects/genre/configs/beardown.yaml"
+            }
+          ]
         },
         {
           "date": "2026-06-19",
-          "title": "Gap diagnosis complete \u2014 every cheap hypothesis ruled out",
+          "title": "Gap diagnosis complete — every cheap hypothesis ruled out",
           "status": "done",
           "detail": "Early stopping, epochs, representation, split, and resolution all tested and eliminated as the cause of the 0.07 gap to 0.766. Lever was batch size; residual is framework (Keras vs PyTorch) + run variance. Faithful, documented reproduction.",
           "refs": []
@@ -48,30 +193,66 @@
           "date": "2026-06-18",
           "title": "Clean log-mel regeneration (silent-failure fix)",
           "status": "done",
-          "detail": "Kaggle grey PNGs are colormapped matplotlib figures \u2014 luminance non-monotonic in mel energy, so a dropped song scored noise. Regenerated all spectrograms from audio with one recipe \u2192 train + inference share extract_mel \u2192 validate passes by construction.",
-          "refs": [{ "label": "build_spectrograms.py", "kind": "file", "href": "projects/genre/eda/build_spectrograms.py" }]
+          "detail": "Kaggle grey PNGs are colormapped matplotlib figures — luminance non-monotonic in mel energy, so a dropped song scored noise. Regenerated all spectrograms from audio with one recipe → train + inference share extract_mel → validate passes by construction.",
+          "refs": [
+            {
+              "label": "build_spectrograms.py",
+              "kind": "file",
+              "href": "projects/genre/eda/build_spectrograms.py"
+            }
+          ]
         },
         {
           "date": "2026-06-17",
           "title": "Architecture vetted against the public INFO_510 repo",
           "status": "done",
-          "detail": "Confirmed cfg_14: 57 features (length dropped), gated fusion, deterministic head, dense 512/192, lr 7.37e-5, adam, 75 epochs. The winning head was already det \u2014 so the FORGE det-backbone + LLLA reproduction is bit-faithful with zero mechanism mismatch.",
-          "refs": [{ "label": "INFO_510 repo", "kind": "link", "href": "https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj" }]
-        },
-        {
-          "date": "2026-06-20",
-          "title": "Bayesian layer \u2014 LLLA + HMC on the frozen head",
-          "status": "planned",
-          "detail": "Last-layer Laplace (closed form from cached GGN) for the live \u03c4-knob path, HMC as gold-standard check, then the observatory panel with live knobs and an LLLA-vs-HMC overlay. The frozen 0.714 point estimate becomes a decomposable posterior \u2014 the FORGE core.",
-          "refs": []
+          "detail": "Confirmed cfg_14: 57 features (length dropped), gated fusion, deterministic head, dense 512/192, lr 7.37e-5, adam, 75 epochs. The winning head was already det — so the FORGE det-backbone + LLLA reproduction is bit-faithful with zero mechanism mismatch.",
+          "refs": [
+            {
+              "label": "INFO_510 repo",
+              "kind": "link",
+              "href": "https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj"
+            }
+          ]
         }
       ],
       "decisions": [
-        { "title": "Batch size was the lever (+0.086 CV)", "detail": "32\u21928 lifted CV 0.629\u21920.714. Smaller batch = gradient-noise regularization on small data. Batch 8 is also the BatchNorm floor for this net and matches cfg_14." },
-        { "title": "224 resolution ruled out", "detail": "Dirty-224 scored CV 0.629 \u2014 erased the batch-8 gain at 6\u00d7 the compute and 3\u00d7 the memory. Resolution is not the lever." },
-        { "title": "Clean log-mel over dirty Kaggle grey", "detail": "Clean mels score \u2265 dirty AND are the only representation reproducible at inference from a dropped wav. A deliberate, documented improvement over the original pipeline." },
-        { "title": "Split is not the gap", "detail": "BEARDOWN's seed-42 stratified split scored \u2248 our track split (0.673 vs 0.70) \u2014 ruling out an unlucky-draw explanation for the gap." },
-        { "title": "Freeze, don't chase 0.766", "detail": "The wall at ~0.71 is precisely FORGE's motivating example: accuracy-only selection stalls and says nothing about trust. The Bayesian layer is the answer, not more tuning." }
+        {
+          "title": "mk2 = cfg 17, selected by variance-weighted RRM_w (CV-only)",
+          "detail": "Deploy the accuracy-strong + stable config; the only metric-region favoring the equal-weight winner (cfg 12) weights the flat, test-uncorrelated U axis. Selection never saw test (firewall)."
+        },
+        {
+          "title": "RRM falsified honestly — the negative result IS the contribution",
+          "detail": "On a frozen-det head, neither reliability axis predicts test rank (RRM_w ρ=−0.00, accuracy ρ=+0.69). Built the apparatus to falsify our own metric, ran it, reported it. Refines INFO 510's boundary, doesn't refute it."
+        },
+        {
+          "title": "Keep BOTH bundles as the result",
+          "detail": "beardown_rrm (=cfg 17, deployed) and beardown_rrm_cfg12 (=equal-weight winner). The comparison between them is the mk2.5 finding."
+        },
+        {
+          "title": "mk3 = beardown_3sec, motivated not guessed",
+          "detail": "mk2.5's mechanism (flat U) hands mk3 a hypothesis: does ×10 data (3-sec clips) make U vary again and revive RRM_w's validity? Needs a leakage-safe cutter (track-grouped split)."
+        },
+        {
+          "title": "Batch size was the lever (+0.086 CV)",
+          "detail": "32→8 lifted CV 0.629→0.714. Smaller batch = gradient-noise regularization on small data. Batch 8 is also the BatchNorm floor for this net and matches cfg_14."
+        },
+        {
+          "title": "224 resolution ruled out",
+          "detail": "Dirty-224 scored CV 0.629 — erased the batch-8 gain at 6× the compute and 3× the memory. Resolution is not the lever."
+        },
+        {
+          "title": "Clean log-mel over dirty Kaggle grey",
+          "detail": "Clean mels score ≥ dirty AND are the only representation reproducible at inference from a dropped wav. A deliberate, documented improvement over the original pipeline."
+        },
+        {
+          "title": "Split is not the gap",
+          "detail": "BEARDOWN's seed-42 stratified split scored ≈ our track split (0.673 vs 0.70) — ruling out an unlucky-draw explanation for the gap."
+        },
+        {
+          "title": "Freeze, don't chase 0.766",
+          "detail": "The wall at ~0.71 is precisely FORGE's motivating example: accuracy-only selection stalls and says nothing about trust. The Bayesian layer is the answer, not more tuning."
+        }
       ]
     },
     {
@@ -81,15 +262,21 @@
       "status": "planned",
       "headline": "Same build template as genre, applied to phonon density-of-states regression and driven to ground-truth.",
       "metrics": [
-        { "label": "target", "value": "ground-truth reproduction" },
-        { "label": "scheduled", "value": "Week 5 (Jun 22\u201326)" }
+        {
+          "label": "target",
+          "value": "ground-truth reproduction"
+        },
+        {
+          "label": "scheduled",
+          "value": "Week 5 (Jun 22–26)"
+        }
       ],
       "entries": [
         {
           "date": "2026-06-22",
           "title": "Apply the standalone build template",
           "status": "planned",
-          "detail": "EDA \u2192 experimental design \u2192 model-lock \u2192 LLLA + HMC \u2192 local dashboard \u2192 compute metrics, mirroring the genre build.",
+          "detail": "EDA → experimental design → model-lock → LLLA + HMC → local dashboard → compute metrics, mirroring the genre build.",
           "refs": []
         }
       ],
@@ -102,15 +289,21 @@
       "status": "planned",
       "headline": "Same build template applied to the ATLAS Run-3 long-lived-particle search and driven to ground-truth.",
       "metrics": [
-        { "label": "target", "value": "ground-truth reproduction" },
-        { "label": "scheduled", "value": "Week 6 (Jun 29\u2013Jul 3)" }
+        {
+          "label": "target",
+          "value": "ground-truth reproduction"
+        },
+        {
+          "label": "scheduled",
+          "value": "Week 6 (Jun 29–Jul 3)"
+        }
       ],
       "entries": [
         {
           "date": "2026-06-29",
           "title": "Apply the standalone build template",
           "status": "planned",
-          "detail": "EDA \u2192 experimental design \u2192 model-lock \u2192 LLLA + HMC \u2192 local dashboard \u2192 compute metrics, mirroring the genre build.",
+          "detail": "EDA → experimental design → model-lock → LLLA + HMC → local dashboard → compute metrics, mirroring the genre build.",
           "refs": []
         }
       ],
