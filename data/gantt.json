@@ -3,45 +3,196 @@
   "num_weeks": 13,
   "project": "FORGE",
   "owner": "Nathan Herling",
-  "last_updated": "2026-06-22",
+  "last_updated": "2026-07-03",
   "windows": [
-    { "label": "Risk-management window", "start": 8, "end": 10, "cls": "fg-risk" }
+    {
+      "label": "Risk-management window",
+      "start": 8,
+      "end": 10,
+      "cls": "fg-risk"
+    }
   ],
   "tasks": [
-    { "name": "Brainstorming & scope lock",                "phase": "Intro",       "start": 0,  "end": 0,  "status": "done" },
-    { "name": "Doc-site design + setup (TRON Ares)",        "phase": "Intro",       "start": 0,  "end": 1,  "status": "done" },
-    { "name": "Research & planning",                        "phase": "Planning",    "start": 1,  "end": 2,  "status": "done" },
-    { "name": "Video lectures + project commercial",        "phase": "Planning",    "start": 2,  "end": 2,  "status": "done" },
-    { "name": "Project Proposal mk_1",                      "phase": "Planning",    "start": 2,  "end": 2,  "status": "done" },
-    { "name": "Initial project setup + FORGE splash",       "phase": "Planning",    "start": 3,  "end": 3,  "status": "done" },
-    { "name": "Full proposal + lock timeline/Gantt",        "phase": "Planning",    "start": 3,  "end": 3,  "status": "done" },
-
-    { "name": "Music Genre \u2014 EDA + standalone site",    "phase": "MVP P1",      "start": 4,  "end": 4,  "status": "done" },
-    { "name": "Phonon \u2014 EDA + standalone site",         "phase": "MVP P1",      "start": 5,  "end": 5,  "status": "in_progress" },
-    { "name": "ATLAS \u2014 EDA + standalone site",          "phase": "MVP P1",      "start": 6,  "end": 6,  "status": "planned" },
-    { "name": "Bayesian options (LLLA + HMC)",              "phase": "MVP P1",      "start": 4,  "end": 6,  "status": "in_progress" },
-    { "name": "Local dashboards + compute metrics",         "phase": "MVP P1",      "start": 4,  "end": 6,  "status": "in_progress" },
-
-    { "name": "Integrate repos \u2192 FORGE website",        "phase": "MVP P2",      "start": 7,  "end": 8,  "status": "planned" },
-    { "name": "Deploy: localhost \u2192 external hosting",   "phase": "MVP P2",      "start": 7,  "end": 8,  "status": "planned" },
-    { "name": "Finalize Bayesian / dashboard decisions",    "phase": "MVP P2",      "start": 8,  "end": 8,  "status": "planned" },
-    { "name": "Test & debug integrated stack",              "phase": "MVP P2",      "start": 7,  "end": 9,  "status": "planned" },
-    { "name": "Begin write-up + final software edits",      "phase": "MVP P2",      "start": 9,  "end": 9,  "status": "planned" },
-
-    { "name": "Lock MVP + freeze repos",                    "phase": "Stretch",     "start": 10, "end": 10, "status": "planned" },
-    { "name": "Stretch goal (if time)",                     "phase": "Stretch",     "start": 10, "end": 10, "status": "planned" },
-
-    { "name": "Finish write-up; deliverables locked",       "phase": "Write-up",    "start": 11, "end": 11, "status": "planned" },
-    { "name": "Turn in \u00b7 present \u00b7 showcase",       "phase": "Deliverables","start": 12, "end": 12, "status": "planned" }
+    {
+      "name": "Brainstorming & scope lock",
+      "phase": "Intro",
+      "start": 0,
+      "end": 0,
+      "status": "done"
+    },
+    {
+      "name": "Doc-site design + setup (TRON Ares)",
+      "phase": "Intro",
+      "start": 0,
+      "end": 1,
+      "status": "done"
+    },
+    {
+      "name": "Research & planning",
+      "phase": "Planning",
+      "start": 1,
+      "end": 2,
+      "status": "done"
+    },
+    {
+      "name": "Video lectures + project commercial",
+      "phase": "Planning",
+      "start": 2,
+      "end": 2,
+      "status": "done"
+    },
+    {
+      "name": "Project Proposal mk_1",
+      "phase": "Planning",
+      "start": 2,
+      "end": 2,
+      "status": "done"
+    },
+    {
+      "name": "Initial project setup + FORGE splash",
+      "phase": "Planning",
+      "start": 3,
+      "end": 3,
+      "status": "done"
+    },
+    {
+      "name": "Full proposal + lock timeline/Gantt",
+      "phase": "Planning",
+      "start": 3,
+      "end": 3,
+      "status": "done"
+    },
+    {
+      "name": "Music Genre — EDA + standalone site",
+      "phase": "MVP P1",
+      "start": 4,
+      "end": 4,
+      "status": "done"
+    },
+    {
+      "name": "Phonon — EDA + standalone site",
+      "phase": "MVP P1",
+      "start": 5,
+      "end": 5,
+      "status": "in_progress"
+    },
+    {
+      "name": "ATLAS — EDA + standalone site",
+      "phase": "MVP P1",
+      "start": 6,
+      "end": 6,
+      "status": "in_progress"
+    },
+    {
+      "name": "Bayesian options (LLLA + HMC)",
+      "phase": "MVP P1",
+      "start": 4,
+      "end": 6,
+      "status": "in_progress"
+    },
+    {
+      "name": "Local dashboards + compute metrics",
+      "phase": "MVP P1",
+      "start": 4,
+      "end": 6,
+      "status": "in_progress"
+    },
+    {
+      "name": "Integrate repos → FORGE website",
+      "phase": "MVP P2",
+      "start": 7,
+      "end": 8,
+      "status": "planned"
+    },
+    {
+      "name": "Deploy: localhost → external hosting",
+      "phase": "MVP P2",
+      "start": 7,
+      "end": 8,
+      "status": "planned"
+    },
+    {
+      "name": "Finalize Bayesian / dashboard decisions",
+      "phase": "MVP P2",
+      "start": 8,
+      "end": 8,
+      "status": "planned"
+    },
+    {
+      "name": "Test & debug integrated stack",
+      "phase": "MVP P2",
+      "start": 7,
+      "end": 9,
+      "status": "planned"
+    },
+    {
+      "name": "Begin write-up + final software edits",
+      "phase": "MVP P2",
+      "start": 9,
+      "end": 9,
+      "status": "planned"
+    },
+    {
+      "name": "Lock MVP + freeze repos",
+      "phase": "Stretch",
+      "start": 10,
+      "end": 10,
+      "status": "planned"
+    },
+    {
+      "name": "Stretch goal (if time)",
+      "phase": "Stretch",
+      "start": 10,
+      "end": 10,
+      "status": "planned"
+    },
+    {
+      "name": "Finish write-up; deliverables locked",
+      "phase": "Write-up",
+      "start": 11,
+      "end": 11,
+      "status": "planned"
+    },
+    {
+      "name": "Turn in · present · showcase",
+      "phase": "Deliverables",
+      "start": 12,
+      "end": 12,
+      "status": "planned"
+    }
   ],
   "milestones": [
-    { "week": 2,  "label": "Proposal mk_1 submitted" },
-    { "week": 3,  "label": "Full proposal + timeline/Gantt locked" },
-    { "week": 6,  "label": "All three MVP-P1 sites functional (guaranteed floor)" },
-    { "week": 8,  "label": "Integrated FORGE site deployed (Phase 2)" },
-    { "week": 9,  "label": "Software feature-frozen; write-up begun" },
-    { "week": 10, "label": "MVP + repos locked" },
-    { "week": 11, "label": "Write-up complete; deliverables locked" },
-    { "week": 12, "label": "Final hand-in / showcase" }
+    {
+      "week": 2,
+      "label": "Proposal mk_1 submitted"
+    },
+    {
+      "week": 3,
+      "label": "Full proposal + timeline/Gantt locked"
+    },
+    {
+      "week": 6,
+      "label": "All three MVP-P1 sites functional (guaranteed floor)"
+    },
+    {
+      "week": 8,
+      "label": "Integrated FORGE site deployed (Phase 2)"
+    },
+    {
+      "week": 9,
+      "label": "Software feature-frozen; write-up begun"
+    },
+    {
+      "week": 10,
+      "label": "MVP + repos locked"
+    },
+    {
+      "week": 11,
+      "label": "Write-up complete; deliverables locked"
+    },
+    {
+      "week": 12,
+      "label": "Final hand-in / showcase"
+    }
   ]
 }

@@ -1,10 +1,14 @@
 {
   "_comment": "Per-week progress reports for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W0..W12. Each week has three sections: planned (set at the start of the week), refactored (mid-week scope changes / re-plans), accomplished (what actually got done). Items are plain strings, or { name, status } where status is 'todo' | 'done'.",
-  "last_updated": "2026-06-22",
-  "sections": ["planned", "refactored", "accomplished"],
+  "last_updated": "2026-07-03",
+  "sections": [
+    "planned",
+    "refactored",
+    "accomplished"
+  ],
   "weeks": {
     "0": {
-      "label": "Intro \u2014 brainstorming",
+      "label": "Intro — brainstorming",
       "planned": [
         "Brainstorming & scope lock",
         "Website documentation design"
@@ -28,7 +32,7 @@
       ]
     },
     "2": {
-      "label": "Planning \u2014 proposal mk_1",
+      "label": "Planning — proposal mk_1",
       "planned": [
         "Planning, research",
         "Website documentation setup",
@@ -45,15 +49,15 @@
       ]
     },
     "3": {
-      "label": "Planning \u2014 lock-in",
+      "label": "Planning — lock-in",
       "planned": [
         "Initial project setup, begin MVP phase 1",
         "Design FORGE splash",
         "Full document for Project Proposal due",
-        "Reconsider timeline & Gantt chart \u2014 lock in final versions"
+        "Reconsider timeline & Gantt chart — lock in final versions"
       ],
       "refactored": [
-        "Timeline & Gantt restructured to MVP-phase cadence (P1 = three standalone sites, W4\u20136; P2 = integrate + deploy, W7\u20139; P3/stretch, W10). Risk window now W8\u201310."
+        "Timeline & Gantt restructured to MVP-phase cadence (P1 = three standalone sites, W4–6; P2 = integrate + deploy, W7–9; P3/stretch, W10). Risk window now W8–10."
       ],
       "accomplished": [
         "Full Project Proposal document submitted",
@@ -64,9 +68,9 @@
       ]
     },
     "4": {
-      "label": "MVP Phase 1 \u2014 Music Genre (BEARDOWN)",
+      "label": "MVP Phase 1 — Music Genre (BEARDOWN)",
       "planned": [
-        "EDA + standalone site design \u2014 Music Genre",
+        "EDA + standalone site design — Music Genre",
         "Music Genre experimental design [a, b, c]",
         "Standalone site: run sweeps, model lock, drop-in analysis",
         "Min. Bayesian options (LLLA + HMC)",
@@ -75,24 +79,24 @@
       ],
       "refactored": [
         "Genre became the reference implementation: the full BEARDOWN-depth treatment here defines the standalone-site template that phonon (W5) and ATLAS (W6) copy \\u2014 so genre absorbed extra build time up front to de-risk models 2 and 3.",
-        "\u201cMin. Bayesian options (LLLA + HMC)\u201d split into two stages: W4 staged the bundle for it (cached phi_train.npy + ggn_eig.npz so the head is plug-ready); the LLLA/HMC math + observatory tab itself landed at the W4\\u2192W5 boundary (2026-06-22)."
+        "“Min. Bayesian options (LLLA + HMC)” split into two stages: W4 staged the bundle for it (cached phi_train.npy + ggn_eig.npz so the head is plug-ready); the LLLA/HMC math + observatory tab itself landed at the W4\\u2192W5 boundary (2026-06-22)."
       ],
       "accomplished": [
-        "BEARDOWN Model 1 up as a local full-stack standalone site \u2014 EDA \\u2192 leakage-safe data \\u2192 frozen backbone \\u2192 drop-in inference \\u2192 Flask dashboard (tabs: EDA / experiment / model / data / glossary)",
+        "BEARDOWN Model 1 up as a local full-stack standalone site — EDA \\u2192 leakage-safe data \\u2192 frozen backbone \\u2192 drop-in inference \\u2192 Flask dashboard (tabs: EDA / experiment / model / data / glossary)",
         "Leakage-safe data pipeline built: track-level vs naive split + BEARDOWN stratified seed-42 reproduction; clean log-mel @128 \\u22c8 57-feature tabular; naive-vs-track gap captured as a result",
-        "Architecture vetted bit-faithful against the public INFO_510 repo (cfg_14: gated fusion, deterministic head, 573,450 params) \u2014 zero mechanism mismatch for the FORGE det-backbone + LLLA plan",
+        "Architecture vetted bit-faithful against the public INFO_510 repo (cfg_14: gated fusion, deterministic head, 573,450 params) — zero mechanism mismatch for the FORGE det-backbone + LLLA plan",
         "Clean log-mel regeneration fixed the silent dirty-grey failure: train + inference now share one extract_mel recipe (validate r=1.0), so dropped songs no longer score as noise",
         "Backbone frozen at clean-128 / batch-8: batch 32\\u21928 lifted CV +0.086; frozen draw = val 0.7467 / test 0.700 / macro-F1 0.686 (573,450 params, bundle round-trips bit-exact)",
-        "Gap-to-0.766 fully diagnosed \u2014 early-stop, epochs/lr, representation, split, and resolution all ruled out; lever was batch size, residual is framework + run variance. Decision: freeze, don\u2019t chase 0.766 (the ~0.71 wall is FORGE\u2019s motivating example, not a bug)",
-        "Song drop-in inference verified end-to-end on wav + mp3: 30-s windows \\u2192 mel + 57 feats \\u2192 per-genre prob + MC-dropout \u03c3; load_audio hardened (soundfile \\u2192 librosa fallback \\u2192 clear error)",
-        "7-file frozen bundle shipped (weights / arch / scaler / label_map / phi_train.npy / ggn_eig.npz / metrics) \u2014 phi_train + GGN eigendecomp pre-staged so the Bayesian head is plug-ready",
+        "Gap-to-0.766 fully diagnosed — early-stop, epochs/lr, representation, split, and resolution all ruled out; lever was batch size, residual is framework + run variance. Decision: freeze, don’t chase 0.766 (the ~0.71 wall is FORGE’s motivating example, not a bug)",
+        "Song drop-in inference verified end-to-end on wav + mp3: 30-s windows \\u2192 mel + 57 feats \\u2192 per-genre prob + MC-dropout σ; load_audio hardened (soundfile \\u2192 librosa fallback \\u2192 clear error)",
+        "7-file frozen bundle shipped (weights / arch / scaler / label_map / phi_train.npy / ggn_eig.npz / metrics) — phi_train + GGN eigendecomp pre-staged so the Bayesian head is plug-ready",
         "ML usage / cost ledger built (_shared/usage.py): per-run compute.json \\u2192 energy / carbon / $ with measured-vs-modeled tags; rolls up all 11 runs (~0.33 h wall, ~14.8 Wh modeled-TDP)"
       ]
     },
     "5": {
-      "label": "MVP Phase 1 \u2014 Phonon",
+      "label": "MVP Phase 1 — Phonon",
       "planned": [
-        "EDA + standalone site design \u2014 Phonon",
+        "EDA + standalone site design — Phonon",
         "Phonon experimental design [a, b, c]",
         "Standalone site: run sweeps, model lock, drop-in analysis",
         "Min. Bayesian options (LLLA + HMC)",
@@ -101,31 +105,67 @@
       ],
       "refactored": [
         "Behind schedule entering W5. Pivot: build phonon as a stripped-down / more basic design first \\u2014 get model 2 standing on the standalone template, then deepen \\u2014 rather than the full BEARDOWN-depth treatment up front.",
-        "Genre proved the full-stack template (EDA \\u2192 data \\u2192 frozen model \\u2192 inference \\u2192 dashboard); phonon copies the skeleton and fills only the three domain pieces (data adapter, EDA, features/model/config) to hit the \u201cget it running\u201d floor.",
-        "Still in flux across all three models: model 2 (phonon) and model 3 (ATLAS) are scaffold-only (skeleton repos, no data/runs yet), and the unified FORGE layout / metrics view is still being designed \\u2014 the per-model dashboards will converge on one shared FORGE look in Phase 2."
+        "Genre proved the full-stack template (EDA \\u2192 data \\u2192 frozen model \\u2192 inference \\u2192 dashboard); phonon copies the skeleton and fills only the three domain pieces (data adapter, EDA, features/model/config) to hit the “get it running” floor.",
+        "Still in flux across all three models: model 2 (phonon) and model 3 (ATLAS) are scaffold-only (skeleton repos, no data/runs yet), and the unified FORGE layout / metrics view is still being designed \\u2014 the per-model dashboards will converge on one shared FORGE look in Phase 2.",
+        "Phonon absorbed the FORGE-layer generalization: rather than a stripped-down site, the phonon build hardened the shared observatory (τ grab-slider, 3-tier data source, independent CLI) so ATLAS inherits a template-stable layer — this is why the phonon work ran W5→W6."
       ],
       "accomplished": [
-        { "name": "FORGE Bayesian core landed for genre (carry-over from W4): LLLA last-layer Laplace + HMC gold-standard sampler on the frozen head, plus the observatory tab (overview / posterior / model / \u03c4-sweep / eigenspectrum / data-frac / report / HMC)", "status": "done" },
-        { "name": "Headline finding wired into the FORGE report: ~506/512 last-layer weight-directions are prior-led \\u2192 model is data-limited, not capacity-limited (answers \u201ccan it go further, or is it noise-capped?\u201d)", "status": "done" },
-        { "name": "Phonon \u2014 EDA + standalone site (basic design)", "status": "todo" },
-        { "name": "Phonon \u2014 data adapter + domain EDA + features/model/config filled into the skeleton", "status": "todo" }
+        {
+          "name": "FORGE Bayesian core landed for genre (carry-over from W4): LLLA last-layer Laplace + HMC gold-standard sampler on the frozen head, plus the observatory tab (overview / posterior / model / τ-sweep / eigenspectrum / data-frac / report / HMC)",
+          "status": "done"
+        },
+        {
+          "name": "Headline finding wired into the FORGE report: most last-layer weight-directions are prior-led → model is data-limited, not capacity-limited (answers “can it go further, or is it noise-capped?”)",
+          "status": "done"
+        },
+        {
+          "name": "Phonon FORGE observatory built end-to-end on the DOS regression (51-bin, Chen et al. 2021 reproduction): forge.html dashboard + Flask server.py + forge_dashboard.py payload assembler, wrapping mk1/mk2/mk3 frozen backbones with an LLLA head",
+          "status": "done"
+        },
+        {
+          "name": "LLLA intercept fix for phonon: DOS baseline centering (ymean) lifted the regression head from R² ≈ −27 to ≈ 0.95 (PICP ≈ 0.95) on the template bundle",
+          "status": "done"
+        },
+        {
+          "name": "Phonon — data adapter + domain EDA + features/model/config filled into the skeleton (mk2 EMD backbone as the headline)",
+          "status": "done"
+        }
       ]
     },
     "6": {
-      "label": "MVP Phase 1 \u2014 ATLAS",
+      "label": "MVP Phase 1 — ATLAS",
       "planned": [
-        "EDA + standalone site design \u2014 ATLAS",
+        "EDA + standalone site design — ATLAS",
         "ATLAS experimental design [a, b, c]",
         "Standalone site: run sweeps, model lock, drop-in analysis",
         "Min. Bayesian options (LLLA + HMC)",
         "Local dashboard design",
         "Build in computational recording metrics"
       ],
-      "refactored": [],
-      "accomplished": []
+      "refactored": [
+        "Working the ATLAS models IN PARALLEL (RA track) rather than strictly after phonon. ATLAS is not yet 'officially added' to the doc-site ecosystem, but the parallel model progress keeps the W6 Gantt floor on track — the FORGE observatory + LLLA/HMC layer is now template-stable (genre + phonon), so ATLAS is a data-adapter + config wrap, not new infrastructure."
+      ],
+      "accomplished": [
+        {
+          "name": "Phonon FORGE observatory finished: continuous data-limited verdict (γ = λ/(λ+τ) with %-confidence gauges), Last-Layer Model panel (W-map heatmap · σ-heatmap · all-1,632-posteriors bell grid · click-to-inspect prior-vs-posterior Gaussian), Optimization Frontier (RRM heat map + Pareto front), and independent forge_cli.py calculators (synth→fit→payload regenerates everything, nothing hard-coded)",
+          "status": "done"
+        },
+        {
+          "name": "HMC made full-stack: FIRE HMC VALIDATION button → real server-side sampler (Flask /api/forge/hmc, forge.hmc_run) → fire/progress animation → per-bin chain-trace + sample-histogram-with-Laplace-Gaussian overlay (validates the fast approximation the rest of the dashboard rides on). Synthetic-bundle fallback so it runs before real bundles exist",
+          "status": "done"
+        },
+        {
+          "name": "ATLAS Run-3 LLP / MSVtx models advancing in parallel (barrel/endcap ABCD, ABCDisCoTEC×DNCQN ablation harness on real data) — standalone-site integration into the FORGE template still pending",
+          "status": "todo"
+        },
+        {
+          "name": "ATLAS — EDA + standalone-site skeleton (data adapter + domain EDA + features/model/config) fold-in",
+          "status": "todo"
+        }
+      ]
     },
     "7": {
-      "label": "MVP Phase 2 \u2014 integrate + deploy",
+      "label": "MVP Phase 2 — integrate + deploy",
       "planned": [
         "Tie together repos into official FORGE website",
         "Move from localhost to external hosting",
@@ -136,7 +176,7 @@
       "accomplished": []
     },
     "8": {
-      "label": "MVP Phase 2 \u2014 integrate + deploy (risk window opens)",
+      "label": "MVP Phase 2 — integrate + deploy (risk window opens)",
       "planned": [
         "Tie together repos into official FORGE website",
         "Move from localhost to external hosting",
@@ -148,7 +188,7 @@
       "accomplished": []
     },
     "9": {
-      "label": "MVP Phase 2 \u2014 write-up begins (risk window)",
+      "label": "MVP Phase 2 — write-up begins (risk window)",
       "planned": [
         "Begin write-up",
         "Final software edits",

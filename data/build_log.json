@@ -1,6 +1,6 @@
 {
   "_comment": "Build Log — living per-project documentation. Edit as each project is built; the panel (panels/build_log.html) re-renders from this file. Schema per project: id, name, week, status(done|in_progress|planned|slipped), headline, metrics[{label,value}], entries[{date,title,status,detail,refs[{label,kind(commit|file|run|link),href}]}], decisions[{title,detail}]. Newest entries first.",
-  "updated": "2026-06-23",
+  "updated": "2026-07-03",
   "projects": [
     {
       "id": "genre",
@@ -396,20 +396,134 @@
     {
       "id": "phonon",
       "name": "Phonon DOS",
-      "week": "W5",
-      "status": "planned",
-      "headline": "Same build template as genre, applied to phonon density-of-states regression and driven to ground-truth.",
+      "week": "W6",
+      "status": "in_progress",
+      "headline": "Phonon DOS (51-bin regression, Chen et al. 2021 E(3)-equivariant reproduction) wrapped by the full FORGE posterior observatory — the genre template applied to a regression head and driven to a working full-stack dashboard. LLLA manufactures a last-layer posterior over every frozen backbone (mk1 e3nn_repro / mk2 EMD / mk3 js), the τ-knob + HMC gold-standard run live in-browser + server-side, and the verdict is now a continuous data-limited confidence (γ = λ/(λ+τ)) rather than a binary. Real ATLAS model work proceeds in parallel (W6).",
       "metrics": [
         {
-          "label": "target",
-          "value": "ground-truth reproduction"
+          "label": "backbones wrapped",
+          "value": "mk1 e3nn_repro · mk2 EMD · mk3 js (all FORGE-wrapped)"
+        },
+        {
+          "label": "LLLA intercept fix",
+          "value": "DOS baseline centering → R² −27 → 0.95 (template/demo bundle)"
+        },
+        {
+          "label": "observatory components",
+          "value": "posterior · τ-sweep · data-frac · HMC · attribution · last-layer model · optimization frontier"
+        },
+        {
+          "label": "HMC",
+          "value": "full-stack Flask /api/forge/hmc — fire-button, samples predicted-DOS, overlays Laplace"
+        },
+        {
+          "label": "data tiers",
+          "value": "live server → computed static payloads → demo seed (source-badged)"
         },
         {
           "label": "scheduled",
-          "value": "Week 5 (Jun 22–26)"
+          "value": "W5–W6 (Jun 22 – Jul 3)"
         }
       ],
       "entries": [
+        {
+          "date": "2026-07-03",
+          "title": "HMC made full-stack + the visualization that gives the Gaussians meaning",
+          "status": "done",
+          "detail": "Wired the FIRE HMC VALIDATION button to a real server-side sampler (Flask GET /api/forge/hmc → forge.hmc_run), with a synthetic-bundle fallback so the full-stack path runs out of the box before real bundles exist. hmc_run projects the sampled last-layer weights onto a probe crystal to give the predicted DOS intensity at a frequency — a readable scalar — and returns the chain trace + sample histogram + the analytic Laplace N(mean,σ) for the same quantity. The UI fires → shows a sampling/progress animation → renders per-bin cards: chain-trace plot (draw-in) + histogram with the Laplace Gaussian overlaid. That overlay is the point: it turns the abstract weight-Gaussians into 'does our fast approximation match the gold standard?' — verdict GOOD when they line up. This is the ATLAS HMC-check pattern reused.",
+          "refs": [
+            {
+              "label": "forge.py (hmc_run)",
+              "kind": "file",
+              "href": "projects/phonon/src/bayes/forge.py"
+            },
+            {
+              "label": "server.py (/api/forge/hmc)",
+              "kind": "file",
+              "href": "projects/phonon/app/server.py"
+            }
+          ]
+        },
+        {
+          "date": "2026-07-02",
+          "title": "Last-Layer Model panel — the head as W-map + full posterior, with a click-to-inspect Gaussian",
+          "status": "done",
+          "detail": "A concrete model of the exact object LLLA Bayes-ifies: the linear head W(32→51) as a heatmap (MEAN), a σ-heatmap (UNCERTAINTY), and an ALL-POSTERIORS bell grid drawing every one of the 1,632 weights as its N(mean,σ). Click any cell → a large, real prior N(0,σ₀) vs posterior N(mean,σ) overlay (σ₀=√(σ²_k/τ), σ=√(σ²_k·featⱼ)), so you watch the data pull a weight off the prior. Carries the honest caveat on-panel: LLLA models ONLY the last layer (backbone φ frozen), so a Deep Ensemble / subnetwork Laplace is what would add feature uncertainty. All τ-reactive, recomputed in-browser from the shipped eigenbasis (U, λ, σ²).",
+          "refs": [
+            {
+              "label": "forge_dashboard.py (ships W, U)",
+              "kind": "file",
+              "href": "projects/phonon/src/bayes/forge_dashboard.py"
+            },
+            {
+              "label": "forge.html (Last-Layer Model)",
+              "kind": "file",
+              "href": "projects/phonon/app/templates/forge.html"
+            }
+          ]
+        },
+        {
+          "date": "2026-07-02",
+          "title": "Continuous verdict — data-limited as a confidence %, not a yes/no",
+          "status": "done",
+          "detail": "Replaced the binary DATA-LIMITED / CAPACITY-LIMITED headline with a graded readout. Each eigen-direction's data-information fraction γ = λ/(λ+τ) ∈ [0,1] is the continuous version of the old λ>τ cut; the verdict % = 1 − eff_dim/d (mean prior-mass). Shown as a spectrum bar with a marker plus four %-confidence gauges — capacity utilization (eff_dim/d), posterior fidelity (Laplace-vs-HMC), epistemic saturation (data-frac), calibration (PICP vs 95%). The eigenspectrum now colours by γ (amber prior → cyan data) instead of a hard two-colour split. All derived from quantities already in the payload, so it works in every data tier.",
+          "refs": [
+            {
+              "label": "forge.html (confidence readout)",
+              "kind": "file",
+              "href": "projects/phonon/app/templates/forge.html"
+            }
+          ]
+        },
+        {
+          "date": "2026-07-01",
+          "title": "Optimization Frontier + independent calculation CLI",
+          "status": "done",
+          "detail": "Optimization Frontier panel: a model×RRM-component heat map (1−A, s, U, ‖v‖; brighter = more room) plus a Pareto front in accuracy-gap vs uncertainty space with dominated backbones arrowed toward the frontier — 'where is the room to improve'. Fed by a compact forge_roster.json. Independent CLI forge_cli.py computes every metric from scratch and tweakably: synth · fit · posterior · metrics · hmc · datafrac · attribution · predict · payload · verify · roster (each takes --tau, --json). synth→fit→payload regenerates the whole dashboard payload with zero server, so nothing on the dashboard is hard-coded — the static tier is CLI output.",
+          "refs": [
+            {
+              "label": "forge_cli.py",
+              "kind": "file",
+              "href": "projects/phonon/src/bayes/forge_cli.py"
+            }
+          ]
+        },
+        {
+          "date": "2026-07-01",
+          "title": "Posterior observatory dashboard stood up (τ grab-slider, live recompute, 3-tier source)",
+          "status": "done",
+          "detail": "The phonon FORGE dashboard (forge.html + Flask server.py + forge_dashboard.py payload assembler): 3-column TRON observatory wrapping ANY frozen backbone with an LLLA head. τ is a grab-slider that live-recomputes the eigen-split AND the LLLA predictive band in-browser (closed form off the shipped c=Uᵀz, σ²); big animated buttons; a calc scan-line/pulse animation; 80vw layout. Data loads in three source-badged tiers: ● LIVE (/api/forge/dashboard recomputes at τ) → ● COMPUTED (CLI-generated static payload) → ● DEMO SEED. mk1/mk2/mk3 are all treated as frozen backbones FORGE wraps — mk1 (deterministic) included, since manufacturing a posterior for a point-estimate model is the whole point of FORGE.",
+          "refs": [
+            {
+              "label": "forge.html",
+              "kind": "file",
+              "href": "projects/phonon/app/templates/forge.html"
+            },
+            {
+              "label": "server.py",
+              "kind": "file",
+              "href": "projects/phonon/app/server.py"
+            },
+            {
+              "label": "forge_dashboard.py",
+              "kind": "file",
+              "href": "projects/phonon/src/bayes/forge_dashboard.py"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-30",
+          "title": "LLLA head + intercept fix for the DOS regression",
+          "status": "done",
+          "detail": "llla.py fit for the phonon regression head (fit_bundle → W, U, λ, σ², μ, sd, ymean). Key fix: a phonon DOS spectrum has a nonzero baseline the zero-intercept head couldn't represent, which showed up as a catastrophic R² (≈ −27); adding a Y-centering intercept (ymean, backward-compatible on load) lifted it to R² ≈ 0.95 with PICP ≈ 0.95 on the template bundle. This is the same closed-form last-layer object as genre — one llla.py, wrapped by the observatory and the HMC validator alike.",
+          "refs": [
+            {
+              "label": "llla.py",
+              "kind": "file",
+              "href": "projects/phonon/src/bayes/llla.py"
+            }
+          ]
+        },
         {
           "date": "2026-06-22",
           "title": "Apply the standalone build template",
@@ -418,14 +532,31 @@
           "refs": []
         }
       ],
-      "decisions": []
+      "decisions": [
+        {
+          "title": "FORGE wraps every backbone — including deterministic mk1",
+          "detail": "mk1 (e3nn_repro, pure MSE, no built-in uncertainty) is not the thing FORGE can't handle; it's the raw material. LLLA manufactures a last-layer posterior for it exactly as for mk2/mk3. Each backbone yields a different φ geometry → a genuinely different epistemic read, so the registry is a real uncertainty-method comparison."
+        },
+        {
+          "title": "Read nonclosure from the DNCQN plateau, not TEC eval-closure (carried into phonon's verdict framing)",
+          "detail": "The graded data-limited confidence mirrors the ABCD finding: the honest systematic is read from where the gradient self-terminates (the prior-led plateau), not from pushing through the noise floor."
+        },
+        {
+          "title": "Verdict is continuous, not binary",
+          "detail": "A hard λ>τ cut throws away the graded γ = λ/(λ+τ) information. The dashboard now reports a %-confidence and per-direction γ, which is both more honest and reads better."
+        },
+        {
+          "title": "HMC validates the Gaussian everything else rides on",
+          "detail": "Every uncertainty shown elsewhere is the fast Laplace approximation. The full-stack HMC run samples the true posterior and overlays it — the single check that licenses trusting all the cheap Gaussians. Synthetic fallback keeps it runnable before real bundles exist."
+        }
+      ]
     },
     {
       "id": "atlas",
       "name": "ATLAS LLP / MSVtx",
       "week": "W6",
-      "status": "planned",
-      "headline": "Same build template applied to the ATLAS Run-3 long-lived-particle search and driven to ground-truth.",
+      "status": "in_progress",
+      "headline": "ATLAS Run-3 LLP / MSVtx model work proceeding IN PARALLEL (RA track) — barrel/endcap displaced-vertex analysis, ABCDisCoTEC×DNCQN ablation harness on real data. Not yet folded into the FORGE doc-site / standalone-site template, but on track for the W6 floor: the FORGE Bayesian + observatory layer is now proven on genre and phonon and drops onto ATLAS features unchanged.",
       "metrics": [
         {
           "label": "target",
@@ -437,6 +568,13 @@
         }
       ],
       "entries": [
+        {
+          "date": "2026-07-03",
+          "title": "ATLAS models advancing in parallel — integration into FORGE template pending",
+          "status": "in_progress",
+          "detail": "Real ATLAS work (Run-3 LLP hidden-sector displaced vertices, MSVtx framework; barrel/endcap ABCD with the ABCDisCoTEC×DNCQN ablation harness) is moving forward on the RA side in parallel with the phonon FORGE build. It is deliberately not yet 'officially added' to the documentation ecosystem — the standalone-site skeleton (data adapter · EDA · features/model/config) is the remaining wrap. Because the FORGE observatory + LLLA/HMC layer is now template-stable from phonon, ATLAS becomes a data-adapter + config exercise rather than new infrastructure, which keeps the W6 'all three MVP-P1 sites functional' milestone on track.",
+          "refs": []
+        },
         {
           "date": "2026-06-29",
           "title": "Apply the standalone build template",

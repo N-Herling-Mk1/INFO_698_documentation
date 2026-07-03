@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-03",
+  "last_updated": "2026-07-03",
   "note": "Single source of truth for the FORGE glossary panel. Add an entry: { term, group, expansion, note? }. Commit and push.",
   "group_order": [
     "Project & process",
@@ -10,42 +10,229 @@
     "Physics & ATLAS"
   ],
   "entries": [
-    { "term": "FORGE", "group": "Project & process", "expansion": "Functional-posterior Observatory for Refinement and Geometric Exploration" },
-    { "term": "MVP",   "group": "Project & process", "expansion": "Minimum Viable Product" },
-    { "term": "PoC",   "group": "Project & process", "expansion": "Proof of Concept" },
-    { "term": "H1 / H2 / H3", "group": "Project & process", "expansion": "The three project hypotheses", "note": "Visualization fidelity; sampler correctness/efficiency; hyperparameter → posterior-geometry (the keystone)." },
-
-    { "term": "BNN",   "group": "Bayesian & statistics", "expansion": "Bayesian Neural Network" },
-    { "term": "HMC",   "group": "Bayesian & statistics", "expansion": "Hamiltonian Monte Carlo", "note": "Gradient-based MCMC for drawing samples from a posterior over weights." },
-    { "term": "NUTS",  "group": "Bayesian & statistics", "expansion": "No-U-Turn Sampler", "note": "Adaptive HMC." },
-    { "term": "LLLA",  "group": "Bayesian & statistics", "expansion": "Last-Layer Laplace Approximation", "note": "The closed-form fast path." },
-    { "term": "MaxEnt","group": "Bayesian & statistics", "expansion": "Maximum Entropy" },
-    { "term": "NLL",   "group": "Bayesian & statistics", "expansion": "Negative Log-Likelihood" },
-    { "term": "RMSE",  "group": "Bayesian & statistics", "expansion": "Root-Mean-Square Error" },
-    { "term": "PCA / fPCA", "group": "Bayesian & statistics", "expansion": "(functional) Principal Component Analysis" },
-
-    { "term": "C0–C3", "group": "Data & benchmarks", "expansion": "Calibration tiers", "note": "Analytic ground-truth datasets scored against in CI." },
-    { "term": "D4",    "group": "Data & benchmarks", "expansion": "Dataset tier 4", "note": "The benchmarked tier (FAIR Universe HiggsML)." },
-    { "term": "FAIR Universe HiggsML", "group": "Data & benchmarks", "expansion": "", "note": "NeurIPS 2024 Higgs machine-learning uncertainty-quantification challenge dataset." },
-    { "term": "UCI",   "group": "Data & benchmarks", "expansion": "University of California, Irvine", "note": "Its machine-learning dataset repository." },
-
-    { "term": "API",   "group": "Software & protocols", "expansion": "Application Programming Interface" },
-    { "term": "CI",    "group": "Software & protocols", "expansion": "Continuous Integration", "note": "Automated checks run on every push." },
-    { "term": "MCP",   "group": "Software & protocols", "expansion": "Model Context Protocol" },
-    { "term": "LLM",   "group": "Software & protocols", "expansion": "Large Language Model" },
-    { "term": "JAX / XLA", "group": "Software & protocols", "expansion": "Accelerated array + linear-algebra libraries", "note": "NumPyro's backend." },
-    { "term": "JSON / JSONL", "group": "Software & protocols", "expansion": "JavaScript Object Notation / JSON Lines", "note": "JSONL: one object per line." },
-    { "term": "SQLite","group": "Software & protocols", "expansion": "", "note": "Lightweight embedded SQL database." },
-    { "term": "TLS",   "group": "Software & protocols", "expansion": "Transport Layer Security", "note": "HTTPS encryption." },
-    { "term": "ID",    "group": "Software & protocols", "expansion": "Identifier", "note": "e.g. job ID." },
-    { "term": "UI / UX", "group": "Software & protocols", "expansion": "User Interface / User Experience" },
-
-    { "term": "CPU",   "group": "Hardware & resources", "expansion": "Central Processing Unit" },
-    { "term": "GPU",   "group": "Hardware & resources", "expansion": "Graphics Processing Unit" },
-    { "term": "RAM",   "group": "Hardware & resources", "expansion": "Random-Access Memory" },
-    { "term": "GB",    "group": "Hardware & resources", "expansion": "Gigabyte" },
-    { "term": "RSS",   "group": "Hardware & resources", "expansion": "Resident Set Size", "note": "True process memory footprint." },
-
-    { "term": "MSVtx", "group": "Physics & ATLAS", "expansion": "Muon-Spectrometer Vertices", "note": "The ATLAS long-lived-particle analysis." }
+    {
+      "term": "FORGE",
+      "group": "Project & process",
+      "expansion": "Functional-posterior Observatory for Refinement and Geometric Exploration"
+    },
+    {
+      "term": "MVP",
+      "group": "Project & process",
+      "expansion": "Minimum Viable Product"
+    },
+    {
+      "term": "PoC",
+      "group": "Project & process",
+      "expansion": "Proof of Concept"
+    },
+    {
+      "term": "H1 / H2 / H3",
+      "group": "Project & process",
+      "expansion": "The three project hypotheses",
+      "note": "Visualization fidelity; sampler correctness/efficiency; hyperparameter → posterior-geometry (the keystone)."
+    },
+    {
+      "term": "BNN",
+      "group": "Bayesian & statistics",
+      "expansion": "Bayesian Neural Network"
+    },
+    {
+      "term": "HMC",
+      "group": "Bayesian & statistics",
+      "expansion": "Hamiltonian Monte Carlo",
+      "note": "Gradient-based MCMC for drawing samples from a posterior over weights."
+    },
+    {
+      "term": "NUTS",
+      "group": "Bayesian & statistics",
+      "expansion": "No-U-Turn Sampler",
+      "note": "Adaptive HMC."
+    },
+    {
+      "term": "LLLA",
+      "group": "Bayesian & statistics",
+      "expansion": "Last-Layer Laplace Approximation",
+      "note": "The closed-form fast path."
+    },
+    {
+      "term": "MaxEnt",
+      "group": "Bayesian & statistics",
+      "expansion": "Maximum Entropy"
+    },
+    {
+      "term": "NLL",
+      "group": "Bayesian & statistics",
+      "expansion": "Negative Log-Likelihood"
+    },
+    {
+      "term": "RMSE",
+      "group": "Bayesian & statistics",
+      "expansion": "Root-Mean-Square Error"
+    },
+    {
+      "term": "PCA / fPCA",
+      "group": "Bayesian & statistics",
+      "expansion": "(functional) Principal Component Analysis"
+    },
+    {
+      "term": "C0–C3",
+      "group": "Data & benchmarks",
+      "expansion": "Calibration tiers",
+      "note": "Analytic ground-truth datasets scored against in CI."
+    },
+    {
+      "term": "D4",
+      "group": "Data & benchmarks",
+      "expansion": "Dataset tier 4",
+      "note": "The benchmarked tier (FAIR Universe HiggsML)."
+    },
+    {
+      "term": "FAIR Universe HiggsML",
+      "group": "Data & benchmarks",
+      "expansion": "",
+      "note": "NeurIPS 2024 Higgs machine-learning uncertainty-quantification challenge dataset."
+    },
+    {
+      "term": "UCI",
+      "group": "Data & benchmarks",
+      "expansion": "University of California, Irvine",
+      "note": "Its machine-learning dataset repository."
+    },
+    {
+      "term": "API",
+      "group": "Software & protocols",
+      "expansion": "Application Programming Interface"
+    },
+    {
+      "term": "CI",
+      "group": "Software & protocols",
+      "expansion": "Continuous Integration",
+      "note": "Automated checks run on every push."
+    },
+    {
+      "term": "MCP",
+      "group": "Software & protocols",
+      "expansion": "Model Context Protocol"
+    },
+    {
+      "term": "LLM",
+      "group": "Software & protocols",
+      "expansion": "Large Language Model"
+    },
+    {
+      "term": "JAX / XLA",
+      "group": "Software & protocols",
+      "expansion": "Accelerated array + linear-algebra libraries",
+      "note": "NumPyro's backend."
+    },
+    {
+      "term": "JSON / JSONL",
+      "group": "Software & protocols",
+      "expansion": "JavaScript Object Notation / JSON Lines",
+      "note": "JSONL: one object per line."
+    },
+    {
+      "term": "SQLite",
+      "group": "Software & protocols",
+      "expansion": "",
+      "note": "Lightweight embedded SQL database."
+    },
+    {
+      "term": "TLS",
+      "group": "Software & protocols",
+      "expansion": "Transport Layer Security",
+      "note": "HTTPS encryption."
+    },
+    {
+      "term": "ID",
+      "group": "Software & protocols",
+      "expansion": "Identifier",
+      "note": "e.g. job ID."
+    },
+    {
+      "term": "UI / UX",
+      "group": "Software & protocols",
+      "expansion": "User Interface / User Experience"
+    },
+    {
+      "term": "CPU",
+      "group": "Hardware & resources",
+      "expansion": "Central Processing Unit"
+    },
+    {
+      "term": "GPU",
+      "group": "Hardware & resources",
+      "expansion": "Graphics Processing Unit"
+    },
+    {
+      "term": "RAM",
+      "group": "Hardware & resources",
+      "expansion": "Random-Access Memory"
+    },
+    {
+      "term": "GB",
+      "group": "Hardware & resources",
+      "expansion": "Gigabyte"
+    },
+    {
+      "term": "RSS",
+      "group": "Hardware & resources",
+      "expansion": "Resident Set Size",
+      "note": "True process memory footprint."
+    },
+    {
+      "term": "MSVtx",
+      "group": "Physics & ATLAS",
+      "expansion": "Muon-Spectrometer Vertices",
+      "note": "The ATLAS long-lived-particle analysis."
+    },
+    {
+      "term": "RRM",
+      "group": "Bayesian & statistics",
+      "expansion": "Reliability-Refinement Metric",
+      "note": "1 − ‖v‖ over a penalty vector v = [1−A, s, U] (accuracy shortfall, fold-instability, epistemic spread); lower ‖v‖ = more reliable. RRM_w is the simplex-weighted generalization."
+    },
+    {
+      "term": "GGN",
+      "group": "Bayesian & statistics",
+      "expansion": "Generalized Gauss-Newton",
+      "note": "Positive-semidefinite curvature/precision matrix of the last layer; its eigenbasis (U, λ) is what LLLA uses to form the posterior and the eigenspectrum."
+    },
+    {
+      "term": "γ (data-information fraction)",
+      "group": "Bayesian & statistics",
+      "expansion": "γ = λ / (λ + τ) ∈ [0,1]",
+      "note": "Per eigen-direction, the continuous fraction of the way from prior (0) to data-determined (1). Σγ = effective dimension; the graded replacement for the binary λ>τ cut."
+    },
+    {
+      "term": "PICP",
+      "group": "Bayesian & statistics",
+      "expansion": "Prediction Interval Coverage Probability",
+      "note": "Fraction of held-out truths that fall inside the predicted 95% credible band; ≈0.95 = calibrated."
+    },
+    {
+      "term": "CRPS",
+      "group": "Bayesian & statistics",
+      "expansion": "Continuous Ranked Probability Score",
+      "note": "Proper scoring rule for a probabilistic prediction — rewards sharpness subject to calibration."
+    },
+    {
+      "term": "Pareto front",
+      "group": "Bayesian & statistics",
+      "expansion": "Non-dominated set in a multi-objective tradeoff",
+      "note": "In FORGE's Optimization Frontier: backbones plotted in accuracy-gap vs uncertainty; dominated models are arrowed toward the front (their optimization room)."
+    },
+    {
+      "term": "EMD",
+      "group": "Data & benchmarks",
+      "expansion": "Earth Mover's Distance (Wasserstein-1)",
+      "note": "The phonon mk2 loss — compares two DOS spectra by mass transport rather than bin-wise error; the headline backbone for the phonon reproduction."
+    },
+    {
+      "term": "DOS",
+      "group": "Physics & ATLAS",
+      "expansion": "(Phonon) Density of States",
+      "note": "The 51-bin phonon spectrum FORGE's phonon model regresses (Chen et al. 2021, E(3)-equivariant reproduction)."
+    }
   ]
 }
