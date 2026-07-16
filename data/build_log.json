@@ -1,589 +1,607 @@
 {
-  "_comment": "Build Log — living per-project documentation. Edit as each project is built; the panel (panels/build_log.html) re-renders from this file. Schema per project: id, name, week, status(done|in_progress|planned|slipped), headline, metrics[{label,value}], entries[{date,title,status,detail,refs[{label,kind(commit|file|run|link),href}]}], decisions[{title,detail}]. Newest entries first.",
-  "updated": "2026-07-03",
-  "projects": [
+ "_comment": "Build Log — living per-project documentation. Edit as each project is built; the panel (panels/build_log.html) re-renders from this file. Schema per project: id, name, week, status(done|in_progress|planned|slipped), headline, metrics[{label,value}], entries[{date,title,status,detail,refs[{label,kind(commit|file|run|link),href}]}], decisions[{title,detail}]. Newest entries first.",
+ "updated": "2026-07-16",
+ "projects": [
+  {
+   "id": "genre",
+   "name": "Music Genre — BEARDOWN",
+   "week": "W5",
+   "status": "in_progress",
+   "headline": "Genre family mk1→mk2→mk2.5→mk3 complete. mk3 (3-sec clips, ×10 rows) lands voted-to-track 0.807 — +4.7 over mk2 (apples-to-apples). The mk2.5 finding REPRODUCED at scale: every reliability axis is flat as a test-rank predictor (U −0.10, RRM_w +0.10), accuracy (+0.43) the only signal. Effective-N ≈1.4× (ICC 0.68) predicted the dead U before the run; batch_refit confirmed it. FORGE multi-model integration next.",
+   "metrics": [
     {
-      "id": "genre",
-      "name": "Music Genre — BEARDOWN",
-      "week": "W5",
-      "status": "in_progress",
-      "headline": "Genre family mk1→mk2→mk2.5→mk3 complete. mk3 (3-sec clips, ×10 rows) lands voted-to-track 0.807 — +4.7 over mk2 (apples-to-apples). The mk2.5 finding REPRODUCED at scale: every reliability axis is flat as a test-rank predictor (U −0.10, RRM_w +0.10), accuracy (+0.43) the only signal. Effective-N ≈1.4× (ICC 0.68) predicted the dead U before the run; batch_refit confirmed it. FORGE multi-model integration next.",
-      "metrics": [
-        {
-          "label": "mk1 val / test",
-          "value": "0.747 / 0.700"
-        },
-        {
-          "label": "mk2 (cfg 17) val / test",
-          "value": "0.793 / 0.760  (per-track)"
-        },
-        {
-          "label": "mk3 voted-to-track",
-          "value": "0.807 acc / 0.807 macro-F1  (+4.7 vs mk2)"
-        },
-        {
-          "label": "mk3 per-segment",
-          "value": "0.789 acc / 0.788 macro-F1  (vote gain +0.018)"
-        },
-        {
-          "label": "mk3 data",
-          "value": "3-sec fused3 · 9,990 seg → 6,992/1,498/1,500 · same tracks as mk1/mk2"
-        },
-        {
-          "label": "metric ↔ test (Spearman, ×10 data)",
-          "value": "accuracy +0.43 · RRM +0.14 · −s +0.13 · RRM_w +0.10 · −U −0.10"
-        },
-        {
-          "label": "effective-N",
-          "value": "≈1.4× (ICC 0.681, design-effect 7.12) — U could not move"
-        }
-      ],
-      "entries": [
-        {
-          "date": "2026-06-23",
-          "title": "mk3 metric validation (×10 data) — RRM & U still flat: mk2.5 reproduced",
-          "status": "done",
-          "detail": "Firewalled study on the 3-sec sweep: refit all 20 configs on full-train, recorded TEST (selection stayed CV-only). Spearman rank-agreement with TEST accuracy — CV accuracy +0.429 (the only predictor, though weaker than mk2.5's +0.685 as more correlated rows noise-up every CV estimate), RRM +0.139, fold-stability −s +0.130, RRM_w +0.099, epistemic −U −0.095. Ten times the rows did NOT revive the epistemic axis. Mechanism, predicted BEFORE the run: within-track segment correlation (ICC 0.681) gives a design-effect 7.12, so 6,992 segments are worth ≈982 independent-equivalent — the last-layer σ tightens by only √(982/700)≈18%, inside the noise. The central negative result now holds on a SECOND dataset at an order of magnitude more rows. Three configs tie for best TEST 0.789 (incl. cfg 17, the accuracy-best RRM buried at 16/20).",
-          "refs": [
-            {
-              "label": "batch_refit.py",
-              "kind": "file",
-              "href": "projects/genre/src/batch_refit.py"
-            },
-            {
-              "label": "batch_test.json",
-              "kind": "run",
-              "href": "projects/genre/runs/beardown_3sec/20260623-015344/batch_test.json"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-23",
-          "title": "mk3 voted-to-track 0.807 — +4.7 over mk2 (apples-to-apples)",
-          "status": "done",
-          "detail": "The sweep reports PER-SEGMENT accuracy (one row per 3-sec clip); mk1/mk2 reported PER-TRACK. Not comparable. vote_eval collapses a track's ~10 segment predictions by prob-sum majority → one prediction per song. Deployed cfg 19: per-segment 0.789 / macro-F1 0.788 → voted-to-track 0.807 / macro-F1 0.807, vote gain +0.018 (the denoising of ambiguous clips). Per-track 0.807 vs mk2's 0.760 = +4.7. macro-F1 ≈ accuracy → no genre sacrificed; classical 1.00, pop/country/rock 0.667 = the stable GTZAN confusion cluster (same genres that capped mk2). The +4.7 is real but bounded — exactly the ≈1.4× effective-N story, not the ×10 the row count suggests.",
-          "refs": [
-            {
-              "label": "vote_eval.py",
-              "kind": "file",
-              "href": "projects/genre/src/vote_eval.py"
-            },
-            {
-              "label": "vote_eval.json",
-              "kind": "run",
-              "href": "projects/genre/models/beardown_3sec/vote_eval.json"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-23",
-          "title": "mk3 RRM sweep — 20-config reliability sweep on 3-sec fused3 (GPU)",
-          "status": "done",
-          "detail": "Same engine, search space, and selection as the mk2 sweep — only the DATA changed (controlled experiment: data density is the single variable). 20 configs, 3-fold GroupKFold-by-track. RRM winner = cfg 19 (A 0.778); accuracy-best = cfg 17 (A 0.800 — the mk2 deployed architecture, img768/tab256/concat). r(A,RRM) = −0.067: RRM again uncorrelated with accuracy, driven −0.88 by the fold-instability penalty s, and it buried the accuracy-best cfg 17 at rank 16/20. Deployed cfg 19 refit → VAL 0.776 / TEST 0.789 (per-segment), acceptance PASS (val≥0.75), φ-dim 384.",
-          "refs": [
-            {
-              "label": "beardown_3sec.yaml",
-              "kind": "file",
-              "href": "projects/genre/configs/beardown_3sec.yaml"
-            },
-            {
-              "label": "sweep.json",
-              "kind": "run",
-              "href": "projects/genre/runs/beardown_3sec/20260623-015344/sweep.json"
-            },
-            {
-              "label": "beardown_3sec bundle",
-              "kind": "file",
-              "href": "projects/genre/models/beardown_3sec/"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-23",
-          "title": "GPU switch — CPU→CUDA, one-line torch reinstall (simple + worthwhile)",
-          "status": "done",
-          "detail": "The 3-sec sweep (6,992 train segments × 3 folds × 20 configs) was crawling on CPU — minutes per config. The RTX 4070 SUPER (12 GB) was present, but the installed torch was a CPU-only build (torch.cuda.is_available() → False). One-line fix: pip install torch --index-url https://download.pytorch.org/whl/cu124 → torch 2.6.0+cu124, CUDA visible (the driver's CUDA 13.2 is the max it supports, not what you install — a cu124 wheel runs forward-compatibly). No code change: train.py / sweep.py / batch_refit.py were already --device-flagged. Result: full-train refit 36 s (from a multi-minute CPU crawl); full 20-config sweep ≈26 min; batch_refit ≈10 min. The cheapest high-leverage move of the week — the canonical 'do this first on any torch box' note.",
-          "refs": [
-            {
-              "label": "PyTorch CUDA install",
-              "kind": "link",
-              "href": "https://pytorch.org/get-started/locally/"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-23",
-          "title": "mk3 data path — leakage-safe 3-sec fused3, verified torch-free",
-          "status": "done",
-          "detail": "New _load_fused3: each 3-sec tabular segment is joined MANY-TO-ONE to its parent track's single mel spectrogram (no spectrogram cutting — the image is track-level). Split is on TRACK ids via stratified seed 42, the SAME partition as mk1/mk2, so segments inherit their parent's split and data density is the only variable. 9,990 segments → 6,992/1,498/1,500. The existing 30-sec _load_fused is byte-untouched (mk1/mk2 numbers can't move); fused3 is dual-input like fused, so LLLA/HMC/bundle attach unchanged. verify_mk3 (7 checks) + sanity_check confirm: dual-input contract, many-to-one join (9.99 seg/track share one image), 0 tracks straddle (a naive segment split would leak 97.1% of tracks — Sturm 2013), scaler fit on train segments only, 57 named axes intact. All pure-numpy — ran and passed BEFORE any GPU time.",
-          "refs": [
-            {
-              "label": "dataio.py",
-              "kind": "file",
-              "href": "projects/genre/src/dataio.py"
-            },
-            {
-              "label": "verify_mk3.py",
-              "kind": "file",
-              "href": "projects/genre/src/verify_mk3.py"
-            },
-            {
-              "label": "beardown_3sec.yaml",
-              "kind": "file",
-              "href": "projects/genre/configs/beardown_3sec.yaml"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-23",
-          "title": "Input-feature attribution wired — bundle self-describes (rung 2)",
-          "status": "done",
-          "detail": "attribution.py: the LLLA epistemic scale v(φ;τ) pushed back onto NAMED inputs. Closed form dv/dφ = 2(H+τI)⁻¹φ (verified vs finite-difference to 1.6e-9), chained with ONE backbone vector-Jacobian product → per-feature epistemic sensitivity dv/dx; τ factors out, so a cached M lets FORGE recompute live for any τ (identity verified exact across τ). write_bundle now emits inputs.json (the 57 named axes) + bundle.json (a capabilities list that gates the FORGE attribution tab). 6/6 torch-free tests pass. This names what INFO 510 Table A3 could only rank anonymously. The torch precompute (dφ/dx) runs once on the GPU box; FORGE then serves static numpy — the ggn_eig.npz pattern.",
-          "refs": [
-            {
-              "label": "attribution.py",
-              "kind": "file",
-              "href": "projects/genre/src/attribution.py"
-            },
-            {
-              "label": "test_attribution.py",
-              "kind": "file",
-              "href": "projects/genre/src/test_attribution.py"
-            },
-            {
-              "label": "FORGE attribution spec",
-              "kind": "file",
-              "href": "FORGE_input_feature_attribution_SPEC.txt"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-22",
-          "title": "mk2.5 metric validation — RRM falsified, honestly (the finding)",
-          "status": "done",
-          "detail": "Firewalled study: refit all 20 configs on full-train, recorded test (selection stayed CV-only). Spearman rank-agreement with TEST accuracy — CV accuracy +0.685, but RRM_w −0.002, equal-weight RRM −0.022, fold-stability −0.008, epistemic U −0.028: every reliability axis is noise as a test-rank predictor. Mechanism: post-hoc LLLA on a frozen DET head gives a near-constant U (0.0258–0.0343), and s is test-uncorrelated. A precise negative result — refines, not refutes, INFO 510 (their RRM used TRAINED Bayesian heads where U varied). Boundary condition: RRM earns its keep only when the reliability axes are both variable AND test-predictive.",
-          "refs": [
-            {
-              "label": "batch_refit.py",
-              "kind": "file",
-              "href": "projects/genre/src/batch_refit.py"
-            },
-            {
-              "label": "batch_test.json",
-              "kind": "run",
-              "href": "projects/genre/runs/beardown_rrm/20260622-185237/batch_test.json"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-22",
-          "title": "mk2.5 — Dirichlet / variance re-selection lens (no new model)",
-          "status": "done",
-          "detail": "Generalized RRM to a simplex weighting: RRM_w = 1−√(Σ wᵢ vᵢ²), w∈Δ²; the locked equal-weight metric is the centroid. Variance-derived w=(0.008,0.926,0.067) zeroes the uninformative U axis on principle → selects cfg 17. Dirichlet sweep (200k uniform-simplex draws): cfg 17 49.5%, cfg 12 48.2%, rest <2% — two robust contenders, choice is weighting-dependent (the only region favoring cfg 12 weights the flat U axis). A selection LENS over sweep.json — no model, no bundle, no FORGE/attribution impact.",
-          "refs": [
-            {
-              "label": "reselect.py",
-              "kind": "file",
-              "href": "projects/genre/src/reselect.py"
-            },
-            {
-              "label": "rrm.py",
-              "kind": "file",
-              "href": "projects/genre/src/rrm.py"
-            },
-            {
-              "label": "reselect.json",
-              "kind": "run",
-              "href": "projects/genre/runs/beardown_rrm/20260622-185237/reselect.json"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-22",
-          "title": "mk2 locked = cfg 17 — first acceptance PASS, beats mk1 +6 test",
-          "status": "done",
-          "detail": "Deployed the variance-weighted RRM_w winner: cfg 17 (img768 / tab256 / concat / adam / lr 2.4e-4 / do 0.21,0.17 / ep75, φ-dim 768). Refit on full-train → VAL 0.793 / TEST 0.760 / test macro-F1 0.760, first acceptance PASS (val≥0.75) and clears the paper's 0.766 val band. The macro-F1 jump (0.686→0.760) is on the WEAK genres — a better-balanced classifier, not a luckier one. Equal-weight RRM's nominal winner was cfg 12 (kept as documented contrast); cfg 12 wins ONLY on the flat U axis, so it loses once U is correctly down-weighted. Round-trip OK, max|Δ|=0 — FORGE wraps it unchanged.",
-          "refs": [
-            {
-              "label": "promote_cfg.py",
-              "kind": "file",
-              "href": "projects/genre/src/promote_cfg.py"
-            },
-            {
-              "label": "beardown_rrm (cfg 17)",
-              "kind": "file",
-              "href": "projects/genre/models/beardown_rrm/"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-22",
-          "title": "mk2 sweep — 20-config RRM-selected reliability sweep",
-          "status": "done",
-          "detail": "Built sweep.py (reuses train.py + llla.py): 20 configs × 3-fold GroupKFold-by-track, each scored on a 4-axis catalogue (accuracy A, fold-σ s, LLLA epistemic U at shared-α τ, off-diagonal rate) + RAM / Pareto / Pearson / dCor. The Bayesian layer is post-hoc LLLA over the frozen det head — the SAME object FORGE serves (selection-U == display-U). Ran clean on CPU (~54 min); catalogue persisted to sweep.json.",
-          "refs": [
-            {
-              "label": "sweep.py",
-              "kind": "file",
-              "href": "projects/genre/src/sweep.py"
-            },
-            {
-              "label": "beardown_rrm.yaml",
-              "kind": "file",
-              "href": "projects/genre/configs/beardown_rrm.yaml"
-            },
-            {
-              "label": "sweep.json",
-              "kind": "run",
-              "href": "projects/genre/runs/beardown_rrm/20260622-185237/sweep.json"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-21",
-          "title": "Input-feature attribution — specced + verified-amenable",
-          "status": "planned",
-          "detail": "Locked the design (FORGE_input_feature_attribution_SPEC.txt): push LLLA σ back through the frozen backbone, ∂σ/∂x = (∂σ/∂φ)·(∂φ/∂x), to NAME which input feature drives a prediction's epistemic uncertainty — the latent features INFO 510 Table A3 could only rank anonymously. Verified against the live bundle: scaler.json carries all 57 named axes + mean/std, arch.json+weights.pt rebuild the frozen backbone — so attribution runs on mk1, cfg 17 and future mk3 with ZERO re-bundling. Ships via precompute-and-cache (mirrors ggn_eig), tabular branch first.",
-          "refs": [
-            {
-              "label": "attribution SPEC",
-              "kind": "file",
-              "href": "projects/genre/FORGE_input_feature_attribution_SPEC.txt"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-20",
-          "title": "Bayesian layer live — LLLA over the frozen head",
-          "status": "done",
-          "detail": "Last-layer Laplace (closed form from the cached GGN eigenbasis) over the frozen det head: the 0.714 point estimate becomes a decomposable posterior with a live τ-knob. This is the object mk2's RRM selects on AND the object FORGE displays — one llla.py call, two consumers.",
-          "refs": [
-            {
-              "label": "llla.py",
-              "kind": "file",
-              "href": "projects/genre/src/bayes/llla.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-19",
-          "title": "ML usage / cost estimator built",
-          "status": "done",
-          "detail": "_shared/usage.py turns every compute.json into energy / carbon / $ with measured-vs-modeled tags, an actual-power hook (RAPL / nvidia-smi), a suite roll-up, and a pre-run projection. Assumptions live in an override YAML for real rates IRL.",
-          "refs": [
-            {
-              "label": "usage.py",
-              "kind": "file",
-              "href": "_shared/usage.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-19",
-          "title": "Song drop-in inference verified (wav + mp3)",
-          "status": "done",
-          "detail": "End-to-end: drop audio → 30-s windows → clean mel + 57 features → per-genre scores with MC-dropout σ. load_audio hardened (soundfile → librosa fallback → clear error, no silent skip). Works because train + inference now share one mel recipe (validate r=1.0).",
-          "refs": [
-            {
-              "label": "predict.py",
-              "kind": "file",
-              "href": "projects/genre/src/predict.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-19",
-          "title": "Backbone frozen: clean-128 / batch-8, CV 0.714",
-          "status": "done",
-          "detail": "Batch 32→8 lifted CV 0.629→0.714 (+0.086). The frozen deterministic backbone the Bayesian head attaches to. 6× cheaper to train than the original 224 dirty pipeline and the only variant that does real-audio drop-in correctly.",
-          "refs": [
-            {
-              "label": "beardown.yaml",
-              "kind": "file",
-              "href": "projects/genre/configs/beardown.yaml"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-19",
-          "title": "Gap diagnosis complete — every cheap hypothesis ruled out",
-          "status": "done",
-          "detail": "Early stopping, epochs, representation, split, and resolution all tested and eliminated as the cause of the 0.07 gap to 0.766. Lever was batch size; residual is framework (Keras vs PyTorch) + run variance. Faithful, documented reproduction.",
-          "refs": []
-        },
-        {
-          "date": "2026-06-18",
-          "title": "Clean log-mel regeneration (silent-failure fix)",
-          "status": "done",
-          "detail": "Kaggle grey PNGs are colormapped matplotlib figures — luminance non-monotonic in mel energy, so a dropped song scored noise. Regenerated all spectrograms from audio with one recipe → train + inference share extract_mel → validate passes by construction.",
-          "refs": [
-            {
-              "label": "build_spectrograms.py",
-              "kind": "file",
-              "href": "projects/genre/eda/build_spectrograms.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-17",
-          "title": "Architecture vetted against the public INFO_510 repo",
-          "status": "done",
-          "detail": "Confirmed cfg_14: 57 features (length dropped), gated fusion, deterministic head, dense 512/192, lr 7.37e-5, adam, 75 epochs. The winning head was already det — so the FORGE det-backbone + LLLA reproduction is bit-faithful with zero mechanism mismatch.",
-          "refs": [
-            {
-              "label": "INFO_510 repo",
-              "kind": "link",
-              "href": "https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj"
-            }
-          ]
-        }
-      ],
-      "decisions": [
-        {
-          "title": "mk2 = cfg 17, selected by variance-weighted RRM_w (CV-only)",
-          "detail": "Deploy the accuracy-strong + stable config; the only metric-region favoring the equal-weight winner (cfg 12) weights the flat, test-uncorrelated U axis. Selection never saw test (firewall)."
-        },
-        {
-          "title": "RRM falsified honestly — the negative result IS the contribution",
-          "detail": "On a frozen-det head, neither reliability axis predicts test rank (RRM_w ρ=−0.00, accuracy ρ=+0.69). Built the apparatus to falsify our own metric, ran it, reported it. Refines INFO 510's boundary, doesn't refute it."
-        },
-        {
-          "title": "Keep BOTH bundles as the result",
-          "detail": "beardown_rrm (=cfg 17, deployed) and beardown_rrm_cfg12 (=equal-weight winner). The comparison between them is the mk2.5 finding."
-        },
-        {
-          "title": "mk3 = beardown_3sec, motivated not guessed",
-          "detail": "mk2.5's mechanism (flat U) hands mk3 a hypothesis: does ×10 data (3-sec clips) make U vary again and revive RRM_w's validity? Needs a leakage-safe cutter (track-grouped split)."
-        },
-        {
-          "title": "Batch size was the lever (+0.086 CV)",
-          "detail": "32→8 lifted CV 0.629→0.714. Smaller batch = gradient-noise regularization on small data. Batch 8 is also the BatchNorm floor for this net and matches cfg_14."
-        },
-        {
-          "title": "224 resolution ruled out",
-          "detail": "Dirty-224 scored CV 0.629 — erased the batch-8 gain at 6× the compute and 3× the memory. Resolution is not the lever."
-        },
-        {
-          "title": "Clean log-mel over dirty Kaggle grey",
-          "detail": "Clean mels score ≥ dirty AND are the only representation reproducible at inference from a dropped wav. A deliberate, documented improvement over the original pipeline."
-        },
-        {
-          "title": "Split is not the gap",
-          "detail": "BEARDOWN's seed-42 stratified split scored ≈ our track split (0.673 vs 0.70) — ruling out an unlucky-draw explanation for the gap."
-        },
-        {
-          "title": "Freeze, don't chase 0.766",
-          "detail": "The wall at ~0.71 is precisely FORGE's motivating example: accuracy-only selection stalls and says nothing about trust. The Bayesian layer is the answer, not more tuning."
-        },
-        {
-          "title": "mk3 = 3-sec tab ⨝ 30-sec image (many-to-one), not a re-render",
-          "detail": "A true per-segment 3-sec image would need re-rendering from the wavs. The effective-N analysis showed it isn't worth it for the U-question: the last-layer posterior conditions on φ, which already diversifies ≈10× through the tabular half under many-to-one, while within-track image correlation caps the marginal gain of distinct 3-sec images at ≈2–3×. Many-to-one runs today with zero re-render and is the cfg-17 architecture on 10× rows — the controlled data-density test."
-        },
-        {
-          "title": "GPU was the iteration lever (simple + worthwhile)",
-          "detail": "One-line cu124 torch reinstall took the sweep from a CPU crawl to 36 s/refit. No code change — the pipeline was already device-flagged. Recorded as the canonical first move on any torch box; the driver's max-CUDA number is not the wheel you install."
-        },
-        {
-          "title": "Deployed cfg 19 (RRM winner); cfg 17 is the accuracy-best contender",
-          "detail": "The sweep auto-deployed its RRM winner, cfg 19 (voted-to-track 0.807). But cfg 17 is accuracy-best (A 0.800) and TIES for best held-out TEST (0.789) — and it is the config RRM buried at 16/20. Recommendation on the record: promote cfg 17 as the mk3 headline and keep cfg 19 as the labeled RRM-winner contrast, mirroring mk2's cfg17-vs-cfg12 pairing so the selection pathology is visible in FORGE. (cfg 17 promote pending.)"
-        },
-        {
-          "title": "U did not revive at ×10 data — predicted, then measured",
-          "detail": "Effective-N ≈1.4× (ICC 0.681) predicted the last-layer σ would tighten only ~18%, too little to move the epistemic axis; batch_refit confirmed −U Spearman −0.095. The mk2.5 boundary condition holds at scale: reliability axes need a TRAINED Bayesian head (INFO 510), not post-hoc LLLA on a frozen DET head. This refines, does not refute, the source paper — now on two datasets."
-        }
-      ]
+     "label": "mk1 val / test",
+     "value": "0.747 / 0.700"
     },
     {
-      "id": "phonon",
-      "name": "Phonon DOS",
-      "week": "W6",
-      "status": "in_progress",
-      "headline": "Phonon DOS (51-bin regression, Chen et al. 2021 E(3)-equivariant reproduction) wrapped by the full FORGE posterior observatory — the genre template applied to a regression head and driven to a working full-stack dashboard. LLLA manufactures a last-layer posterior over every frozen backbone (mk1 e3nn_repro / mk2 EMD / mk3 js), the τ-knob + HMC gold-standard run live in-browser + server-side, and the verdict is now a continuous data-limited confidence (γ = λ/(λ+τ)) rather than a binary. Real ATLAS model work proceeds in parallel (W6).",
-      "metrics": [
-        {
-          "label": "backbones wrapped",
-          "value": "mk1 e3nn_repro · mk2 EMD · mk3 js (all FORGE-wrapped)"
-        },
-        {
-          "label": "LLLA intercept fix",
-          "value": "DOS baseline centering → R² −27 → 0.95 (template/demo bundle)"
-        },
-        {
-          "label": "observatory components",
-          "value": "posterior · τ-sweep · data-frac · HMC · attribution · last-layer model · optimization frontier"
-        },
-        {
-          "label": "HMC",
-          "value": "full-stack Flask /api/forge/hmc — fire-button, samples predicted-DOS, overlays Laplace"
-        },
-        {
-          "label": "data tiers",
-          "value": "live server → computed static payloads → demo seed (source-badged)"
-        },
-        {
-          "label": "scheduled",
-          "value": "W5–W6 (Jun 22 – Jul 3)"
-        }
-      ],
-      "entries": [
-        {
-          "date": "2026-07-03",
-          "title": "HMC made full-stack + the visualization that gives the Gaussians meaning",
-          "status": "done",
-          "detail": "Wired the FIRE HMC VALIDATION button to a real server-side sampler (Flask GET /api/forge/hmc → forge.hmc_run), with a synthetic-bundle fallback so the full-stack path runs out of the box before real bundles exist. hmc_run projects the sampled last-layer weights onto a probe crystal to give the predicted DOS intensity at a frequency — a readable scalar — and returns the chain trace + sample histogram + the analytic Laplace N(mean,σ) for the same quantity. The UI fires → shows a sampling/progress animation → renders per-bin cards: chain-trace plot (draw-in) + histogram with the Laplace Gaussian overlaid. That overlay is the point: it turns the abstract weight-Gaussians into 'does our fast approximation match the gold standard?' — verdict GOOD when they line up. This is the ATLAS HMC-check pattern reused.",
-          "refs": [
-            {
-              "label": "forge.py (hmc_run)",
-              "kind": "file",
-              "href": "projects/phonon/src/bayes/forge.py"
-            },
-            {
-              "label": "server.py (/api/forge/hmc)",
-              "kind": "file",
-              "href": "projects/phonon/app/server.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-07-02",
-          "title": "Last-Layer Model panel — the head as W-map + full posterior, with a click-to-inspect Gaussian",
-          "status": "done",
-          "detail": "A concrete model of the exact object LLLA Bayes-ifies: the linear head W(32→51) as a heatmap (MEAN), a σ-heatmap (UNCERTAINTY), and an ALL-POSTERIORS bell grid drawing every one of the 1,632 weights as its N(mean,σ). Click any cell → a large, real prior N(0,σ₀) vs posterior N(mean,σ) overlay (σ₀=√(σ²_k/τ), σ=√(σ²_k·featⱼ)), so you watch the data pull a weight off the prior. Carries the honest caveat on-panel: LLLA models ONLY the last layer (backbone φ frozen), so a Deep Ensemble / subnetwork Laplace is what would add feature uncertainty. All τ-reactive, recomputed in-browser from the shipped eigenbasis (U, λ, σ²).",
-          "refs": [
-            {
-              "label": "forge_dashboard.py (ships W, U)",
-              "kind": "file",
-              "href": "projects/phonon/src/bayes/forge_dashboard.py"
-            },
-            {
-              "label": "forge.html (Last-Layer Model)",
-              "kind": "file",
-              "href": "projects/phonon/app/templates/forge.html"
-            }
-          ]
-        },
-        {
-          "date": "2026-07-02",
-          "title": "Continuous verdict — data-limited as a confidence %, not a yes/no",
-          "status": "done",
-          "detail": "Replaced the binary DATA-LIMITED / CAPACITY-LIMITED headline with a graded readout. Each eigen-direction's data-information fraction γ = λ/(λ+τ) ∈ [0,1] is the continuous version of the old λ>τ cut; the verdict % = 1 − eff_dim/d (mean prior-mass). Shown as a spectrum bar with a marker plus four %-confidence gauges — capacity utilization (eff_dim/d), posterior fidelity (Laplace-vs-HMC), epistemic saturation (data-frac), calibration (PICP vs 95%). The eigenspectrum now colours by γ (amber prior → cyan data) instead of a hard two-colour split. All derived from quantities already in the payload, so it works in every data tier.",
-          "refs": [
-            {
-              "label": "forge.html (confidence readout)",
-              "kind": "file",
-              "href": "projects/phonon/app/templates/forge.html"
-            }
-          ]
-        },
-        {
-          "date": "2026-07-01",
-          "title": "Optimization Frontier + independent calculation CLI",
-          "status": "done",
-          "detail": "Optimization Frontier panel: a model×RRM-component heat map (1−A, s, U, ‖v‖; brighter = more room) plus a Pareto front in accuracy-gap vs uncertainty space with dominated backbones arrowed toward the frontier — 'where is the room to improve'. Fed by a compact forge_roster.json. Independent CLI forge_cli.py computes every metric from scratch and tweakably: synth · fit · posterior · metrics · hmc · datafrac · attribution · predict · payload · verify · roster (each takes --tau, --json). synth→fit→payload regenerates the whole dashboard payload with zero server, so nothing on the dashboard is hard-coded — the static tier is CLI output.",
-          "refs": [
-            {
-              "label": "forge_cli.py",
-              "kind": "file",
-              "href": "projects/phonon/src/bayes/forge_cli.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-07-01",
-          "title": "Posterior observatory dashboard stood up (τ grab-slider, live recompute, 3-tier source)",
-          "status": "done",
-          "detail": "The phonon FORGE dashboard (forge.html + Flask server.py + forge_dashboard.py payload assembler): 3-column TRON observatory wrapping ANY frozen backbone with an LLLA head. τ is a grab-slider that live-recomputes the eigen-split AND the LLLA predictive band in-browser (closed form off the shipped c=Uᵀz, σ²); big animated buttons; a calc scan-line/pulse animation; 80vw layout. Data loads in three source-badged tiers: ● LIVE (/api/forge/dashboard recomputes at τ) → ● COMPUTED (CLI-generated static payload) → ● DEMO SEED. mk1/mk2/mk3 are all treated as frozen backbones FORGE wraps — mk1 (deterministic) included, since manufacturing a posterior for a point-estimate model is the whole point of FORGE.",
-          "refs": [
-            {
-              "label": "forge.html",
-              "kind": "file",
-              "href": "projects/phonon/app/templates/forge.html"
-            },
-            {
-              "label": "server.py",
-              "kind": "file",
-              "href": "projects/phonon/app/server.py"
-            },
-            {
-              "label": "forge_dashboard.py",
-              "kind": "file",
-              "href": "projects/phonon/src/bayes/forge_dashboard.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-30",
-          "title": "LLLA head + intercept fix for the DOS regression",
-          "status": "done",
-          "detail": "llla.py fit for the phonon regression head (fit_bundle → W, U, λ, σ², μ, sd, ymean). Key fix: a phonon DOS spectrum has a nonzero baseline the zero-intercept head couldn't represent, which showed up as a catastrophic R² (≈ −27); adding a Y-centering intercept (ymean, backward-compatible on load) lifted it to R² ≈ 0.95 with PICP ≈ 0.95 on the template bundle. This is the same closed-form last-layer object as genre — one llla.py, wrapped by the observatory and the HMC validator alike.",
-          "refs": [
-            {
-              "label": "llla.py",
-              "kind": "file",
-              "href": "projects/phonon/src/bayes/llla.py"
-            }
-          ]
-        },
-        {
-          "date": "2026-06-22",
-          "title": "Apply the standalone build template",
-          "status": "planned",
-          "detail": "EDA → experimental design → model-lock → LLLA + HMC → local dashboard → compute metrics, mirroring the genre build.",
-          "refs": []
-        }
-      ],
-      "decisions": [
-        {
-          "title": "FORGE wraps every backbone — including deterministic mk1",
-          "detail": "mk1 (e3nn_repro, pure MSE, no built-in uncertainty) is not the thing FORGE can't handle; it's the raw material. LLLA manufactures a last-layer posterior for it exactly as for mk2/mk3. Each backbone yields a different φ geometry → a genuinely different epistemic read, so the registry is a real uncertainty-method comparison."
-        },
-        {
-          "title": "Read nonclosure from the DNCQN plateau, not TEC eval-closure (carried into phonon's verdict framing)",
-          "detail": "The graded data-limited confidence mirrors the ABCD finding: the honest systematic is read from where the gradient self-terminates (the prior-led plateau), not from pushing through the noise floor."
-        },
-        {
-          "title": "Verdict is continuous, not binary",
-          "detail": "A hard λ>τ cut throws away the graded γ = λ/(λ+τ) information. The dashboard now reports a %-confidence and per-direction γ, which is both more honest and reads better."
-        },
-        {
-          "title": "HMC validates the Gaussian everything else rides on",
-          "detail": "Every uncertainty shown elsewhere is the fast Laplace approximation. The full-stack HMC run samples the true posterior and overlays it — the single check that licenses trusting all the cheap Gaussians. Synthetic fallback keeps it runnable before real bundles exist."
-        }
-      ]
+     "label": "mk2 (cfg 17) val / test",
+     "value": "0.793 / 0.760  (per-track)"
     },
     {
-      "id": "atlas",
-      "name": "ATLAS LLP / MSVtx",
-      "week": "W6",
-      "status": "in_progress",
-      "headline": "ATLAS Run-3 LLP / MSVtx model work proceeding IN PARALLEL (RA track) — barrel/endcap displaced-vertex analysis, ABCDisCoTEC×DNCQN ablation harness on real data. Not yet folded into the FORGE doc-site / standalone-site template, but on track for the W6 floor: the FORGE Bayesian + observatory layer is now proven on genre and phonon and drops onto ATLAS features unchanged.",
-      "metrics": [
-        {
-          "label": "target",
-          "value": "ground-truth reproduction"
-        },
-        {
-          "label": "scheduled",
-          "value": "Week 6 (Jun 29–Jul 3)"
-        }
-      ],
-      "entries": [
-        {
-          "date": "2026-07-03",
-          "title": "ATLAS models advancing in parallel — integration into FORGE template pending",
-          "status": "in_progress",
-          "detail": "Real ATLAS work (Run-3 LLP hidden-sector displaced vertices, MSVtx framework; barrel/endcap ABCD with the ABCDisCoTEC×DNCQN ablation harness) is moving forward on the RA side in parallel with the phonon FORGE build. It is deliberately not yet 'officially added' to the documentation ecosystem — the standalone-site skeleton (data adapter · EDA · features/model/config) is the remaining wrap. Because the FORGE observatory + LLLA/HMC layer is now template-stable from phonon, ATLAS becomes a data-adapter + config exercise rather than new infrastructure, which keeps the W6 'all three MVP-P1 sites functional' milestone on track.",
-          "refs": []
-        },
-        {
-          "date": "2026-06-29",
-          "title": "Apply the standalone build template",
-          "status": "planned",
-          "detail": "EDA → experimental design → model-lock → LLLA + HMC → local dashboard → compute metrics, mirroring the genre build.",
-          "refs": []
-        }
-      ],
-      "decisions": []
+     "label": "mk3 voted-to-track",
+     "value": "0.807 acc / 0.807 macro-F1  (+4.7 vs mk2)"
+    },
+    {
+     "label": "mk3 per-segment",
+     "value": "0.789 acc / 0.788 macro-F1  (vote gain +0.018)"
+    },
+    {
+     "label": "mk3 data",
+     "value": "3-sec fused3 · 9,990 seg → 6,992/1,498/1,500 · same tracks as mk1/mk2"
+    },
+    {
+     "label": "metric ↔ test (Spearman, ×10 data)",
+     "value": "accuracy +0.43 · RRM +0.14 · −s +0.13 · RRM_w +0.10 · −U −0.10"
+    },
+    {
+     "label": "effective-N",
+     "value": "≈1.4× (ICC 0.681, design-effect 7.12) — U could not move"
     }
-  ]
+   ],
+   "entries": [
+    {
+     "date": "2026-06-23",
+     "title": "mk3 metric validation (×10 data) — RRM & U still flat: mk2.5 reproduced",
+     "status": "done",
+     "detail": "Firewalled study on the 3-sec sweep: refit all 20 configs on full-train, recorded TEST (selection stayed CV-only). Spearman rank-agreement with TEST accuracy — CV accuracy +0.429 (the only predictor, though weaker than mk2.5's +0.685 as more correlated rows noise-up every CV estimate), RRM +0.139, fold-stability −s +0.130, RRM_w +0.099, epistemic −U −0.095. Ten times the rows did NOT revive the epistemic axis. Mechanism, predicted BEFORE the run: within-track segment correlation (ICC 0.681) gives a design-effect 7.12, so 6,992 segments are worth ≈982 independent-equivalent — the last-layer σ tightens by only √(982/700)≈18%, inside the noise. The central negative result now holds on a SECOND dataset at an order of magnitude more rows. Three configs tie for best TEST 0.789 (incl. cfg 17, the accuracy-best RRM buried at 16/20).",
+     "refs": [
+      {
+       "label": "batch_refit.py",
+       "kind": "file",
+       "href": "projects/genre/src/batch_refit.py"
+      },
+      {
+       "label": "batch_test.json",
+       "kind": "run",
+       "href": "projects/genre/runs/beardown_3sec/20260623-015344/batch_test.json"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-23",
+     "title": "mk3 voted-to-track 0.807 — +4.7 over mk2 (apples-to-apples)",
+     "status": "done",
+     "detail": "The sweep reports PER-SEGMENT accuracy (one row per 3-sec clip); mk1/mk2 reported PER-TRACK. Not comparable. vote_eval collapses a track's ~10 segment predictions by prob-sum majority → one prediction per song. Deployed cfg 19: per-segment 0.789 / macro-F1 0.788 → voted-to-track 0.807 / macro-F1 0.807, vote gain +0.018 (the denoising of ambiguous clips). Per-track 0.807 vs mk2's 0.760 = +4.7. macro-F1 ≈ accuracy → no genre sacrificed; classical 1.00, pop/country/rock 0.667 = the stable GTZAN confusion cluster (same genres that capped mk2). The +4.7 is real but bounded — exactly the ≈1.4× effective-N story, not the ×10 the row count suggests.",
+     "refs": [
+      {
+       "label": "vote_eval.py",
+       "kind": "file",
+       "href": "projects/genre/src/vote_eval.py"
+      },
+      {
+       "label": "vote_eval.json",
+       "kind": "run",
+       "href": "projects/genre/models/beardown_3sec/vote_eval.json"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-23",
+     "title": "mk3 RRM sweep — 20-config reliability sweep on 3-sec fused3 (GPU)",
+     "status": "done",
+     "detail": "Same engine, search space, and selection as the mk2 sweep — only the DATA changed (controlled experiment: data density is the single variable). 20 configs, 3-fold GroupKFold-by-track. RRM winner = cfg 19 (A 0.778); accuracy-best = cfg 17 (A 0.800 — the mk2 deployed architecture, img768/tab256/concat). r(A,RRM) = −0.067: RRM again uncorrelated with accuracy, driven −0.88 by the fold-instability penalty s, and it buried the accuracy-best cfg 17 at rank 16/20. Deployed cfg 19 refit → VAL 0.776 / TEST 0.789 (per-segment), acceptance PASS (val≥0.75), φ-dim 384.",
+     "refs": [
+      {
+       "label": "beardown_3sec.yaml",
+       "kind": "file",
+       "href": "projects/genre/configs/beardown_3sec.yaml"
+      },
+      {
+       "label": "sweep.json",
+       "kind": "run",
+       "href": "projects/genre/runs/beardown_3sec/20260623-015344/sweep.json"
+      },
+      {
+       "label": "beardown_3sec bundle",
+       "kind": "file",
+       "href": "projects/genre/models/beardown_3sec/"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-23",
+     "title": "GPU switch — CPU→CUDA, one-line torch reinstall (simple + worthwhile)",
+     "status": "done",
+     "detail": "The 3-sec sweep (6,992 train segments × 3 folds × 20 configs) was crawling on CPU — minutes per config. The RTX 4070 SUPER (12 GB) was present, but the installed torch was a CPU-only build (torch.cuda.is_available() → False). One-line fix: pip install torch --index-url https://download.pytorch.org/whl/cu124 → torch 2.6.0+cu124, CUDA visible (the driver's CUDA 13.2 is the max it supports, not what you install — a cu124 wheel runs forward-compatibly). No code change: train.py / sweep.py / batch_refit.py were already --device-flagged. Result: full-train refit 36 s (from a multi-minute CPU crawl); full 20-config sweep ≈26 min; batch_refit ≈10 min. The cheapest high-leverage move of the week — the canonical 'do this first on any torch box' note.",
+     "refs": [
+      {
+       "label": "PyTorch CUDA install",
+       "kind": "link",
+       "href": "https://pytorch.org/get-started/locally/"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-23",
+     "title": "mk3 data path — leakage-safe 3-sec fused3, verified torch-free",
+     "status": "done",
+     "detail": "New _load_fused3: each 3-sec tabular segment is joined MANY-TO-ONE to its parent track's single mel spectrogram (no spectrogram cutting — the image is track-level). Split is on TRACK ids via stratified seed 42, the SAME partition as mk1/mk2, so segments inherit their parent's split and data density is the only variable. 9,990 segments → 6,992/1,498/1,500. The existing 30-sec _load_fused is byte-untouched (mk1/mk2 numbers can't move); fused3 is dual-input like fused, so LLLA/HMC/bundle attach unchanged. verify_mk3 (7 checks) + sanity_check confirm: dual-input contract, many-to-one join (9.99 seg/track share one image), 0 tracks straddle (a naive segment split would leak 97.1% of tracks — Sturm 2013), scaler fit on train segments only, 57 named axes intact. All pure-numpy — ran and passed BEFORE any GPU time.",
+     "refs": [
+      {
+       "label": "dataio.py",
+       "kind": "file",
+       "href": "projects/genre/src/dataio.py"
+      },
+      {
+       "label": "verify_mk3.py",
+       "kind": "file",
+       "href": "projects/genre/src/verify_mk3.py"
+      },
+      {
+       "label": "beardown_3sec.yaml",
+       "kind": "file",
+       "href": "projects/genre/configs/beardown_3sec.yaml"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-23",
+     "title": "Input-feature attribution wired — bundle self-describes (rung 2)",
+     "status": "done",
+     "detail": "attribution.py: the LLLA epistemic scale v(φ;τ) pushed back onto NAMED inputs. Closed form dv/dφ = 2(H+τI)⁻¹φ (verified vs finite-difference to 1.6e-9), chained with ONE backbone vector-Jacobian product → per-feature epistemic sensitivity dv/dx; τ factors out, so a cached M lets FORGE recompute live for any τ (identity verified exact across τ). write_bundle now emits inputs.json (the 57 named axes) + bundle.json (a capabilities list that gates the FORGE attribution tab). 6/6 torch-free tests pass. This names what INFO 510 Table A3 could only rank anonymously. The torch precompute (dφ/dx) runs once on the GPU box; FORGE then serves static numpy — the ggn_eig.npz pattern.",
+     "refs": [
+      {
+       "label": "attribution.py",
+       "kind": "file",
+       "href": "projects/genre/src/attribution.py"
+      },
+      {
+       "label": "test_attribution.py",
+       "kind": "file",
+       "href": "projects/genre/src/test_attribution.py"
+      },
+      {
+       "label": "FORGE attribution spec",
+       "kind": "file",
+       "href": "FORGE_input_feature_attribution_SPEC.txt"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-22",
+     "title": "mk2.5 metric validation — RRM falsified, honestly (the finding)",
+     "status": "done",
+     "detail": "Firewalled study: refit all 20 configs on full-train, recorded test (selection stayed CV-only). Spearman rank-agreement with TEST accuracy — CV accuracy +0.685, but RRM_w −0.002, equal-weight RRM −0.022, fold-stability −0.008, epistemic U −0.028: every reliability axis is noise as a test-rank predictor. Mechanism: post-hoc LLLA on a frozen DET head gives a near-constant U (0.0258–0.0343), and s is test-uncorrelated. A precise negative result — refines, not refutes, INFO 510 (their RRM used TRAINED Bayesian heads where U varied). Boundary condition: RRM earns its keep only when the reliability axes are both variable AND test-predictive.",
+     "refs": [
+      {
+       "label": "batch_refit.py",
+       "kind": "file",
+       "href": "projects/genre/src/batch_refit.py"
+      },
+      {
+       "label": "batch_test.json",
+       "kind": "run",
+       "href": "projects/genre/runs/beardown_rrm/20260622-185237/batch_test.json"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-22",
+     "title": "mk2.5 — Dirichlet / variance re-selection lens (no new model)",
+     "status": "done",
+     "detail": "Generalized RRM to a simplex weighting: RRM_w = 1−√(Σ wᵢ vᵢ²), w∈Δ²; the locked equal-weight metric is the centroid. Variance-derived w=(0.008,0.926,0.067) zeroes the uninformative U axis on principle → selects cfg 17. Dirichlet sweep (200k uniform-simplex draws): cfg 17 49.5%, cfg 12 48.2%, rest <2% — two robust contenders, choice is weighting-dependent (the only region favoring cfg 12 weights the flat U axis). A selection LENS over sweep.json — no model, no bundle, no FORGE/attribution impact.",
+     "refs": [
+      {
+       "label": "reselect.py",
+       "kind": "file",
+       "href": "projects/genre/src/reselect.py"
+      },
+      {
+       "label": "rrm.py",
+       "kind": "file",
+       "href": "projects/genre/src/rrm.py"
+      },
+      {
+       "label": "reselect.json",
+       "kind": "run",
+       "href": "projects/genre/runs/beardown_rrm/20260622-185237/reselect.json"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-22",
+     "title": "mk2 locked = cfg 17 — first acceptance PASS, beats mk1 +6 test",
+     "status": "done",
+     "detail": "Deployed the variance-weighted RRM_w winner: cfg 17 (img768 / tab256 / concat / adam / lr 2.4e-4 / do 0.21,0.17 / ep75, φ-dim 768). Refit on full-train → VAL 0.793 / TEST 0.760 / test macro-F1 0.760, first acceptance PASS (val≥0.75) and clears the paper's 0.766 val band. The macro-F1 jump (0.686→0.760) is on the WEAK genres — a better-balanced classifier, not a luckier one. Equal-weight RRM's nominal winner was cfg 12 (kept as documented contrast); cfg 12 wins ONLY on the flat U axis, so it loses once U is correctly down-weighted. Round-trip OK, max|Δ|=0 — FORGE wraps it unchanged.",
+     "refs": [
+      {
+       "label": "promote_cfg.py",
+       "kind": "file",
+       "href": "projects/genre/src/promote_cfg.py"
+      },
+      {
+       "label": "beardown_rrm (cfg 17)",
+       "kind": "file",
+       "href": "projects/genre/models/beardown_rrm/"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-22",
+     "title": "mk2 sweep — 20-config RRM-selected reliability sweep",
+     "status": "done",
+     "detail": "Built sweep.py (reuses train.py + llla.py): 20 configs × 3-fold GroupKFold-by-track, each scored on a 4-axis catalogue (accuracy A, fold-σ s, LLLA epistemic U at shared-α τ, off-diagonal rate) + RAM / Pareto / Pearson / dCor. The Bayesian layer is post-hoc LLLA over the frozen det head — the SAME object FORGE serves (selection-U == display-U). Ran clean on CPU (~54 min); catalogue persisted to sweep.json.",
+     "refs": [
+      {
+       "label": "sweep.py",
+       "kind": "file",
+       "href": "projects/genre/src/sweep.py"
+      },
+      {
+       "label": "beardown_rrm.yaml",
+       "kind": "file",
+       "href": "projects/genre/configs/beardown_rrm.yaml"
+      },
+      {
+       "label": "sweep.json",
+       "kind": "run",
+       "href": "projects/genre/runs/beardown_rrm/20260622-185237/sweep.json"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-21",
+     "title": "Input-feature attribution — specced + verified-amenable",
+     "status": "planned",
+     "detail": "Locked the design (FORGE_input_feature_attribution_SPEC.txt): push LLLA σ back through the frozen backbone, ∂σ/∂x = (∂σ/∂φ)·(∂φ/∂x), to NAME which input feature drives a prediction's epistemic uncertainty — the latent features INFO 510 Table A3 could only rank anonymously. Verified against the live bundle: scaler.json carries all 57 named axes + mean/std, arch.json+weights.pt rebuild the frozen backbone — so attribution runs on mk1, cfg 17 and future mk3 with ZERO re-bundling. Ships via precompute-and-cache (mirrors ggn_eig), tabular branch first.",
+     "refs": [
+      {
+       "label": "attribution SPEC",
+       "kind": "file",
+       "href": "projects/genre/FORGE_input_feature_attribution_SPEC.txt"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-20",
+     "title": "Bayesian layer live — LLLA over the frozen head",
+     "status": "done",
+     "detail": "Last-layer Laplace (closed form from the cached GGN eigenbasis) over the frozen det head: the 0.714 point estimate becomes a decomposable posterior with a live τ-knob. This is the object mk2's RRM selects on AND the object FORGE displays — one llla.py call, two consumers.",
+     "refs": [
+      {
+       "label": "llla.py",
+       "kind": "file",
+       "href": "projects/genre/src/bayes/llla.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-19",
+     "title": "ML usage / cost estimator built",
+     "status": "done",
+     "detail": "_shared/usage.py turns every compute.json into energy / carbon / $ with measured-vs-modeled tags, an actual-power hook (RAPL / nvidia-smi), a suite roll-up, and a pre-run projection. Assumptions live in an override YAML for real rates IRL.",
+     "refs": [
+      {
+       "label": "usage.py",
+       "kind": "file",
+       "href": "_shared/usage.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-19",
+     "title": "Song drop-in inference verified (wav + mp3)",
+     "status": "done",
+     "detail": "End-to-end: drop audio → 30-s windows → clean mel + 57 features → per-genre scores with MC-dropout σ. load_audio hardened (soundfile → librosa fallback → clear error, no silent skip). Works because train + inference now share one mel recipe (validate r=1.0).",
+     "refs": [
+      {
+       "label": "predict.py",
+       "kind": "file",
+       "href": "projects/genre/src/predict.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-19",
+     "title": "Backbone frozen: clean-128 / batch-8, CV 0.714",
+     "status": "done",
+     "detail": "Batch 32→8 lifted CV 0.629→0.714 (+0.086). The frozen deterministic backbone the Bayesian head attaches to. 6× cheaper to train than the original 224 dirty pipeline and the only variant that does real-audio drop-in correctly.",
+     "refs": [
+      {
+       "label": "beardown.yaml",
+       "kind": "file",
+       "href": "projects/genre/configs/beardown.yaml"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-19",
+     "title": "Gap diagnosis complete — every cheap hypothesis ruled out",
+     "status": "done",
+     "detail": "Early stopping, epochs, representation, split, and resolution all tested and eliminated as the cause of the 0.07 gap to 0.766. Lever was batch size; residual is framework (Keras vs PyTorch) + run variance. Faithful, documented reproduction.",
+     "refs": []
+    },
+    {
+     "date": "2026-06-18",
+     "title": "Clean log-mel regeneration (silent-failure fix)",
+     "status": "done",
+     "detail": "Kaggle grey PNGs are colormapped matplotlib figures — luminance non-monotonic in mel energy, so a dropped song scored noise. Regenerated all spectrograms from audio with one recipe → train + inference share extract_mel → validate passes by construction.",
+     "refs": [
+      {
+       "label": "build_spectrograms.py",
+       "kind": "file",
+       "href": "projects/genre/eda/build_spectrograms.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-17",
+     "title": "Architecture vetted against the public INFO_510 repo",
+     "status": "done",
+     "detail": "Confirmed cfg_14: 57 features (length dropped), gated fusion, deterministic head, dense 512/192, lr 7.37e-5, adam, 75 epochs. The winning head was already det — so the FORGE det-backbone + LLLA reproduction is bit-faithful with zero mechanism mismatch.",
+     "refs": [
+      {
+       "label": "INFO_510 repo",
+       "kind": "link",
+       "href": "https://github.com/N-Herling-Mk1/INFO_510_Fa25_Final_Proj"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-16",
+     "title": "BEARDOWN public — full stack live at genre.forge-observatory.com",
+     "status": "done",
+     "detail": "W8 flip: Pages apex (splash/floor) + Docker container on own hardware + Cloudflare Tunnel. Dashboard ships Feature Stats, the τ-knob Observatory (bay 02, browser-side posterior recompute), and the Drop Deck (song → MK1/MK2/MK3 verdicts ±σ). Verified end-to-end from a second PC over the public internet. Serving-image gap found by that first remote test — torch absent (pyproject lists the TF training tier only) — closed with an explicit CPU-torch layer; publish gate now smokes the ML stack (/api/forge/meta) so a hollow image cannot ship.",
+     "refs": [
+      {
+       "label": "live app",
+       "kind": "link",
+       "href": "https://genre.forge-observatory.com"
+      },
+      {
+       "label": "FORGE apex",
+       "kind": "link",
+       "href": "https://forge-observatory.com"
+      }
+     ]
+    }
+   ],
+   "decisions": [
+    {
+     "title": "mk2 = cfg 17, selected by variance-weighted RRM_w (CV-only)",
+     "detail": "Deploy the accuracy-strong + stable config; the only metric-region favoring the equal-weight winner (cfg 12) weights the flat, test-uncorrelated U axis. Selection never saw test (firewall)."
+    },
+    {
+     "title": "RRM falsified honestly — the negative result IS the contribution",
+     "detail": "On a frozen-det head, neither reliability axis predicts test rank (RRM_w ρ=−0.00, accuracy ρ=+0.69). Built the apparatus to falsify our own metric, ran it, reported it. Refines INFO 510's boundary, doesn't refute it."
+    },
+    {
+     "title": "Keep BOTH bundles as the result",
+     "detail": "beardown_rrm (=cfg 17, deployed) and beardown_rrm_cfg12 (=equal-weight winner). The comparison between them is the mk2.5 finding."
+    },
+    {
+     "title": "mk3 = beardown_3sec, motivated not guessed",
+     "detail": "mk2.5's mechanism (flat U) hands mk3 a hypothesis: does ×10 data (3-sec clips) make U vary again and revive RRM_w's validity? Needs a leakage-safe cutter (track-grouped split)."
+    },
+    {
+     "title": "Batch size was the lever (+0.086 CV)",
+     "detail": "32→8 lifted CV 0.629→0.714. Smaller batch = gradient-noise regularization on small data. Batch 8 is also the BatchNorm floor for this net and matches cfg_14."
+    },
+    {
+     "title": "224 resolution ruled out",
+     "detail": "Dirty-224 scored CV 0.629 — erased the batch-8 gain at 6× the compute and 3× the memory. Resolution is not the lever."
+    },
+    {
+     "title": "Clean log-mel over dirty Kaggle grey",
+     "detail": "Clean mels score ≥ dirty AND are the only representation reproducible at inference from a dropped wav. A deliberate, documented improvement over the original pipeline."
+    },
+    {
+     "title": "Split is not the gap",
+     "detail": "BEARDOWN's seed-42 stratified split scored ≈ our track split (0.673 vs 0.70) — ruling out an unlucky-draw explanation for the gap."
+    },
+    {
+     "title": "Freeze, don't chase 0.766",
+     "detail": "The wall at ~0.71 is precisely FORGE's motivating example: accuracy-only selection stalls and says nothing about trust. The Bayesian layer is the answer, not more tuning."
+    },
+    {
+     "title": "mk3 = 3-sec tab ⨝ 30-sec image (many-to-one), not a re-render",
+     "detail": "A true per-segment 3-sec image would need re-rendering from the wavs. The effective-N analysis showed it isn't worth it for the U-question: the last-layer posterior conditions on φ, which already diversifies ≈10× through the tabular half under many-to-one, while within-track image correlation caps the marginal gain of distinct 3-sec images at ≈2–3×. Many-to-one runs today with zero re-render and is the cfg-17 architecture on 10× rows — the controlled data-density test."
+    },
+    {
+     "title": "GPU was the iteration lever (simple + worthwhile)",
+     "detail": "One-line cu124 torch reinstall took the sweep from a CPU crawl to 36 s/refit. No code change — the pipeline was already device-flagged. Recorded as the canonical first move on any torch box; the driver's max-CUDA number is not the wheel you install."
+    },
+    {
+     "title": "Deployed cfg 19 (RRM winner); cfg 17 is the accuracy-best contender",
+     "detail": "The sweep auto-deployed its RRM winner, cfg 19 (voted-to-track 0.807). But cfg 17 is accuracy-best (A 0.800) and TIES for best held-out TEST (0.789) — and it is the config RRM buried at 16/20. Recommendation on the record: promote cfg 17 as the mk3 headline and keep cfg 19 as the labeled RRM-winner contrast, mirroring mk2's cfg17-vs-cfg12 pairing so the selection pathology is visible in FORGE. (cfg 17 promote pending.)"
+    },
+    {
+     "title": "U did not revive at ×10 data — predicted, then measured",
+     "detail": "Effective-N ≈1.4× (ICC 0.681) predicted the last-layer σ would tighten only ~18%, too little to move the epistemic axis; batch_refit confirmed −U Spearman −0.095. The mk2.5 boundary condition holds at scale: reliability axes need a TRAINED Bayesian head (INFO 510), not post-hoc LLLA on a frozen DET head. This refines, does not refute, the source paper — now on two datasets."
+    }
+   ]
+  },
+  {
+   "id": "phonon",
+   "name": "Phonon DOS",
+   "week": "W6",
+   "status": "in_progress",
+   "headline": "Phonon DOS (51-bin regression, Chen et al. 2021 E(3)-equivariant reproduction) wrapped by the full FORGE posterior observatory — the genre template applied to a regression head and driven to a working full-stack dashboard. LLLA manufactures a last-layer posterior over every frozen backbone (mk1 e3nn_repro / mk2 EMD / mk3 js), the τ-knob + HMC gold-standard run live in-browser + server-side, and the verdict is now a continuous data-limited confidence (γ = λ/(λ+τ)) rather than a binary. Real ATLAS model work proceeds in parallel (W6).",
+   "metrics": [
+    {
+     "label": "backbones wrapped",
+     "value": "mk1 e3nn_repro · mk2 EMD · mk3 js (all FORGE-wrapped)"
+    },
+    {
+     "label": "LLLA intercept fix",
+     "value": "DOS baseline centering → R² −27 → 0.95 (template/demo bundle)"
+    },
+    {
+     "label": "observatory components",
+     "value": "posterior · τ-sweep · data-frac · HMC · attribution · last-layer model · optimization frontier"
+    },
+    {
+     "label": "HMC",
+     "value": "full-stack Flask /api/forge/hmc — fire-button, samples predicted-DOS, overlays Laplace"
+    },
+    {
+     "label": "data tiers",
+     "value": "live server → computed static payloads → demo seed (source-badged)"
+    },
+    {
+     "label": "scheduled",
+     "value": "W5–W6 (Jun 22 – Jul 3)"
+    }
+   ],
+   "entries": [
+    {
+     "date": "2026-07-03",
+     "title": "HMC made full-stack + the visualization that gives the Gaussians meaning",
+     "status": "done",
+     "detail": "Wired the FIRE HMC VALIDATION button to a real server-side sampler (Flask GET /api/forge/hmc → forge.hmc_run), with a synthetic-bundle fallback so the full-stack path runs out of the box before real bundles exist. hmc_run projects the sampled last-layer weights onto a probe crystal to give the predicted DOS intensity at a frequency — a readable scalar — and returns the chain trace + sample histogram + the analytic Laplace N(mean,σ) for the same quantity. The UI fires → shows a sampling/progress animation → renders per-bin cards: chain-trace plot (draw-in) + histogram with the Laplace Gaussian overlaid. That overlay is the point: it turns the abstract weight-Gaussians into 'does our fast approximation match the gold standard?' — verdict GOOD when they line up. This is the ATLAS HMC-check pattern reused.",
+     "refs": [
+      {
+       "label": "forge.py (hmc_run)",
+       "kind": "file",
+       "href": "projects/phonon/src/bayes/forge.py"
+      },
+      {
+       "label": "server.py (/api/forge/hmc)",
+       "kind": "file",
+       "href": "projects/phonon/app/server.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-02",
+     "title": "Last-Layer Model panel — the head as W-map + full posterior, with a click-to-inspect Gaussian",
+     "status": "done",
+     "detail": "A concrete model of the exact object LLLA Bayes-ifies: the linear head W(32→51) as a heatmap (MEAN), a σ-heatmap (UNCERTAINTY), and an ALL-POSTERIORS bell grid drawing every one of the 1,632 weights as its N(mean,σ). Click any cell → a large, real prior N(0,σ₀) vs posterior N(mean,σ) overlay (σ₀=√(σ²_k/τ), σ=√(σ²_k·featⱼ)), so you watch the data pull a weight off the prior. Carries the honest caveat on-panel: LLLA models ONLY the last layer (backbone φ frozen), so a Deep Ensemble / subnetwork Laplace is what would add feature uncertainty. All τ-reactive, recomputed in-browser from the shipped eigenbasis (U, λ, σ²).",
+     "refs": [
+      {
+       "label": "forge_dashboard.py (ships W, U)",
+       "kind": "file",
+       "href": "projects/phonon/src/bayes/forge_dashboard.py"
+      },
+      {
+       "label": "forge.html (Last-Layer Model)",
+       "kind": "file",
+       "href": "projects/phonon/app/templates/forge.html"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-02",
+     "title": "Continuous verdict — data-limited as a confidence %, not a yes/no",
+     "status": "done",
+     "detail": "Replaced the binary DATA-LIMITED / CAPACITY-LIMITED headline with a graded readout. Each eigen-direction's data-information fraction γ = λ/(λ+τ) ∈ [0,1] is the continuous version of the old λ>τ cut; the verdict % = 1 − eff_dim/d (mean prior-mass). Shown as a spectrum bar with a marker plus four %-confidence gauges — capacity utilization (eff_dim/d), posterior fidelity (Laplace-vs-HMC), epistemic saturation (data-frac), calibration (PICP vs 95%). The eigenspectrum now colours by γ (amber prior → cyan data) instead of a hard two-colour split. All derived from quantities already in the payload, so it works in every data tier.",
+     "refs": [
+      {
+       "label": "forge.html (confidence readout)",
+       "kind": "file",
+       "href": "projects/phonon/app/templates/forge.html"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-01",
+     "title": "Optimization Frontier + independent calculation CLI",
+     "status": "done",
+     "detail": "Optimization Frontier panel: a model×RRM-component heat map (1−A, s, U, ‖v‖; brighter = more room) plus a Pareto front in accuracy-gap vs uncertainty space with dominated backbones arrowed toward the frontier — 'where is the room to improve'. Fed by a compact forge_roster.json. Independent CLI forge_cli.py computes every metric from scratch and tweakably: synth · fit · posterior · metrics · hmc · datafrac · attribution · predict · payload · verify · roster (each takes --tau, --json). synth→fit→payload regenerates the whole dashboard payload with zero server, so nothing on the dashboard is hard-coded — the static tier is CLI output.",
+     "refs": [
+      {
+       "label": "forge_cli.py",
+       "kind": "file",
+       "href": "projects/phonon/src/bayes/forge_cli.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-07-01",
+     "title": "Posterior observatory dashboard stood up (τ grab-slider, live recompute, 3-tier source)",
+     "status": "done",
+     "detail": "The phonon FORGE dashboard (forge.html + Flask server.py + forge_dashboard.py payload assembler): 3-column TRON observatory wrapping ANY frozen backbone with an LLLA head. τ is a grab-slider that live-recomputes the eigen-split AND the LLLA predictive band in-browser (closed form off the shipped c=Uᵀz, σ²); big animated buttons; a calc scan-line/pulse animation; 80vw layout. Data loads in three source-badged tiers: ● LIVE (/api/forge/dashboard recomputes at τ) → ● COMPUTED (CLI-generated static payload) → ● DEMO SEED. mk1/mk2/mk3 are all treated as frozen backbones FORGE wraps — mk1 (deterministic) included, since manufacturing a posterior for a point-estimate model is the whole point of FORGE.",
+     "refs": [
+      {
+       "label": "forge.html",
+       "kind": "file",
+       "href": "projects/phonon/app/templates/forge.html"
+      },
+      {
+       "label": "server.py",
+       "kind": "file",
+       "href": "projects/phonon/app/server.py"
+      },
+      {
+       "label": "forge_dashboard.py",
+       "kind": "file",
+       "href": "projects/phonon/src/bayes/forge_dashboard.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-30",
+     "title": "LLLA head + intercept fix for the DOS regression",
+     "status": "done",
+     "detail": "llla.py fit for the phonon regression head (fit_bundle → W, U, λ, σ², μ, sd, ymean). Key fix: a phonon DOS spectrum has a nonzero baseline the zero-intercept head couldn't represent, which showed up as a catastrophic R² (≈ −27); adding a Y-centering intercept (ymean, backward-compatible on load) lifted it to R² ≈ 0.95 with PICP ≈ 0.95 on the template bundle. This is the same closed-form last-layer object as genre — one llla.py, wrapped by the observatory and the HMC validator alike.",
+     "refs": [
+      {
+       "label": "llla.py",
+       "kind": "file",
+       "href": "projects/phonon/src/bayes/llla.py"
+      }
+     ]
+    },
+    {
+     "date": "2026-06-22",
+     "title": "Apply the standalone build template",
+     "status": "planned",
+     "detail": "EDA → experimental design → model-lock → LLLA + HMC → local dashboard → compute metrics, mirroring the genre build.",
+     "refs": []
+    }
+   ],
+   "decisions": [
+    {
+     "title": "FORGE wraps every backbone — including deterministic mk1",
+     "detail": "mk1 (e3nn_repro, pure MSE, no built-in uncertainty) is not the thing FORGE can't handle; it's the raw material. LLLA manufactures a last-layer posterior for it exactly as for mk2/mk3. Each backbone yields a different φ geometry → a genuinely different epistemic read, so the registry is a real uncertainty-method comparison."
+    },
+    {
+     "title": "Read nonclosure from the DNCQN plateau, not TEC eval-closure (carried into phonon's verdict framing)",
+     "detail": "The graded data-limited confidence mirrors the ABCD finding: the honest systematic is read from where the gradient self-terminates (the prior-led plateau), not from pushing through the noise floor."
+    },
+    {
+     "title": "Verdict is continuous, not binary",
+     "detail": "A hard λ>τ cut throws away the graded γ = λ/(λ+τ) information. The dashboard now reports a %-confidence and per-direction γ, which is both more honest and reads better."
+    },
+    {
+     "title": "HMC validates the Gaussian everything else rides on",
+     "detail": "Every uncertainty shown elsewhere is the fast Laplace approximation. The full-stack HMC run samples the true posterior and overlays it — the single check that licenses trusting all the cheap Gaussians. Synthetic fallback keeps it runnable before real bundles exist."
+    }
+   ]
+  },
+  {
+   "id": "atlas",
+   "name": "ATLAS LLP / MSVtx",
+   "week": "W6",
+   "status": "in_progress",
+   "headline": "ATLAS Run-3 LLP / MSVtx model work proceeding IN PARALLEL (RA track) — barrel/endcap displaced-vertex analysis, ABCDisCoTEC×DNCQN ablation harness on real data. Not yet folded into the FORGE doc-site / standalone-site template, but on track for the W6 floor: the FORGE Bayesian + observatory layer is now proven on genre and phonon and drops onto ATLAS features unchanged.",
+   "metrics": [
+    {
+     "label": "target",
+     "value": "ground-truth reproduction"
+    },
+    {
+     "label": "scheduled",
+     "value": "Week 6 (Jun 29–Jul 3)"
+    }
+   ],
+   "entries": [
+    {
+     "date": "2026-07-03",
+     "title": "ATLAS models advancing in parallel — integration into FORGE template pending",
+     "status": "in_progress",
+     "detail": "Real ATLAS work (Run-3 LLP hidden-sector displaced vertices, MSVtx framework; barrel/endcap ABCD with the ABCDisCoTEC×DNCQN ablation harness) is moving forward on the RA side in parallel with the phonon FORGE build. It is deliberately not yet 'officially added' to the documentation ecosystem — the standalone-site skeleton (data adapter · EDA · features/model/config) is the remaining wrap. Because the FORGE observatory + LLLA/HMC layer is now template-stable from phonon, ATLAS becomes a data-adapter + config exercise rather than new infrastructure, which keeps the W6 'all three MVP-P1 sites functional' milestone on track.",
+     "refs": []
+    },
+    {
+     "date": "2026-06-29",
+     "title": "Apply the standalone build template",
+     "status": "planned",
+     "detail": "EDA → experimental design → model-lock → LLLA + HMC → local dashboard → compute metrics, mirroring the genre build.",
+     "refs": []
+    }
+   ],
+   "decisions": []
+  }
+ ]
 }
