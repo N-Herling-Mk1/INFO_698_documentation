@@ -1,0 +1,208 @@
+<h2>FORGE Contract</h2>
+
+<p class="lead">
+  The FORGE contract is the two-sided agreement between an experiment and the observatory:
+  what an experiment must supply (inbound, tiered by necessity), and what FORGE owes back
+  (outbound, the four aspects). The contract is written in <strong>&phi;-space</strong> &mdash;
+  the frozen backbone&rsquo;s penultimate features &mdash; and that choice of currency is what
+  separates FORGE itself from the widgets that feed it.
+</p>
+
+<div class="fc-statement">
+  <span class="fc-kicker">The contract in one line</span>
+  <p>
+    FORGE consumes <code>(&phi;_train, y_train, likelihood, &tau;)</code> and returns the four
+    observatory aspects. Everything else is either a <em>cache</em> of that core, an
+    <em>adapter</em> into it, or a <em>display</em> beside it.
+  </p>
+</div>
+
+<h3 id="fc-tiers">Inbound &mdash; the four tiers</h3>
+
+<div class="fc-tier fc-t0">
+  <div class="fc-tier-head">
+    <span class="fc-tier-n">Tier 0</span>
+    <span class="fc-tier-name">Statistical core</span>
+    <span class="status-badge status-done">required</span>
+  </div>
+  <p>
+    <code>&phi;_train</code> (N&times;d penultimate features from a <strong>frozen,
+    deterministic</strong> backbone), <code>y_train</code> aligned to it &mdash; alignment
+    <em>verified, not assumed</em> &mdash; a declared <strong>likelihood family</strong>
+    (softmax classification vs. Gaussian regression; it selects the
+    <abbr title="Last-Layer Laplace Approximation">LLLA</abbr>/<abbr title="Hamiltonian Monte Carlo">HMC</abbr>
+    path), and a prior/&tau; configuration with its <code>tau_range</code>.
+    Every one of the four aspects is computable from this tier alone.
+  </p>
+</div>
+
+<div class="fc-tier fc-t1">
+  <div class="fc-tier-head">
+    <span class="fc-tier-n">Tier 1</span>
+    <span class="fc-tier-name">Fitted cache</span>
+    <span class="status-badge status-planned">derivable &mdash; shipped for speed</span>
+  </div>
+  <p>
+    The fitted LLLA head, the <abbr title="Generalized Gauss&ndash;Newton">GGN</abbr> eigenbasis
+    (<code>ggn_eig</code>), cached eigen-projections of the examples, the
+    <code>capabilities</code> array, and the metrics card. This tier is
+    <code>fit:&nbsp;features&nbsp;&rarr;&nbsp;bundle</code> &mdash; no new information, just
+    Tier&nbsp;0 precomputed so the &tau;-knob recomputes in-browser instead of refitting
+    server-side.
+  </p>
+</div>
+
+<div class="fc-tier fc-t2">
+  <div class="fc-tier-head">
+    <span class="fc-tier-n">Tier 2</span>
+    <span class="fc-tier-name">Input-space adapters</span>
+    <span class="status-badge status-planned">optional &mdash; widget side</span>
+  </div>
+  <p>
+    Backbone checkpoint + architecture, feature scaler, label map. Their single job is
+    mapping <em>new raw inputs</em> into &phi;-space: the Drop Deck, guest projection, and
+    rung-2 attribution (d&phi;/dx) all cross this line; rung-1 attribution
+    (d&sigma;/d&phi;) does not. FORGE core never touches raw inputs.
+  </p>
+</div>
+
+<div class="fc-tier fc-t3">
+  <div class="fc-tier-head">
+    <span class="fc-tier-n">Tier 3</span>
+    <span class="fc-tier-name">Display artifacts</span>
+    <span class="status-badge status-planned">optional &mdash; X-space</span>
+  </div>
+  <p>
+    <code>eda_stats.json</code> + figures for the feature-stats bay. These live in
+    <em>input</em> space (named raw features), not &phi;-space &mdash; derivable from the
+    raw data, never from <code>&phi;_train</code>. A separate artifact stream, documented
+    here precisely so it is not mistaken for part of the core.
+  </p>
+</div>
+
+<h3 id="fc-bundle">The bundle, mapped to tiers</h3>
+
+<p>
+  The shipping unit is the experiment bundle. Each file resolves to exactly one tier and
+  one consumer:
+</p>
+
+<table class="content-table">
+  <thead>
+    <tr><th>Bundle file</th><th>Tier</th><th>Consumed by</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>phi_train.npy</code></td><td>0</td><td>data-fraction refits &middot; HMC &middot; LLLA (re)fit</td></tr>
+    <tr><td><code>y_train.npy</code></td><td>0</td><td>HMC likelihood &middot; data-fraction refits</td></tr>
+    <tr><td><code>ggn_eig.npz</code></td><td>1</td><td>eigenspectrum &middot; in-browser &tau; recompute</td></tr>
+    <tr><td><code>metrics</code></td><td>1</td><td><code>meta</code> card (accuracy / <abbr title="Expected Calibration Error">ECE</abbr> / regression set)</td></tr>
+    <tr><td><code>weights</code> + <code>arch</code></td><td>2</td><td>raw&nbsp;input &rarr; &phi; (Drop Deck, guest projection, rung-2 attribution)</td></tr>
+    <tr><td><code>scaler</code></td><td>2</td><td>raw&nbsp;input &rarr; &phi; (same path)</td></tr>
+    <tr><td><code>label_map</code></td><td>2</td><td>class names on verdict cards and posterior bars</td></tr>
+  </tbody>
+</table>
+
+<p class="fc-rules">
+  <strong>Validity rules.</strong> The backbone is frozen and deterministic (&phi; is stable);
+  the &phi;/y alignment check is enforced at build time (max&nbsp;|&Delta;&phi;| under
+  tolerance, or the bundle is rejected &mdash; misalignment is silent otherwise); the
+  likelihood family is declared, never inferred; and <code>capabilities</code> lists only
+  what the shipped artifacts actually support.
+</p>
+
+<h3 id="fc-outbound">Outbound &mdash; what FORGE owes back</h3>
+
+<p>
+  Given a valid Tier&nbsp;0/1 bundle, FORGE serves the four observatory aspects through
+  <code>/api/forge/{meta, posterior, datasweep, hmc}</code>. The <code>meta</code> endpoint
+  reports the bundle identity, example count, <code>tau_range</code>, and metrics card;
+  <code>hmc</code> is environment-gated for public deploys. The <code>capabilities</code>
+  array gates the dashboard bays: a missing artifact leaves its bay
+  <em>staged</em> &mdash; visibly present, honestly inert &mdash; never a 500. (Attribution
+  is the live example: rung-2 implemented, bay staged until <code>attribution.npz</code>
+  ships in a bundle.) The widget-side <code>/api/predict</code> route documented in the
+  <a href="#mvp" data-go-panel="mvp">MVP plan</a> is a Tier-2 contract, deliberately
+  separate from these four.
+</p>
+
+<div class="fc-boundary">
+  <span class="fc-kicker">The boundary</span>
+  <p>
+    <strong>The widget is not FORGE.</strong> Audio drop, crystal builder, CSV upload &mdash;
+    those are Tier-2 adapters, and they <em>end</em> at &phi;. FORGE <em>begins</em> at &phi;.
+    Nothing in Tiers&nbsp;2&ndash;3 is required for the observatory to function; nothing in
+    Tiers&nbsp;0&ndash;1 knows raw inputs exist.
+  </p>
+</div>
+
+<h3 id="fc-exec">The executable contract <span class="status-badge status-planned">planned</span></h3>
+
+<p>
+  The tutorial experiment adds live, backend-driven retraining (new architecture or
+  parameters, capped at roughly five minutes per run). That changes the contract&rsquo;s
+  nature: it stops being a one-time artifact drop and becomes a <strong>function the
+  backend executes</strong> &mdash; every retrain must re-emit Tier&nbsp;0&nbsp;&rarr;&nbsp;1
+  programmatically: recompute <code>&phi;_train</code>, refit the head, re-eigendecompose,
+  refresh projections and <code>capabilities</code>. Same contract, run on a loop.
+</p>
+
+<style>
+  /* ---- FORGE Contract panel (fc-) ---- */
+  .fc-statement, .fc-boundary {
+    margin: 0 0 1.6em;
+    padding: 16px 20px 14px;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border-soft);
+    border-left: 4px solid var(--color-ember);
+    border-radius: var(--radius, 8px);
+  }
+  .fc-boundary { border-left-color: var(--color-cyan); margin-top: 1.6em; }
+  .fc-kicker {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+  }
+  .fc-statement p, .fc-boundary p { margin: 0; }
+
+  .fc-tier {
+    margin: 0 0 14px;
+    padding: 12px 18px 10px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border-soft);
+    border-left-width: 4px;
+    border-radius: var(--radius, 8px);
+  }
+  .fc-t0 { border-left-color: var(--color-ember); }
+  .fc-t1 { border-left-color: var(--color-gold); }
+  .fc-t2 { border-left-color: var(--color-cyan); }
+  .fc-t3 { border-left-color: var(--color-navy-soft); }
+  .fc-tier-head {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .fc-tier-n {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+  .fc-t0 .fc-tier-n { color: var(--color-ember); }
+  .fc-t1 .fc-tier-n { color: var(--color-warn); }
+  .fc-t2 .fc-tier-n { color: #1893B8; }
+  .fc-tier-name { font-weight: 600; color: var(--color-text); }
+  .fc-tier p { margin: 0; font-size: 0.95rem; }
+
+  .fc-rules {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    border-left: 3px solid var(--color-navy-soft);
+    padding: 8px 14px;
+    background: var(--color-bg-alt);
+    border-radius: var(--radius, 8px);
+  }
+</style>
