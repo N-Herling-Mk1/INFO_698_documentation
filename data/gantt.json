@@ -3,7 +3,7 @@
  "num_weeks": 13,
  "project": "FORGE",
  "owner": "Nathan Herling",
- "last_updated": "2026-07-16",
+ "last_updated": "2026-07-29",
  "windows": [
   {
    "label": "Risk-management window",
@@ -63,21 +63,21 @@
    "status": "done"
   },
   {
-   "name": "Music Genre — EDA + standalone site",
+   "name": "Music Genre \u2014 EDA + standalone site",
    "phase": "MVP P1",
    "start": 4,
    "end": 4,
    "status": "done"
   },
   {
-   "name": "Phonon — EDA + standalone site",
+   "name": "Phonon \u2014 EDA + standalone site",
    "phase": "MVP P1",
    "start": 5,
    "end": 5,
    "status": "in_progress"
   },
   {
-   "name": "ATLAS — EDA + standalone site",
+   "name": "ATLAS \u2014 EDA + standalone site",
    "phase": "MVP P1",
    "start": 6,
    "end": 6,
@@ -98,14 +98,14 @@
    "status": "in_progress"
   },
   {
-   "name": "Integrate repos → FORGE website",
+   "name": "Integrate repos \u2192 FORGE website",
    "phase": "MVP P2",
    "start": 7,
    "end": 8,
    "status": "done"
   },
   {
-   "name": "Deploy: localhost → external hosting",
+   "name": "Deploy: localhost \u2192 external hosting",
    "phase": "MVP P2",
    "start": 7,
    "end": 8,
@@ -115,8 +115,36 @@
    "name": "Finalize Bayesian / dashboard decisions",
    "phase": "MVP P2",
    "start": 8,
-   "end": 8,
+   "end": 9,
+   "status": "done"
+  },
+  {
+   "name": "FORGE contract + gauge lock-in",
+   "phase": "MVP P2",
+   "start": 9,
+   "end": 9,
+   "status": "done"
+  },
+  {
+   "name": "Front-end design restart (FORGE_site_dev)",
+   "phase": "MVP P2",
+   "start": 9,
+   "end": 10,
    "status": "in_progress"
+  },
+  {
+   "name": "Tutorial example \u2014 Palmer Penguins (forge-lite)",
+   "phase": "MVP P2",
+   "start": 9,
+   "end": 10,
+   "status": "in_progress"
+  },
+  {
+   "name": "FORGE hype video",
+   "phase": "MVP P2",
+   "start": 9,
+   "end": 9,
+   "status": "done"
   },
   {
    "name": "Test & debug integrated stack",
@@ -126,10 +154,17 @@
    "status": "in_progress"
   },
   {
-   "name": "Begin write-up + final software edits",
+   "name": "Final software edits + testing",
    "phase": "MVP P2",
    "start": 9,
-   "end": 9,
+   "end": 10,
+   "status": "in_progress"
+  },
+  {
+   "name": "Begin write-up (slipped W9 \u2192 W10)",
+   "phase": "MVP P2",
+   "start": 10,
+   "end": 10,
    "status": "planned"
   },
   {
@@ -154,7 +189,7 @@
    "status": "planned"
   },
   {
-   "name": "Turn in · present · showcase",
+   "name": "Turn in \u00b7 present \u00b7 showcase",
    "phase": "Deliverables",
    "start": 12,
    "end": 12,
@@ -180,7 +215,7 @@
   },
   {
    "week": 9,
-   "label": "Software feature-frozen; write-up begun"
+   "label": "Front end restarted (select deck + splash); contract + gauges locked; write-up start \u2192 W10"
   },
   {
    "week": 10,
