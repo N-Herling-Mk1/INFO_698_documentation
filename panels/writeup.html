@@ -1,9 +1,75 @@
 <h2>Final Write-up</h2>
-<div class="placeholder-panel">
-  <h2>Coming soon</h2>
-  <p>The final project write-up will be added here at Week 11–12.</p>
-  <p style="font-size: 0.85rem;">
-    When ready, place the PDF at <code>assets/docs/final_writeup.pdf</code> and update
-    this panel to embed it.
-  </p>
+<p>
+  The FORGE final report. Rather than standing apart from the Statement of Work, this
+  document <em>is</em> the approved proposal, extended: Sections&nbsp;1&ndash;4 are the
+  proposal as approved and unchanged, Sections&nbsp;5&ndash;9 are new
+  (goal-by-goal verdict, research component, results, discussion, conclusion), and the
+  proposal's ethics / approvals / appendix tail is renumbered to 10&ndash;12 behind the new
+  material. New sections carry an amber <strong>NEW IN THIS DOCUMENT</strong> marker beneath
+  the heading, so a reader who has already seen the proposal knows exactly where to start.
+</p>
+
+<p>
+  The report is authored in LaTeX (<code>final_report.tex</code> +
+  <code>forge-report.sty</code>) and rebuilt to PDF automatically on every push, on the same
+  CI job that builds the proposal. Body word count &mdash; Sections&nbsp;1&ndash;9, excluding title page, revision history,
+  table of contents, and the ethics / approvals / appendix back matter &mdash; is
+  <strong>8,498 words</strong>.
+</p>
+
+<div class="writeup-summary"
+     style="display:flex; gap:10px; flex-wrap:wrap; margin:4px 0 16px;">
+  <span class="status-badge status-in_progress">Due&nbsp;&middot;&nbsp;Mon 10 Aug 2026</span>
+  <span class="status-badge status-done">v1.0</span>
+  <span class="status-badge status-done">8,498 words</span>
+  <span class="status-badge status-done">Sections 5&ndash;9 new</span>
 </div>
+
+<h3>What is new in this document</h3>
+<ul>
+  <li><strong>&sect;5 &mdash; Were the goals met?</strong> A goal-by-goal verdict table with
+      the caveat stated alongside the verdict rather than after it, including the one number
+      the report most needs read correctly.</li>
+  <li><strong>&sect;6 &mdash; Research component.</strong> The methodological claim: FORGE's
+      base measure is <em>variance</em>, under the law of total variance &mdash; not entropy or
+      mutual information. The four capabilities C1&ndash;C4 restated as four operations on one
+      variance budget (split / verify / source / locate), EAR as a <em>field</em> along each
+      domain's resolving axis, and the ATLAS closure work.</li>
+  <li><strong>&sect;7 &mdash; Results.</strong> The model board with references and baselines,
+      the measured accuracy-versus-epistemic-signal frontier, the head sweep, the ATLAS
+      closure factorial, and cross-model readings.</li>
+  <li><strong>&sect;8 &mdash; Discussion and inference.</strong> What the measurements support,
+      and four stated limits of the instrument.</li>
+  <li><strong>&sect;9 &mdash; Conclusion and future work.</strong> Named open items in the order
+      they should be attacked.</li>
+</ul>
+
+<div id="fr-embed-wrapper" class="embed-wrapper">
+  <embed src="assets/docs/final_report.pdf" type="application/pdf" class="embed-pdf"
+         aria-label="FORGE final report PDF">
+</div>
+
+<div class="download-row">
+  <a class="btn" href="assets/docs/final_report.pdf" download>Download PDF</a>
+  <a class="btn btn-secondary" href="assets/docs/final_report.tex" download>Download LaTeX source</a>
+  <a class="btn btn-secondary" href="assets/docs/forge-report.sty" download>Download style package</a>
+</div>
+
+<p style="margin-top:20px; color:var(--color-text-muted); font-size:0.88rem;">
+  <em>If the embedded viewer does not display the document, your browser may not support
+  inline PDF rendering. Use the download buttons above.</em>
+</p>
+
+<hr style="margin:26px 0; border:0; border-top:1px solid var(--color-border, #d8dde6);">
+
+<h3>Open slots</h3>
+<p style="color:var(--color-text-muted); font-size:0.9rem;">
+  Section&nbsp;7.6 carries three screenshot placeholders for the deployed observatory. Drop the
+  images into <code>assets/img/</code> under these exact names and they replace themselves on
+  the next build &mdash; no edit to the LaTeX source is required:
+</p>
+<ul style="color:var(--color-text-muted); font-size:0.9rem;">
+  <li><code>shot_splash.png</code> &mdash; the splash page (strike to ignite)</li>
+  <li><code>shot_deck.png</code> &mdash; the navigation deck (four model plates)</li>
+  <li><code>shot_forge.png</code> &mdash; the FORGE dashboard (&tau; rail, C1&ndash;C4, graph area)</li>
+</ul>

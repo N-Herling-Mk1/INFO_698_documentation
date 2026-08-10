@@ -1,6 +1,6 @@
 {
  "_comment": "Per-week progress reports for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W0..W12. Each week has three sections: planned (set at the start of the week), refactored (mid-week scope changes / re-plans), accomplished (what actually got done). Items are plain strings, or { name, status } where status is 'todo' | 'done'.",
- "last_updated": "2026-07-29",
+ "last_updated": "2026-08-07",
  "sections": [
   "planned",
   "refactored",
@@ -278,7 +278,7 @@
    ]
   },
   "10": {
-   "label": "MVP Phase 3 / stretch (risk window)",
+   "label": "MVP Phase 3 \u2014 tutorial re-lock + phonon mk4 opened (risk window)",
    "planned": [
     "Continue write-up",
     "Lock in MVP",
@@ -286,21 +286,108 @@
     "If time, attempt stretch goal",
     "Risk-management window"
    ],
-   "refactored": [],
-   "accomplished": []
+   "refactored": [
+    "Palmer Penguins REJECTED as the tutorial dataset. The replacement had to keep all four tenets readable, stay trivially explainable, and be ADJUSTABLE \u2014 knobs that phase one gauge or all four up and down \u2014 so the tutorial demonstrates what the dials can actually read. That pushed the choice off real datasets entirely and onto a synthetic information-theory toy.",
+    "Phonon mk4 opened as a from-scratch design against the FORGE contract rather than a patch to mk3. The E(3)NN backbone stays; everything downstream of it is open. Two further calls: sweep multiple heads instead of committing to one likelihood up front, and drop the EDA-descriptor route in favour of the variance base measure plus per-feature posterior.",
+    "Write-up start slipped a second time, W10 \u2192 W11. The tutorial re-lock and the phonon redesign both landed inside the risk window and both were prerequisites for having results worth writing about.",
+    "Product scope confirmed against the Gantt: the phonon and ATLAS 'standalone site' rows were absorbed into the single integrated site at the W9 narrowing, so they close on the EDA + model line only. The W6 milestone as originally worded (three standalone sites) is superseded, not met."
+   ],
+   "accomplished": [
+    {
+     "name": "W9 filed into the documentation data layer: weekly_todos.json and gantt.json updated with the front-end restart, the FORGE contract, the gauge lock-in and the hype video; four new Gantt rows added and the W9 milestone corrected. Twelve legacy double-escaped unicode strings in W3\u2013W5 were repaired \u2014 they had been rendering literally on the site.",
+     "status": "done"
+    },
+    {
+     "name": "Tutorial model LOCKED as the dice phantom after a multi-round numpy bench: 10 Jaynes-tilted dice, 12 rolls, N_train=200, h=64, 11 columns (6 signal + 3 nuisance + 2 exactly-collinear), tau = 10^-3 \u00b7 lambda_max as the master knob. Reads G1\u224873 / G2\u224817 / G3\u224867 / G4\u224866 simultaneously at mid-scale \u2014 the first configuration found that moves all four gauges at once.",
+     "status": "done"
+    },
+    {
+     "name": "Three gauge traps found on the bench and documented, each of which would have silently produced a flat dial. Class count K is the primary driver of G3's dynamic range (K=3 pins G3 at 98\u201399% regardless of head width or tau). G4 computed in input space reads flat at 50\u201363 under every configuration but spans 35\u201366 off the tau knob when computed correctly in phi-space, as the gauge lock specifies. G2 must refit the head only with the backbone held fixed, or backbone retraining confounds the measurement.",
+     "status": "done"
+    },
+    {
+     "name": "dice_model.py mk1 shipped \u2014 753 lines, numpy + scipy only, ~0.7 s end to end, heavy commenting so every locked constant traces back to its bench evidence. Exports a four-tier contract bundle and an mk1\u2192mk4 genealogy chain, with the order='F' flattening convention and both gauge traps recorded inline as explicit warnings.",
+     "status": "done"
+    },
+    {
+     "name": "Per-model accent colours locked off the dash-1 plate strip \u2014 01 ATLAS LLP #FF2D6B, 02 Music Genre #F0A52A, 03 Phonon DOS #2FB8F0, 04 Tutorial/dice #2FE08A \u2014 and a distinct emblem specified for each: displaced vertex with decay tracks, spectral fan of measurement bars, vibrating lattice resolving into a DOS curve, and a die dissolving into a histogram. Shared style spine: flat vector, thin uniform strokes, legible at 24\u00d724 px.",
+     "status": "done"
+    },
+    {
+     "name": "Research-facing CV built from scratch for the course submission and written forward toward doctoral applications: two-page hard cap, education second, the ROOT-to-CSV toolkit promoted to its own portfolio entry, two manuscripts listed as in preparation with no venue named until submission is a fact.",
+     "status": "done"
+    },
+    {
+     "name": "Phonon mk4 scoping closed: E(3)NN backbone retained, multi-head sweep adopted over a single committed likelihood, temperature handled as a sweep inside the model, and the C2/C3 degeneracy on a linear-Gaussian head accepted rather than engineered around.",
+     "status": "done"
+    }
+   ]
   },
   "11": {
-   "label": "Write-up & deliverables",
+   "label": "Metric lock-in \u00b7 experiments closed \u00b7 board packaged \u00b7 write-up opened",
    "planned": [
     "Finish write-up",
     "Deliverables locked"
    ],
-   "refactored": [],
-   "accomplished": []
+   "refactored": [
+    "BASE MEASURE CHANGED, and it is the largest single decision of the project. Entropy / BALD mutual information is out; the law of total variance is in \u2014 Var(y|x) = E_theta[Var(y|x,theta)] aleatoric + Var_theta(E[y|x,theta]) epistemic. Chosen for regression compatibility, dimensional invariance, a literal dB SNR reading, and to avoid MI's axiom violations. Cost: the W9 gauge calibration is invalidated wholesale, G2's target moves from 29.29% to 50%, and G3 has to be re-derived because 1-TV has no form for DOS regression.",
+    "The dashboard was reframed. It is not a health readout. It reports the features in the model and the confidence or doubt attached to them \u2014 when more information would help versus when the model has hit its predictive limit. The four gauges collapse into four views of ONE variance budget: split it, shrink it, verify it, locate it.",
+    "Tutorial changed a THIRD time \u2014 from the generic dice phantom to Jaynes' 1963 Brandeis Dice Problem specifically, so the tutorial inherits a named, citable, historically load-bearing MaxEnt problem instead of a synthetic toy of our own construction.",
+    "Phonon: three separately-argued 'properly architected' trunks all lost to the trained model's own output as phi. Linear-readout scored 0.605, the invariants surrogate 0.20, and phi-norm max ~0.53, against phi_out at 0.717. The insight that retired all three was that LLLA constrains only the map phi -> output, so every nonlinear layer upstream is already permitted \u2014 which means the retraining was never necessary.",
+    "The final report was reframed as complementary to the proposal rather than an extension of it: no section overlap, proposal material COMPRESSED to make room for results, targeting ~8.5K words on hybrid science-plus-product grounds against the professor's stated 5\u20136K norm. Extension granted."
+   ],
+   "accomplished": [
+    {
+     "name": "VARIANCE BASE MEASURE LOCKED and documented in FORGE_variance_lockin_mk1.csv \u2014 61 rows across DECISION / EQUATION / AXIS / GAUGE / CHANGE / CAVEAT / BLOCKER / REFERENCE, 15 references, cross-checked. A companion lock (FORGE_resolving_axis_mk1.csv) establishes that EAR is a FIELD, not a scalar: each model resolves along its own natural output axis \u2014 6 faces for Brandeis, 10 classes for genre, 51 energy bins for phonon, signal region for ATLAS.",
+     "status": "done"
+    },
+    {
+     "name": "C1\u2013C4 re-cut under the variance budget: C1 (LLLA) splits it, C2 (HMC) verifies it with a signed relative epistemic-variance error per slot, C3 (GGN eigenspectrum) sources it as a projected prior-leak share, C4 locates it by Euler allocation a_k = phi_k(Sigma phi)_k with sum a_k = E exactly, plotted signed. C4's long-standing attribution.npz blocker dissolved \u2014 the two candidate implementations turned out to be the same object up to a factor of phi_k, computable from one matrix-vector product on the cached covariance.",
+     "status": "done"
+    },
+    {
+     "name": "Scaling result established and numerically verified: one top-k Lanczos pass plus two exact traces serves the epistemic variance, gamma(tau), log Z(tau) and the HMC mass matrix simultaneously. At d = 1200, k = 100 gives 0.016 dB error. The HMC ceiling was measured rather than assumed and sits near d \u2248 2000 \u2014 mixing, not compute, is the binding constraint.",
+     "status": "done"
+    },
+    {
+     "name": "forge-brandeis mk1 built \u2014 Flask plus vanilla JS and canvas, no JS dependencies. Seven channels on the board: tau, C1\u2013C4, X overall score, and a P provenance channel carrying the problem setup, architecture and solution confidence. m=5 constraint statistics include a planted nuisance and an exactly-collinear pair that make the GGN singular BY DESIGN, so the instrument is tested against a known-degenerate case. Health checks H1\u2013H7 gate the panels; tau* by MacKay fixed point on the frozen MAP; score reads as an EAR dB dial plus a reducibility 7-segment readout.",
+     "status": "done"
+    },
+    {
+     "name": "PHONON mk4 COMPLETE. Trunk retrained from scratch (the paper's reference checkpoint is unusable \u2014 pickled against the pre-rewrite e3nn) and reproduces Chen at test frac@10% = 0.711 against the paper's 0.70. The shipped configuration is phi = the trained model's own 51-bin output, rank 32, H2_planted_diag, with the prior centred on the trunk's trained last layer. The headline deliverable is a measured PARETO FRONTIER, not a single number: k=0 gives 0.717, above both mk1 and the paper, with reducibility 0.01% \u2014 a dead instrument; k* = -4.82, chosen by MacKay with no test data, gives 0.664\u20130.671 with reducibility 3.9%, the best PICP95 at 0.889 and the best PIT-KS at 0.156. Accuracy, epistemic signal and calibration all move together. Five hypotheses were tested and refuted along the way and every one is recorded.",
+     "status": "done"
+    },
+    {
+     "name": "Instrument result worth the write-up: the H7 control head posted PICP95 = 0.951, dead on nominal, and EAR = -53 dB declaring nothing reducible \u2014 yet the A-invariance referee caught it at 183.9% drift. Calibration alone is NOT sufficient to detect bias contamination. H4 failed the same test at 165.9% while H5, the same head with a representation floor, passed at 0.2%, which is a sharper argument for the floor than was anticipated.",
+     "status": "done"
+    },
+    {
+     "name": "ATLAS LLP three rungs trained and evaluated on endcap data (27,995 events): R1 vanilla BCE, R2 + ABCD.isCo double-DisCo, R3 + DNCn_QN closure. NN1 OOF AUC 0.8310 and NN2 0.9703 against historical references of ~0.86 and ~0.945. Two real bugs fixed in the closure term \u2014 a relu hinge, because the optimiser was chasing the -1 floor instead of the target, and per-batch randomised cut positions to match the 36-cell evaluation grid. A replicated 3\u00d74\u00d73 factorial gives the headline: mu moves |nc|med at 20 standard errors while dCor moves only 2.8 in the wrong direction, so the mechanism is corner-weighted local factorisation, not global decorrelation. Operating point lambda=5, mu=2\u20135; LLP_NN_LAB_NOTES.txt written with an explicit when-NOT-to-use section.",
+     "status": "done"
+    },
+    {
+     "name": "FORGE BOARD PACKAGED \u2014 all three experiments exported under one contract for the first time. The export layer ships Lambda plus a pre-projected G[i,j] = (u_j\u00b7phi_i)^2 instead of full eigenvector matrices, taking genre from 27.10 MB to 3.17 MB. INFO_698_forge_board.zip is 228 files at 4.54 MB against a 30 MB cap, with all four package-time assertions green: 8 models, phonon runs as sweep.json only, zero forbidden-path leaks, under budget. Six export-time verifications run before any file is written; V1 (tau roundtrip) measures ~3e-8 and V2 (allocation identity) ~1e-15.",
+     "status": "done"
+    },
+    {
+     "name": "ATLAS's first FORGE artefacts ever emitted: l3_m1_s2 fold0 endcap R3_disco_dncnqn, 5599 held-out rows, d=129 both nets, one bundle per fold and explicitly never pooled. The adapter took four versions \u2014 it had guessed dropout, scaler, seed and row selection wrong \u2014 and the final version reads every setting from the cell's own trainlog rather than from assumption.",
+     "status": "done"
+    },
+    {
+     "name": "Course deliverables cleared: capstone team evaluation form (solo team, with the n=1 degeneracy disclosed in the free response rather than papered over), assignment pitch PDF with executive summary and elevator script, ten-lesson video synopsis PDF, a HD-local / YouTube toggle viewer on the site's video panel, and a resume-and-LinkedIn section added to the research panel.",
+     "status": "done"
+    },
+    {
+     "name": "Final report scoped and outlined \u2014 six sections at ~8.5K words: Scope & Goals (600), Were Goals Met (1400), Research Component (3000), Results (1800), Discussion & Inference (1200), Conclusion & Future Work (500). Every concrete measured result is already baked into the outline: the phonon frontier, the A-invariance and H7 finding, the DNCn_QN closure result, and the cross-model PIT over-confidence signature that applies to genre and ATLAS as well as phonon.",
+     "status": "done"
+    }
+   ]
   },
   "12": {
    "label": "Turn in, present, party",
    "planned": [
+    "Stitch all FORGE components into one site (splash \u2192 deck \u2192 board, all four models live)",
+    "Finish and submit the final project paper",
     "Turn in",
     "Present / iShowcase",
     "Repo freeze"

@@ -53,8 +53,8 @@ for i, t in enumerate(tasks):
                 edgecolor="#C67D3E", linewidth=1.4, linestyle=(0, (3, 2)), zorder=4)
     ax.text(-0.35, y, t["name"], ha="right", va="center", fontsize=8.3, color="#1A2238")
 
-# Today marker: 2026-06-12
-today = (dt.date(2026, 6, 12) - w0).days / 7.0
+# Today marker: computed live from the real date (was pinned to 2026-06-12)
+today = (dt.date.today() - w0).days / 7.0
 ax.axvline(today, color="#C0392B", lw=1.6, zorder=5)
 ax.text(today, n - 0.2, "Today", color="#C0392B", fontsize=8, ha="center",
         va="bottom", fontweight="bold")

@@ -1,0 +1,63 @@
+FORGE / INFO_698_documentation - delta drop: W10 + W11 filed
+=============================================================
+Apply: copy over your local repo root, keeping paths. Nothing else changed.
+
+FILES
+  data/weekly_todos.json ......... W10 + W11 written; W12 planned re-pointed
+  data/gantt.json ................ 6 new rows, 2 renames, 12 edits, 3 milestones
+  FORGE_INFO698_Gantt.xlsx ....... regenerated from gantt.json
+  assets/docs/gantt_chart.png .... regenerated
+  scripts/build_gantt_png.py ..... today marker was PINNED to 2026-06-12;
+                                   now computed live (matches gantt.js)
+
+GANTT - NEW ROWS
+  Phonon mk4 - Bayesian head + Pareto frontier ....... MVP P1   W10-11  done
+  ATLAS LLP - three rungs + DNCn_QN closure .......... MVP P1   W11     done
+  Variance base measure + C1-C4 lock-in .............. MVP P2   W11     done
+  FORGE board export + packaging (8 models) .......... MVP P2   W11     done
+  Stitch FORGE site - all components integrated ...... MVP P2   W11-12  in_progress
+  Final report - outline -> draft -> submit .......... Write-up W11-12  in_progress
+
+GANTT - RENAMES (the old names had gone false)
+  "Tutorial example - Palmer Penguins (forge-lite)"
+      -> "Tutorial example - penguins -> Brandeis dice"     (dataset rejected W10)
+  "Begin write-up (slipped W9 -> W10)"
+      -> "Begin write-up (slipped W9 -> W10 -> W11)"        (slipped again)
+
+GANTT - CLOSED OUT
+  Phonon / ATLAS "EDA + standalone site" -> done. The standalone-site half of
+  both rows was absorbed into the single integrated site at the W9 scope
+  narrowing, so they close on the EDA + model line only. That means the W6
+  milestone AS WORDED ("all three MVP-P1 sites functional") is superseded, not
+  met - stated plainly in the W10 refactored notes rather than papered over.
+  Reword the milestone if you would rather it read differently.
+
+  Bayesian options (LLLA+HMC) ......... extended to W11, done
+  Local dashboards + compute metrics .. extended to W11, done
+  Front-end design restart ............ done
+  Risk window ......................... W8-10 -> W8-11
+
+TAIL
+  Test & debug / Final software edits . extended to W11, still in_progress
+  Lock MVP + freeze repos ............. moved W10 -> W11-12
+  Finish write-up; deliverables locked  extended to W12
+  W12 planned now reads: stitch the site, submit the paper, turn in, present, freeze
+
+TWO THINGS WORTH YOUR EYES
+  1. Task rows were re-ordered within their phase blocks so the PNG reads
+     chronologically top to bottom. Phase grouping is unchanged and still
+     contiguous, so gantt.js and build_xlsx.py both group correctly.
+  2. W6's milestone wording (above) is the one place the record and the
+     original plan genuinely disagree. Your call.
+
+WHAT W10/W11 RECORD AS PROBLEMS (not just wins)
+  W10: penguins rejected -> tutorial restart; three gauge traps that each
+       produce a silently flat dial; write-up slipped a second time.
+  W11: the variance switch invalidated the W9 gauge calibration outright;
+       three phonon trunk retrains built and refuted; OneDrive reverted source
+       files four times; PowerShell packaging failed twice before moving to
+       Python; the ATLAS adapter took four versions.
+
+REGENERATE (only if you edit the JSON further)
+  python scripts/build_xlsx.py
+  python scripts/build_gantt_png.py

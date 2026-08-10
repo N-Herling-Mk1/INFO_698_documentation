@@ -1,0 +1,209 @@
+% =====================================================================
+%  forge-report.sty
+%  Add-on preamble for the FORGE INFO 698 FINAL REPORT.
+%
+%  Loads forge-proposal.sty (so the report is visually identical to the
+%  proposal it extends) and adds only what the final report needs:
+%     - the NEW brand lockup masthead  (flame + F.O.R.G.E + POSTERIOR OBSERVATORY)
+%     - verdict badges for the goals table
+%     - screenshot slots that auto-swap to the real image once dropped in
+%     - the "new in this document" section marker
+%
+%  Edit the proposal look in forge-proposal.sty; edit report-only look here.
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{forge-report}[2026/08/10 FORGE INFO 698 final report style]
+
+\RequirePackage{forge-proposal}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{multirow}
+\RequirePackage{colortbl}
+
+% Letterspacing for the wordmark subtitle. microtype ships letterspace;
+% if it is unavailable anywhere, fall back to plain text so the build survives.
+\IfFileExists{letterspace.sty}{%
+  \RequirePackage{letterspace}%
+  \newcommand{\forgetrack}[1]{\textls[220]{##1}}%
+  \newcommand{\forgetrackwide}[1]{\textls[300]{##1}}%
+  \newcommand{\forgetrackwider}[1]{\textls[330]{##1}}%
+}{%
+  \newcommand{\forgetrack}[1]{##1}%
+  \newcommand{\forgetrackwide}[1]{##1}%
+  \newcommand{\forgetrackwider}[1]{##1}%
+}
+
+% ---------------------------------------------------------------------
+%  NEW BRAND LOCKUP  (replaces the old \forgemasthead art on page 1)
+%
+%  Print translation of the site splash lockup, proportioned off the
+%  reference image:
+%      flame height : text-block height   = 2.7 : 1   (the flame dominates)
+%      text width   : flame width         = 2.6 : 1
+%      gap          = 0.19 x flame width
+%
+%      [ tall flame ]   F . O . R . G . E        <- one gold, wide tracking
+%                       POSTERIOR OBSERVATORY    <- wider tracking, same span
+%                       ============------------ <- tapered rule, thick to thin
+%
+%  Tune the three lengths below; everything else follows.
+% ---------------------------------------------------------------------
+\RequirePackage{tikz}
+\newcommand{\forgeflamefile}{forge_flame_mk1}
+\newlength{\forgeflameht}   \setlength{\forgeflameht}{39mm}  % flame height
+\newlength{\forgetextwd}    \setlength{\forgetextwd}{82mm}   % text-block width
+\newlength{\forgelockupgap} \setlength{\forgelockupgap}{7mm} % flame-to-text gap
+
+% Single-colour gold wordmark. All five letters share one colour; the
+% interpuncts are one step deeper so they still read as separators.
+\definecolor{forgegold}{HTML}{B0761E}
+\definecolor{forgegolddot}{HTML}{8A5A16}
+\newcommand{\forgegoldkern}{\kern0.34em}
+\newcommand{\forgewordmarkgold}{%
+  {\sffamily\bfseries\color{forgegold}%
+    F\forgegoldkern{\color{forgegolddot}\textperiodcentered}\forgegoldkern
+    O\forgegoldkern{\color{forgegolddot}\textperiodcentered}\forgegoldkern
+    R\forgegoldkern{\color{forgegolddot}\textperiodcentered}\forgegoldkern
+    G\forgegoldkern{\color{forgegolddot}\textperiodcentered}\forgegoldkern
+    E%
+  }%
+}
+
+% Rule that tapers left-to-right: thick and saturated at the left edge,
+% thinning and fading out at the right. #1 = width.
+\newcommand{\forgetaperrule}[1]{%
+  \begin{tikzpicture}[baseline=0pt]
+    \shade[left color=forgegold, right color=forgegold!12]
+      (0pt,1.50pt) -- (#1,0.22pt) -- (#1,-0.22pt) -- (0pt,-1.50pt) -- cycle;
+  \end{tikzpicture}%
+}
+
+% #1 = document-type line printed under the lockup (e.g. "Final Report")
+\newcommand{\forgelockup}[1]{%
+  \begin{center}
+  \setlength{\tabcolsep}{0pt}%
+  \begin{tabular}{@{}c@{\hspace{\forgelockupgap}}l@{}}
+    \IfFileExists{\forgeflamefile.png}
+      {\raisebox{-0.5\height}{\includegraphics[height=\forgeflameht]{\forgeflamefile}}}
+      {\rule{0pt}{\forgeflameht}}
+    &
+    \begin{minipage}[c]{\forgetextwd}
+      \centering
+      {\fontsize{27}{30}\selectfont\forgetrackwide{\forgewordmarkgold}}\\[7pt]
+      {\sffamily\fontsize{10.5}{13}\selectfont\color{forgegold}%
+       \forgetrackwider{POSTERIOR OBSERVATORY}}\\[4pt]
+      \forgetaperrule{\linewidth}
+    \end{minipage}
+  \end{tabular}\\[18pt]
+  {\LARGE\rmfamily\color{forgemute} #1}
+  \end{center}%
+}
+
+% ---------------------------------------------------------------------
+%  Weighted tabularx columns.
+%
+%  WHY: a plain "l" column next to X columns takes its NATURAL width, so a
+%  long cell in the l column starves the X columns to near-zero and every
+%  word wraps one letter at a time. Never mix l/c with X in a tabularx.
+%  Use these instead and make the weights sum to the number of columns:
+%      \begin{tabularx}{\linewidth}{|W{0.95}|W{1.55}|N{0.50}|}   % 3 cols
+%  W = ragged-right text, N = centred.
+% ---------------------------------------------------------------------
+\newcolumntype{W}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}
+\newcolumntype{N}[1]{>{\hsize=#1\hsize\centering\arraybackslash}X}
+
+% ---------------------------------------------------------------------
+%  widetable --- a table float that bleeds past the 1in text block into the
+%  margins, for wide reference tables that would otherwise wrap badly.
+%  Adds \forgewidebleed to EACH side, so the printed margin becomes
+%  1in - \forgewidebleed. Keep it at or below 12mm to stay printer-safe.
+%  Caption sits inside the wide block, so it matches the table width.
+%
+%  Usage:
+%      \begin{widetable}
+%        \boardstretch\boardfont
+%        \begin{tabularx}{\linewidth}{...}  % \linewidth is the WIDE width
+%        ...
+%        \end{tabularx}
+%        \caption{...}\label{...}
+%      \end{widetable}
+% ---------------------------------------------------------------------
+\newlength{\forgewidebleed}
+\setlength{\forgewidebleed}{11mm}
+\newlength{\forgewidewd}
+\newenvironment{widetable}
+  {\begin{table}[H]%
+   \setlength{\forgewidewd}{\dimexpr\textwidth+2\forgewidebleed\relax}%
+   \noindent\hspace*{-\forgewidebleed}%
+   \begin{minipage}{\forgewidewd}\centering}
+  {\end{minipage}%
+   \end{table}}
+
+% ---------------------------------------------------------------------
+%  Vertically-centred table cells.
+%
+%  \ffcell wraps a cell so it sits centred in its row with even padding.
+%  Use with \renewcommand{\tabularxcolumn}[1]{m{#1}} and arraystretch 1.0 --
+%  m centres the box, and the minipage supplies the breathing room that
+%  \arraystretch would otherwise add asymmetrically (which is what makes the
+%  TALLEST cell in a row hug the top).
+%
+%  NOTE: use \hsize, not \linewidth. Inside a weighted >{\hsize=..}X column
+%  \linewidth is stale and the minipage overflows into the next column.
+% ---------------------------------------------------------------------
+\newcommand{\ffcell}[1]{\begin{minipage}[c]{\hsize}\vspace{4pt}#1\vspace{4pt}\end{minipage}}
+\newcommand{\ffbul}[1]{\begin{itemize}[nosep,leftmargin=0.9em,topsep=0pt,partopsep=0pt]#1\end{itemize}}
+
+% ---------------------------------------------------------------------
+%  Verdict badges for the goals-met table  (yes / caveat / no)
+% ---------------------------------------------------------------------
+\definecolor{verdictgreen}{HTML}{1E7A46}
+\definecolor{verdictamber}{HTML}{B5741A}
+\definecolor{verdictred}{HTML}{B02318}
+\newcommand{\vyes}{{\bfseries\color{verdictgreen}YES}}
+\newcommand{\vcav}{{\bfseries\color{verdictamber}CAVEAT}}
+\newcommand{\vno}{{\bfseries\color{verdictred}NO}}
+% RETIRED: deliberately removed because it stopped being necessary --- a
+% different thing from an unmet commitment, and it should not read as one.
+\definecolor{verdictgrey}{HTML}{5A6472}
+\newcommand{\vret}{{\bfseries\color{verdictgrey}RETIRED}}
+
+% ---------------------------------------------------------------------
+%  Screenshot slot.
+%  #1 = image basename (no extension), #2 = caption, #3 = label
+%  Drop <basename>.png into assets/img/ and the placeholder is replaced
+%  automatically on the next build. No edit to this file required.
+% ---------------------------------------------------------------------
+\newcommand{\screenshotslot}[3]{%
+  \begin{figure}[H]
+  \centering
+  \IfFileExists{#1.png}
+    {\includegraphics[width=0.94\linewidth]{#1}}
+    {\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{1pt}%
+     \fcolorbox{forgemute}{white}{%
+       \begin{minipage}[c][4.6cm][c]{0.94\linewidth}
+         \centering
+         {\footnotesize\bfseries\color{forgemute}SCREENSHOT SLOT}\\[6pt]
+         {\footnotesize\itshape\color{forgemute}
+          drop {\upshape\texttt{\detokenize{#1}.png}} into {\upshape\texttt{assets/img/}} --- this box is
+          replaced automatically on the next build}
+       \end{minipage}}}
+  \caption{#2}
+  \label{#3}
+  \end{figure}%
+}
+
+% ---------------------------------------------------------------------
+%  "NEW" marker for sections that did not exist in the proposal.
+% ---------------------------------------------------------------------
+\newcommand{\newsection}{%
+  \par\nobreak\vspace{-6pt}%
+  {\footnotesize\bfseries\color{forgeamber}NEW IN THIS DOCUMENT}%
+  \hspace{6pt}{\footnotesize\itshape\color{forgemute}not present in the approved proposal}%
+  \par\vspace{4pt}}
+
+% Compact table helper: small font + tighter rows for the results boards.
+\newcommand{\boardfont}{\footnotesize}
+\newcommand{\boardstretch}{\renewcommand{\arraystretch}{1.18}}
+
+\endinput
