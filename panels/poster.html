@@ -1,9 +1,81 @@
 <h2>Poster</h2>
-<div class="placeholder-panel">
-  <h2>Coming soon</h2>
-  <p>The iShowcase poster will be added here closer to Week 11.</p>
-  <p style="font-size: 0.85rem;">
-    When ready, place the PDF at <code>assets/docs/poster.pdf</code> and update this
-    panel to embed it the same way the proposal panel does.
-  </p>
+<p>
+  The FORGE conference sheet &mdash; 48&nbsp;&times;&nbsp;36&nbsp;in landscape, drawn as an
+  engineering sheet rather than a slide: title block, zone ticks, and six numbered panels.
+  It is generated from source (<code>build_poster2.py</code> + <code>forge_lib.py</code>)
+  rather than hand-edited, so every number on it is read from the exported board and the
+  sheet can be re-cut without redrawing.
+</p>
+
+<div class="writeup-summary" style="display:flex; gap:10px; flex-wrap:wrap; margin:4px 0 16px;">
+  <span class="status-badge status-done">mk1</span>
+  <span class="status-badge status-done">48&nbsp;&times;&nbsp;36&nbsp;in</span>
+  <span class="status-badge status-done">8 boards exported &middot; 7 shown</span>
 </div>
+
+<h3>What is on the sheet</h3>
+<table class="content-table">
+  <thead>
+    <tr><th>Zone</th><th>Panel</th><th>What it carries</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>01</td><td>The budget</td>
+        <td>The base measure &mdash; variance under the law of total variance &mdash; and why
+            it replaced entropy / mutual information.</td></tr>
+    <tr><td>02</td><td>One dial, three verdicts</td>
+        <td>The signature graphic: a single segmented EAR arc carrying three needles &mdash;
+            ATLAS&nbsp;+12.51&nbsp;dB, genre&nbsp;RRM&nbsp;+3.79&nbsp;dB, phonon&nbsp;&minus;16.90&nbsp;dB.</td></tr>
+    <tr><td>03</td><td>The board</td>
+        <td>Every exported model with its EAR, reducible share, prior leak, and verdict band.</td></tr>
+    <tr><td>04</td><td>The FORGE four</td>
+        <td>C1 splits the budget, C2 verifies the split, C3 sources it, C4 locates it &mdash;
+            four views of one variance budget.</td></tr>
+    <tr><td>05</td><td>The instrument</td>
+        <td>The deployed navigation deck and the FORGE dashboard.</td></tr>
+    <tr><td>06</td><td>What the instrument caught</td>
+        <td>Calibration is not trust (the H7 case), the fast path is optimistic about its own
+            doubt, and the measured accuracy-versus-signal frontier.</td></tr>
+  </tbody>
+</table>
+
+<h3>Full sheet</h3>
+<p style="color:var(--color-text-muted); font-size:0.88rem;">
+  Click the preview for the full-resolution PDF &mdash; the sheet is print-scale, so the
+  inline preview is a reduction and the fine print is only legible in the PDF.
+</p>
+
+<a href="assets/docs/FORGE_poster_mk1.pdf" target="_blank" rel="noopener"
+   style="display:block; margin:0 0 16px;">
+  <img src="assets/img/poster_preview.png" alt="FORGE project poster, 48 by 36 inch sheet"
+       style="width:100%; height:auto; display:block; border:1px solid var(--color-border);
+              border-radius:var(--radius);">
+</a>
+
+<div id="poster-embed-wrapper" class="embed-wrapper">
+  <embed src="assets/docs/FORGE_poster_mk1.pdf" type="application/pdf" class="embed-pdf"
+         aria-label="FORGE project poster PDF">
+</div>
+
+<div class="download-row">
+  <a class="btn" href="assets/docs/FORGE_poster_mk1.pdf" download>Download PDF</a>
+  <a class="btn btn-secondary" id="poster-dl-svg" href="assets/docs/FORGE_poster_mk1.svg"
+     download style="display:none;">Download SVG source</a>
+  <a class="btn btn-secondary" href="assets/img/poster_preview.png" download>Download PNG preview</a>
+</div>
+
+<p style="margin-top:20px; color:var(--color-text-muted); font-size:0.88rem;">
+  <em>If the embedded viewer does not display the sheet, your browser may not support inline
+  PDF rendering. Use the download buttons above.</em>
+</p>
+
+<script>
+  // Reveal the SVG download only if the vector source has been committed alongside the PDF.
+  // Wrapped in an IIFE because app.js re-executes panel scripts on every panel load.
+  (function () {
+    var btn = document.getElementById("poster-dl-svg");
+    if (!btn) return;
+    fetch("assets/docs/FORGE_poster_mk1.svg", { method: "HEAD" })
+      .then(function (r) { if (r.ok) btn.style.display = ""; })
+      .catch(function () { /* absent: leave the button hidden */ });
+  })();
+</script>

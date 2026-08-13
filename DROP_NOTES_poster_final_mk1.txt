@@ -1,0 +1,66 @@
+DROP NOTES — poster_final_mk1
+INFO_698_documentation · 2026-08-13
+
+WHAT THIS DROP DOES
+  Adds the FORGE poster and the SIGNED final report to the documentation site,
+  and wires the two panels that were still stubs or still quoting pre-freeze numbers.
+
+STATE FOUND (from the uploaded repo copy)
+  HEAD 24bd4b6 "Added final signed proposal + pane for it", == origin/main, tree clean.
+  W10/W11 weekly filings present. Nothing behind — the two gaps were simply never committed:
+    - assets/docs/ carried proposal_signed.pdf but NOT final_report_signed.pdf
+    - panels/poster.html was still the "Coming soon" stub
+    - panels/writeup.html quoted 8,498 words and "Sections 5-9 new" — the pre-freeze outline,
+      not the signed document (10,941 graded body, ~18,650 whole, 51 pp,
+      §§5-8 new, §9 refs, §§10-12 tail, §13 glossary, Appendices A-F)
+
+FILES ADDED
+  assets/docs/FORGE_poster_mk1.pdf      3.0 MB   48x36 in landscape (3456x2592 pt), 1 page
+  assets/docs/final_report_signed.pdf   2.2 MB   52 pp incl. the Adobe Sign audit report
+  assets/img/poster_preview.png         779 KB   2400x1800 render of the sheet, for the panel
+
+  Note the rename: NTH_INFO698_final_report_signed.pdf -> final_report_signed.pdf, to match
+  the proposal_signed.pdf convention already in assets/docs/.
+
+FILES REPLACED (whole file, backed up first)
+  panels/poster.html
+    - zone table (01 budget / 02 one dial three verdicts / 03 board / 04 FORGE four /
+      05 instrument / 06 what the instrument caught)
+    - clickable preview image -> full PDF in a new tab, plus the inline embed
+    - downloads: PDF, PNG preview, and an SVG button that stays HIDDEN until
+      assets/docs/FORGE_poster_mk1.svg exists (HEAD probe — commit the .svg and the
+      button appears with no edit to the panel)
+  panels/writeup.html
+    - counts corrected to 10,941 graded body / ~18,650 whole / 51 pp
+    - section map corrected to §§1-4 carried forward (with §1's new opening and §3b's new
+      subsection called out), §§5-8 new, §9 refs, §§10-12 tail, §13 glossary
+    - headline-results table: phonon 0.711 (0.717 ridge) vs Chen 0.70; genre faithful 0.7467
+      FAILS its own 0.75 gate while RRM clears at 0.7933 and 3sec posts best test 0.7887;
+      ATLAS NN1 0.8785 / NN2 0.9697, DNCn_QN 3x closure at fixed dCor, endcap only
+    - the H7 note kept as the reading the report most wants right: PICP95 0.951 and still
+      fails A-invariance at 183.9%
+    - Signed / Working-draft seg-toggle, defaulting to SIGNED. The working-draft button
+      hides itself if final_report.pdf is ever removed
+    - the stale "Open slots" block (three screenshot placeholders) is GONE — Figures 2-4
+      are in the signed document
+
+FILES PATCHED BY MARKER (idempotent, verified by read-back)
+  index.html        removes the "future" badge from the Poster nav link
+  panels/home.html  removes both "future" badges and replaces the two placeholder blurbs
+
+APPLY
+  Unblock-File .\apply_poster_final_mk1.ps1     # mark-of-the-web from the zip
+  .\apply_poster_final_mk1.ps1                  # run from the repo root
+  .\apply_poster_final_mk1.ps1 -WhatIfOnly      # payload check only, writes nothing
+
+  The script backs up every file it touches to _backup_<timestamp>\ before writing, and
+  verifies each edit with Select-String on a marker — never by size or timestamp
+  (the OneDrive silent-revert hazard).
+
+DELIBERATELY NOT DONE
+  - final_report.pdf / .tex left untouched. They are the unsigned LaTeX build and remain the
+    working draft behind the toggle. If the .tex has moved on since the signature, the panel
+    caption already says the working build may run ahead of the signed copy.
+  - No .svg shipped for the poster; only the PDF was supplied. The panel is ready for it.
+  - No weekly_todos.json / gantt.json edits. W12 is still all-planned; if you want the poster
+    and the signed report logged as accomplished, that is a separate patch.

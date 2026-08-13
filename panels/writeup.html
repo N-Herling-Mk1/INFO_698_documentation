@@ -1,75 +1,157 @@
 <h2>Final Write-up</h2>
 <p>
-  The FORGE final report. Rather than standing apart from the Statement of Work, this
-  document <em>is</em> the approved proposal, extended: Sections&nbsp;1&ndash;4 are the
-  proposal as approved and unchanged, Sections&nbsp;5&ndash;9 are new
-  (goal-by-goal verdict, research component, results, discussion, conclusion), and the
+  The FORGE final report. Rather than standing apart from the Statement of Work, this document
+  <em>is</em> the approved proposal, extended: Sections&nbsp;1&ndash;4 are the proposal as
+  approved, Sections&nbsp;5&ndash;8 are new, Section&nbsp;9 is the reference list, the
   proposal's ethics / approvals / appendix tail is renumbered to 10&ndash;12 behind the new
-  material. New sections carry an amber <strong>NEW IN THIS DOCUMENT</strong> marker beneath
-  the heading, so a reader who has already seen the proposal knows exactly where to start.
+  material, and Section&nbsp;13 is a glossary. New sections are flagged in amber, so a reader
+  who has already seen the proposal knows exactly where to start &mdash; Section&nbsp;5.
 </p>
 
 <p>
-  The report is authored in LaTeX (<code>final_report.tex</code> +
-  <code>forge-report.sty</code>) and rebuilt to PDF automatically on every push, on the same
-  CI job that builds the proposal. Body word count &mdash; Sections&nbsp;1&ndash;9, excluding title page, revision history,
-  table of contents, and the ethics / approvals / appendix back matter &mdash; is
-  <strong>8,498 words</strong>.
+  The report is authored in LaTeX (<code>final_report.tex</code> + <code>forge-report.sty</code>)
+  and rebuilt to PDF on every push, on the same CI job that builds the proposal. The graded body
+  &mdash; Sections&nbsp;1&ndash;8, excluding front matter, the 9&ndash;13 back matter, and inline
+  citations &mdash; runs to <strong>10,941 words</strong>; the whole document is
+  <strong>&sim;18,650 words</strong> over 51&nbsp;pages.
 </p>
 
-<div class="writeup-summary"
-     style="display:flex; gap:10px; flex-wrap:wrap; margin:4px 0 16px;">
-  <span class="status-badge status-in_progress">Due&nbsp;&middot;&nbsp;Mon 10 Aug 2026</span>
-  <span class="status-badge status-done">v1.0</span>
-  <span class="status-badge status-done">8,498 words</span>
-  <span class="status-badge status-done">Sections 5&ndash;9 new</span>
+<div class="writeup-summary" style="display:flex; gap:10px; flex-wrap:wrap; margin:4px 0 16px;">
+  <span class="status-badge status-done">Signed &middot; 10 Aug 2026</span>
+  <span class="status-badge status-done">v1.2</span>
+  <span class="status-badge status-done">10,941 words graded body</span>
+  <span class="status-badge status-done">Sections 5&ndash;8 new</span>
 </div>
 
-<h3>What is new in this document</h3>
-<ul>
-  <li><strong>&sect;5 &mdash; Were the goals met?</strong> A goal-by-goal verdict table with
-      the caveat stated alongside the verdict rather than after it, including the one number
-      the report most needs read correctly.</li>
-  <li><strong>&sect;6 &mdash; Research component.</strong> The methodological claim: FORGE's
-      base measure is <em>variance</em>, under the law of total variance &mdash; not entropy or
-      mutual information. The four capabilities C1&ndash;C4 restated as four operations on one
-      variance budget (split / verify / source / locate), EAR as a <em>field</em> along each
-      domain's resolving axis, and the ATLAS closure work.</li>
-  <li><strong>&sect;7 &mdash; Results.</strong> The model board with references and baselines,
-      the measured accuracy-versus-epistemic-signal frontier, the head sweep, the ATLAS
-      closure factorial, and cross-model readings.</li>
-  <li><strong>&sect;8 &mdash; Discussion and inference.</strong> What the measurements support,
-      and four stated limits of the instrument.</li>
-  <li><strong>&sect;9 &mdash; Conclusion and future work.</strong> Named open items in the order
-      they should be attacked.</li>
-</ul>
+<h3>Section map</h3>
+<table class="content-table">
+  <thead>
+    <tr><th>Sections</th><th>Status</th><th>Contents</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1&ndash;4</td><td>Carried forward</td>
+        <td>The approved proposal. Two exceptions inside it: &sect;1 gains a new opening that
+            defines aleatoric and epistemic error, and &sect;3b gains a new subsection on the
+            original problem, model design, and problem architectures per domain.</td></tr>
+    <tr><td>5</td><td>New</td>
+        <td>Final stats &mdash; every proposed feature and project goal marked met, caveated,
+            retired, or not attempted, against the proposal as written.</td></tr>
+    <tr><td>6</td><td>New</td>
+        <td>Research component &mdash; the variance base measure, the FORGE four as four
+            operations on one budget, EAR as a field, and what is claimed as original.</td></tr>
+    <tr><td>7</td><td>New</td>
+        <td>Results &mdash; the model board, the phonon head sweep, the genre genealogy, the
+            ATLAS closure factorial, and the deployed observatory.</td></tr>
+    <tr><td>8</td><td>New</td>
+        <td>Conclusion and future work, including the open items named rather than deferred.</td></tr>
+    <tr><td>9&ndash;13</td><td>Back matter</td>
+        <td>References, the proposal's ethics / approvals / appendix tail (Appendices A&ndash;F),
+            and a glossary covering every term, symbol, metric, and equation used.</td></tr>
+  </tbody>
+</table>
+
+<h3>Headline results</h3>
+<table class="content-table">
+  <thead>
+    <tr><th>Domain</th><th>Reference</th><th>Measured here</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Phonon DOS</td><td>0.70 frac@10% (Chen et al., 2021)</td>
+        <td>0.711 trunk retrained from scratch; 0.717 with a ridge-regularized readout</td></tr>
+    <tr><td>Music genre</td><td>cfg_14, 0.766 validation (BEARDOWN)</td>
+        <td>Faithful reproduction 0.7467 &mdash; below its own 0.75 gate; the RRM-selected
+            configuration clears it at 0.7933, and the 3&nbsp;s control posts the best test
+            accuracy at 0.7887</td></tr>
+    <tr><td>ATLAS LLP</td><td>NN1 &sim;0.86, NN2 &sim;0.945</td>
+        <td>NN1 0.8785, NN2 0.9697; DNCn_QN buys threefold better ABCD closure at fixed distance
+            correlation (endcap only &mdash; barrel is not claimed)</td></tr>
+  </tbody>
+</table>
+<p style="color:var(--color-text-muted); font-size:0.88rem;">
+  The instrument result the report most wants read correctly: head&nbsp;H7 posts PICP95 = 0.951,
+  dead on nominal and the best-calibrated head on the board, and still fails the A-invariance
+  referee at 183.9&nbsp;%. Coverage alone is not evidence of a trustworthy posterior.
+</p>
+
+<h3>The document</h3>
+<div class="seg-toggle" role="tablist" aria-label="Report version">
+  <button class="seg-btn active" data-doc="signed"  role="tab" aria-selected="true">Signed</button>
+  <button class="seg-btn"        data-doc="working" role="tab" aria-selected="false">Working draft</button>
+</div>
+
+<p class="seg-note" id="fr-caption">
+  Signed &mdash; the Adobe Acrobat Sign certified copy, faculty e-signature and Final Audit
+  Report appended.
+</p>
 
 <div id="fr-embed-wrapper" class="embed-wrapper">
-  <embed src="assets/docs/final_report.pdf" type="application/pdf" class="embed-pdf"
+  <embed src="assets/docs/final_report_signed.pdf" type="application/pdf" class="embed-pdf"
          aria-label="FORGE final report PDF">
 </div>
 
 <div class="download-row">
-  <a class="btn" href="assets/docs/final_report.pdf" download>Download PDF</a>
-  <a class="btn btn-secondary" href="assets/docs/final_report.tex" download>Download LaTeX source</a>
+  <a class="btn" id="fr-dl-pdf" href="assets/docs/final_report_signed.pdf" download>Download PDF</a>
+  <a class="btn btn-secondary" id="fr-dl-tex" href="assets/docs/final_report.tex" download>Download LaTeX source</a>
   <a class="btn btn-secondary" href="assets/docs/forge-report.sty" download>Download style package</a>
 </div>
 
 <p style="margin-top:20px; color:var(--color-text-muted); font-size:0.88rem;">
-  <em>If the embedded viewer does not display the document, your browser may not support
-  inline PDF rendering. Use the download buttons above.</em>
+  <em>If the embedded viewer does not display the document, your browser may not support inline
+  PDF rendering. Use the download buttons above.</em>
 </p>
 
-<hr style="margin:26px 0; border:0; border-top:1px solid var(--color-border, #d8dde6);">
+<script>
+  // Toggle between the signed certified copy and the LaTeX working build.
+  // Wrapped in an IIFE because app.js re-executes panel scripts on every panel load.
+  (function () {
+    var DOCS = {
+      signed: {
+        pdf: "assets/docs/final_report_signed.pdf",
+        caption: "Signed \u2014 the Adobe Acrobat Sign certified copy, faculty e-signature and Final Audit Report appended."
+      },
+      working: {
+        pdf: "assets/docs/final_report.pdf",
+        caption: "Working draft \u2014 the LaTeX build, rebuilt on every push. Unsigned, and may run ahead of the signed copy."
+      }
+    };
 
-<h3>Open slots</h3>
-<p style="color:var(--color-text-muted); font-size:0.9rem;">
-  Section&nbsp;7.6 carries three screenshot placeholders for the deployed observatory. Drop the
-  images into <code>assets/img/</code> under these exact names and they replace themselves on
-  the next build &mdash; no edit to the LaTeX source is required:
-</p>
-<ul style="color:var(--color-text-muted); font-size:0.9rem;">
-  <li><code>shot_splash.png</code> &mdash; the splash page (strike to ignite)</li>
-  <li><code>shot_deck.png</code> &mdash; the navigation deck (four model plates)</li>
-  <li><code>shot_forge.png</code> &mdash; the FORGE dashboard (&tau; rail, C1&ndash;C4, graph area)</li>
-</ul>
+    var wrapper = document.getElementById("fr-embed-wrapper");
+    var caption = document.getElementById("fr-caption");
+    var dlPdf   = document.getElementById("fr-dl-pdf");
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".seg-toggle .seg-btn"));
+
+    function show(key) {
+      var d = DOCS[key];
+      if (!d || !wrapper) return;
+      // Rebuild the <embed> node so the PDF reliably reloads across browsers
+      // (swapping the src attribute alone is unreliable for embedded PDFs).
+      wrapper.innerHTML =
+        '<embed src="' + d.pdf + '" type="application/pdf" class="embed-pdf" ' +
+        'aria-label="FORGE final report PDF">';
+      if (dlPdf) dlPdf.setAttribute("href", d.pdf);
+      if (caption) caption.textContent = d.caption;
+      buttons.forEach(function (b) {
+        var on = b.getAttribute("data-doc") === key;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () { show(b.getAttribute("data-doc")); });
+    });
+
+    // Hide the working-draft option if only the signed copy is committed.
+    fetch("assets/docs/final_report.pdf", { method: "HEAD" })
+      .then(function (r) {
+        if (!r.ok) {
+          buttons.forEach(function (b) {
+            if (b.getAttribute("data-doc") === "working") b.style.display = "none";
+          });
+        }
+      })
+      .catch(function () { /* leave the toggle as-is */ });
+
+    show("signed");
+  })();
+</script>
